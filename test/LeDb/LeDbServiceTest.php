@@ -9,8 +9,6 @@ require_once '../../src/bootstrap.php';
 
 use LeroysBackside\LeDb\LeDbService;
 
-$db = LeDbService::init('test');
-$result = $db->execute('SELECT * FROM test');
-echo '<pre>' . print_r($db, true) . '</pre>';
-echo '<pre>' . print_r($result, true) . '</pre>';
-echo $result->getException()->getMessage();
+$db = new LeDbService('dev.robguida.com.json', 'pharmpay');
+$result = $db->execute('SELECT * FROM invoice;');
+

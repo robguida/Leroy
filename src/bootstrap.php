@@ -6,13 +6,7 @@
  * Time: 6:06 PM
  */
 error_reporting(E_ALL);
-session_start([
-    'use_strict_mode' => true,
-    'use_only_cookies' => true,
-    'cookie_httponly' => true,
-    'session_switch' => true,
-    'cookie_lifetime' => 54000, // 15 minutes
-]);
+session_start();
 session_regenerate_id(true);
 date_default_timezone_set('America/New_York');
 spl_autoload_register('autoLoader');
