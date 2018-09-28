@@ -1,0 +1,12 @@
+{
+    "name": "robguida/leroysbackside",
+    "description": "The back-end portion of the Leroy framework",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Rob Guida",
+            "email": "robguida4@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
