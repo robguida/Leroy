@@ -106,19 +106,12 @@ class LeDbService
      */
     private function getDomainCredentials($domain, $dsn)
     {
-        $output = '';
-        /* first location is the parent project */
-        if (file_exists($domain)) {
-            // this should fail for now
-        } else {
-            $path = "../../test/LeDb/db_settings/{$domain}";
-            if (!file_exists($path)) {
-                throw new Exception("'{$path}' does not exist");
-            }
-            $stdClass = json_decode(file_get_contents($path));
-            $output = $stdClass->$dsn;
+        if (!file_exists($domain)) {
+            throw new Exception("'{$domain}' does not exist");
         }
-        return $output;
+        $json_string = file_get_contents($domain);
+        $stdClass = json_decode($json_string);
+        return $stdClass->$dsn;
     }
 
     private function initPdo($type)
