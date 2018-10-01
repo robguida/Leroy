@@ -9,6 +9,7 @@
 namespace LeroysBackside\LeDb;
 
 use Exception;
+use PDOStatement;
 
 interface LeDbResultInterface
 {
@@ -21,4 +22,63 @@ interface LeDbResultInterface
      * @param Exception $exception
      */
     public function setException($exception);
+
+    /**
+     * @param null|PDOStatement $pdoStatement
+     */
+    public function setPdoStatement(PDOStatement $pdoStatement);
+
+    /**
+     * @return null|PDOStatement
+     */
+    public function getPdoStatement();
+
+    /**
+     * @return integer
+     */
+    public function getLastInsertId();
+
+    /**
+     * @param integer $input
+     */
+    public function setLastInsertId($input);
+
+    /**
+     * @return mixed
+     */
+    public function getErrorCode();
+
+    /**
+     * @param mixed $input
+     */
+    public function setErrorCode($input);
+
+    /**
+     * @return mixed
+     */
+    public function getErrorInfo();
+
+    /**
+     * @param mixed $input
+     */
+    public function setErrorInfo($input);
+
+    /**
+     * @return int
+     */
+    public function getRowCount();
+
+    /**
+     * @return integer
+     */
+    public function getTotalRecordsFound();
+    /**
+     * @return bool
+     */
+    public function nextSet();
+
+    /**
+     * @return array
+     */
+    public function fetchAssoc();
 }

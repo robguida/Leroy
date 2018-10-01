@@ -17,7 +17,7 @@ class LeDbService
     /** @var LeDbResultInterface */
     private $resultObject;
     /** @var  array */
-    private $connection_cache;
+    private $statement_cache;
     /** @var  array */
     private $pdo_cache;
     /** @var  string */
@@ -31,7 +31,7 @@ class LeDbService
      */
     public function __construct($domain_name, $data_source_name)
     {
-        $this->connection_cache = [];
+        $this->statement_cache = [];
         $this->pdo_cache = [];
         $this->domain_credentials = $this->getDomainCredentials($domain_name, $data_source_name);
      }
@@ -58,32 +58,6 @@ class LeDbService
         }
         return clone $this->resultObject;
     }
-
-    /**
-     * @param $qry
-     * @param PDO $stmt
-     */
-    protected function cachePdo($qry, PDO $stmt)
-    {
-        $key = md5($qry);
-        if (!array_key_exists($key, $this->connection_cache)) {
-            $this->connection_cache[$key] = $stmt;
-        }
-    }
-
-    /**
-     * @param $qry
-     * @return bool|PDO
-     */
-    protected function getPdo($qry)
-    {
-        $output = false;
-        $key = md5($qry);
-        if (array_key_exists($key, $this->connection_cache)) {
-            $output = $this->connection_cache[$key];
-        }
-        return $output;
-    }
     //</editor-fold>
 
     /**
@@ -94,43 +68,63 @@ class LeDbService
      */
     public function execute($sql, array $bindings = [], $associate = false)
     {
-        /**
-         * @var PDOStatement $stmt
-         */
+        /** @var LeDbResultInterface $output */
         $output = $this->getDbResult();
         try {
-            /* cache the pdo for each sql query */
-            if (!$pdo = $this->getPdo($sql)) {
-                $type = $this->evalSql($sql);
-                $this->cachePdo($sql, $this->initPdo($type));
-                $pdo = $this->getPdo($sql);
-                if (!empty($bindings)) {
-                    $stmt = $pdo->prepare($sql, [$pdo::ATTR_CURSOR, $pdo::CURSOR_FWDONLY]);
-                }
-            }
+            $sql_type = $this->evalSql($sql);
+            $pdo = $this->initPdo($sql_type);
+            $stmt = $this->getStatement($sql, $pdo, !empty($bindings));
             if (!empty($bindings)) {
                 if ($associate) {
                     foreach ($bindings as $key => $val) {
                         if (is_int($val)) {
-                            $type = PDO::PARAM_INT;
+                            $var_type = PDO::PARAM_INT;
                         } elseif (is_bool($val)) {
-                            $type = PDO::PARAM_BOOL;
+                            $var_type = PDO::PARAM_BOOL;
                         } elseif (is_null($val)) {
-                            $type = PDO::PARAM_NULL;
+                            $var_type = PDO::PARAM_NULL;
                         } else {
-                            $type = (65535 < strlen($val)) ? PDO::PARAM_STR : PDO::PARAM_LOB;
+                            $var_type = (65535 < strlen($val)) ? PDO::PARAM_STR : PDO::PARAM_LOB;
                         }
-                        $stmt->bindValue(":{$key}", $val, $type);
+                        $stmt->bindValue(":{$key}", $val, $var_type);
                     }
                 }
-                $stmt->execute($sql, $bindings);
-            } else {
-                $stmt = $pdo->query($sql);
+                $stmt->execute($bindings);
+            }
+            $output->setPdoStatement($stmt);
+            if ('master' == $sql_type) {
+                $output->setLastInsertId($pdo->lastInsertId());
+            }
+            if ($pdo->errorCode()) {
+                $output->setErrorCode($pdo->errorCode());
+            }
+            if ($pdo->errorInfo()) {
+                $output->setErrorInfo($pdo->errorInfo());
             }
         } catch (Exception $e) {
             $output->setException($e);
         }
         return $output;
+    }
+    //<editor-fold desc="Private Functions">
+
+    /**
+     * @param string $sql
+     * @param PDO $pdo
+     * @param bool $prepare
+     * @return PDOStatement
+     */
+    private function getStatement($sql, PDO $pdo, $prepare = false)
+    {
+        $key = md5($sql);
+        if (!array_key_exists($key, $this->statement_cache)) {
+            if ($prepare) {
+                $this->statement_cache[$key] = $pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+            } else {
+                $this->statement_cache[$key] = $pdo->query($sql);
+            }
+        }
+        return $this->statement_cache[$key];
     }
 
     /**
@@ -193,4 +187,5 @@ class LeDbService
         }
         return $output;
     }
+    //</editor-fold>
 }

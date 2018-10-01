@@ -18,10 +18,38 @@ use PDOStatement;
  *
  * This object is passed back with every query done in LeDbService
  */
-class LeDbResult
+class LeDbResult implements LeDbResultInterface
 {
     /** @var Exception */
-    private $exception = null;
+    private $exception;
+
+    /** @var PDOStatement */
+    private $pdoStatement;
+
+    /** @var integer */
+    private $last_insert_id;
+
+    /** @var mixed */
+    private $error_code;
+
+    /** @var string */
+    private $error_info;
+
+    /**
+     * @param null|PDOStatement $pdoStatement
+     */
+    public function setPdoStatement(PDOStatement $pdoStatement)
+    {
+        $this->pdoStatement = $pdoStatement;
+    }
+
+    /**
+     * @return null|PDOStatement
+     */
+    public function getPdoStatement()
+    {
+        return $this->pdoStatement;
+    }
 
     /**
      * @return Exception
@@ -37,5 +65,85 @@ class LeDbResult
     public function setException($exception)
     {
         $this->exception = $exception;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLastInsertId()
+    {
+        return $this->last_insert_id;
+    }
+
+    /**
+     * @param integer $input
+     */
+    public function setLastInsertId($input)
+    {
+        $this->last_insert_id = (int)$input;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorCode()
+    {
+        return $this->error_code;
+    }
+
+    /**
+     * @param mixed $input
+     */
+    public function setErrorCode($input)
+    {
+        $this->error_code = $input;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorInfo()
+    {
+        return $this->error_info;
+    }
+
+    /**
+     * @param mixed $input
+     */
+    public function setErrorInfo($input)
+    {
+        $this->error_info = $input;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowCount()
+    {
+        return $this->getPdoStatement()->rowCount();
+    }
+
+    /**
+     * @return integer
+     */
+    public function getTotalRecordsFound()
+    {
+        return (int)$this->getPdoStatement()->query('SELECT FOUND_ROWS()')->fetchColumn();
+    }
+
+    /**
+     * @return bool
+     */
+    public function nextSet()
+    {
+        return $this->getPdoStatement()->nextRowset();
+    }
+
+    /**
+     * @return array
+     */
+    public function fetchAssoc()
+    {
+        return $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
     }
 }
