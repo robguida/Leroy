@@ -1,62 +1,52 @@
 {
-    "pharmpay":
-     {
-        "master":
-        {
-            "host":"pharmpay-service.development.com",
-            "userName":"dev",
-            "password":"123456",
-            "dbName":"pharmpay",
-            "port":"3306"
-        },
-        "slave":
-        {
-            "0":
-            {
-                "host":"pharmpay-service.development.com",
-                "userName":"dev",
-                "password":"123456",
-                "dbName":"pharmpay",
-                "port":"3306"
-            },
-            "1":
-            {
-                "host":"pharmpay-service.development.com",
-                "userName":"dev",
-                "password":"123456",
-                "dbName":"pharmpay",
-                "port":"3306"
-            }
-        }
-     },
-     "leroysbackside":
-      {
-         "master":
-         {
-             "host":"leroysbackside.development.com",
-             "userName":"dev",
-             "password":"123456",
-             "dbName":"leroysbackside",
-             "port":"3306"
-         },
-         "slave":
-         {
-             "0":
-             {
-                 "host":"localhost",
-                 "userName":"dev",
-                 "password":"123456",
-                 "dbName":"leroysbackside",
-                 "port":"3306"
-             },
-             "1":
-             {
-                 "host":"localhost",
-                 "userName":"dev",
-                 "password":"123456",
-                 "dbName":"leroysbackside",
-                 "port":"3306"
-             }
-         }
+  "leroysbackside": {
+    "master": {
+      "host": "leroysbackside.development.com",
+      "userName": "dev",
+      "password": "123456",
+      "dbName": "leroysbackside",
+      "port": "3306"
+    },
+    "slave": {
+      "0": {
+        "host": "localhost",
+        "userName": "dev",
+        "password": "123456",
+        "dbName": "leroysbackside",
+        "port": "3306"
+      },
+      "1": {
+        "host": "localhost",
+        "userName": "dev",
+        "password": "123456",
+        "dbName": "leroysbackside",
+        "port": "3306"
       }
+    }
+  },
+  "leroysbackside2": {
+    "master": {
+      "host": "leroysbackside.development.com",
+      "userName": "dev",
+      "password": "123456",
+      "dbName": "leroysbackside",
+      "port": "3306"
+    },
+    "slave": {
+      "0": {
+        "host": "localhost",
+        "userName": "dev",
+        "password": "123456",
+        "dbName": "leroysbackside",
+        "port": "3306"
+      },
+      "1": {
+        "host": "localhost",
+        "userName": "dev",
+        "password": "123456",
+        "dbName": "leroysbackside",
+        "port": "3306"
+      }
+    }
+  }
 }
