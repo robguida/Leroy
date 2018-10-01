@@ -10,6 +10,7 @@ namespace LeroysBackside\LeDb;
 
 use Exception;
 use PDO;
+use PDOStatement;
 
 class LeDbService
 {
@@ -26,6 +27,7 @@ class LeDbService
      * LeDbService constructor.
      * @param string $domain_name - used to find the file with the db credentials
      * @param string $data_source_name - the dsn to use
+     * @throws Exception
      */
     public function __construct($domain_name, $data_source_name)
     {
@@ -61,7 +63,7 @@ class LeDbService
      * @param $qry
      * @param PDO $stmt
      */
-    protected function cacheConnection($qry, PDO $stmt)
+    protected function cachePdo($qry, PDO $stmt)
     {
         $key = md5($qry);
         if (!array_key_exists($key, $this->connection_cache)) {
@@ -73,7 +75,7 @@ class LeDbService
      * @param $qry
      * @return bool|PDO
      */
-    protected function getConnection($qry)
+    protected function getPdo($qry)
     {
         $output = false;
         $key = md5($qry);
@@ -84,13 +86,46 @@ class LeDbService
     }
     //</editor-fold>
 
-    public function execute($sql)
+    /**
+     * @param string $sql
+     * @param array $bindings
+     * @param bool $associate
+     * @return LeDbResultInterface
+     */
+    public function execute($sql, array $bindings = [], $associate = false)
     {
+        /**
+         * @var PDOStatement $stmt
+         */
         $output = $this->getDbResult();
         try {
-            if (!$pdo = $this->getConnection($sql)) {
+            /* cache the pdo for each sql query */
+            if (!$pdo = $this->getPdo($sql)) {
                 $type = $this->evalSql($sql);
-                $this->cacheConnection($sql, $this->initPdo($type));
+                $this->cachePdo($sql, $this->initPdo($type));
+                $pdo = $this->getPdo($sql);
+                if (!empty($bindings)) {
+                    $stmt = $pdo->prepare($sql, [$pdo::ATTR_CURSOR, $pdo::CURSOR_FWDONLY]);
+                }
+            }
+            if (!empty($bindings)) {
+                if ($associate) {
+                    foreach ($bindings as $key => $val) {
+                        if (is_int($val)) {
+                            $type = PDO::PARAM_INT;
+                        } elseif (is_bool($val)) {
+                            $type = PDO::PARAM_BOOL;
+                        } elseif (is_null($val)) {
+                            $type = PDO::PARAM_NULL;
+                        } else {
+                            $type = (65535 < strlen($val)) ? PDO::PARAM_STR : PDO::PARAM_LOB;
+                        }
+                        $stmt->bindValue(":{$key}", $val, $type);
+                    }
+                }
+                $stmt->execute($sql, $bindings);
+            } else {
+                $stmt = $pdo->query($sql);
             }
         } catch (Exception $e) {
             $output->setException($e);
@@ -114,14 +149,18 @@ class LeDbService
         return $stdClass->$dsn;
     }
 
+    /**
+     * @param $type
+     * @return PDO
+     */
     private function initPdo($type)
     {
         if ('master' == $type) {
             $cred = $this->domain_credentials->master;
         } else {
-            $slaves = $this->domain_credentials->slave;
+            $slaves = (array)$this->domain_credentials->slave;
             $slave = rand(0, count($slaves) - 1);
-            $cred = $slaves->$slave;
+            $cred = $slaves[$slave];
         }
         $conn_str = "mysql:host={$cred->host};dbname={$cred->dbName};port={$cred->port};";
         if (!array_key_exists($conn_str, $this->pdo_cache)) {

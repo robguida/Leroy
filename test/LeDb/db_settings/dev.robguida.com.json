@@ -43,7 +43,7 @@
          {
              "0":
              {
-                 "host":"leroysbackside.development.com",
+                 "host":"localhost",
                  "userName":"dev",
                  "password":"123456",
                  "dbName":"leroysbackside",
@@ -51,7 +51,7 @@
              },
              "1":
              {
-                 "host":"leroysbackside.development.com",
+                 "host":"localhost",
                  "userName":"dev",
                  "password":"123456",
                  "dbName":"leroysbackside",
