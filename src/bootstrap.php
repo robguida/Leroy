@@ -12,6 +12,5 @@ if (DEVENV) {
     session_regenerate_id(true);
     date_default_timezone_set('America/New_York');
     ini_set('include_path', __DIR__);
+    require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
 }
-
-require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
