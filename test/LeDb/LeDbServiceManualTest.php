@@ -5,7 +5,7 @@
  * Date: 9/25/2018
  * Time: 11:48 PM
  */
-require_once '../../vendor/autoload.php';
+require_once '../bootstrap.php';
 
 use LeroysBackside\LeDb\LeDbService;
 
@@ -14,7 +14,7 @@ try {
         '/var/www/LeroysBackside/test/LeDb/db_settings/dev.robguida.com.json',
         'leroysbackside'
     );
-    $r = $db->execute('SELECT * FROM contacts;');
+    $r = $db->execute('SELECT * FROM contact;');
     print_r($r);
     print_r($r->fetchAssoc());
 
