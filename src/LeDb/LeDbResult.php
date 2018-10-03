@@ -120,7 +120,11 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getRowCount()
     {
-        return $this->getPdoStatement()->rowCount();
+        $output = null;
+        if ($this->pdoStatement instanceof PDOStatement) {
+            $output = $this->getPdoStatement()->rowCount();
+        }
+        return $output;
     }
 
     /**
@@ -128,7 +132,11 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getTotalRecordsFound()
     {
-        return (int)$this->getPdoStatement()->query('SELECT FOUND_ROWS()')->fetchColumn();
+        $output = null;
+        if ($this->pdoStatement instanceof PDOStatement) {
+            $output = (int)$this->getPdoStatement()->query('SELECT FOUND_ROWS()')->fetchColumn();
+        }
+        return $output;
     }
 
     /**
@@ -136,7 +144,11 @@ class LeDbResult implements LeDbResultInterface
      */
     public function nextSet()
     {
-        return $this->getPdoStatement()->nextRowset();
+        $output = null;
+        if ($this->pdoStatement instanceof PDOStatement) {
+            $output = $this->getPdoStatement()->nextRowset();
+        }
+        return $output;
     }
 
     /**
@@ -144,6 +156,10 @@ class LeDbResult implements LeDbResultInterface
      */
     public function fetchAssoc()
     {
-        return $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+        $output = null;
+        if ($this->pdoStatement instanceof PDOStatement) {
+            $output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $output;
     }
 }

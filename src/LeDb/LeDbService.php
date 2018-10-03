@@ -106,8 +106,20 @@ class LeDbService
         }
         return $output;
     }
-    //<editor-fold desc="Private Functions">
 
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $output = [];
+        foreach ($this as $k => $v) {
+            $output[$k] = $v;
+        }
+        return $output;
+    }
+
+    //<editor-fold desc="Private Functions">
     /**
      * @param string $sql
      * @param PDO $pdo
