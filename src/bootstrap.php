@@ -9,37 +9,6 @@ error_reporting(E_ALL);
 session_start();
 session_regenerate_id(true);
 date_default_timezone_set('America/New_York');
-spl_autoload_register('autoLoader');
 ini_set('include_path', __DIR__);
 
-/**
- * @param $class
- * @throws Exception
- */
-function autoLoader($class)
-{
-    static $autoLoader;
-    if (is_null($autoLoader)) {
-        $autoLoader = [];
-    }
-    if (!in_array($class, $autoLoader)) {
-        $autoLoader[] = $class;
-        $path = dirname(__FILE__);
-        $dirs = explode("\\", $class);
-        $className = end($dirs) . '.php';
-        array_pop($dirs);
-
-        if (!empty($dirs)) {
-            $path .= '/' . implode('/', $dirs);
-            $path = implode('/', array_unique(explode('/', $path))) . '/';
-        }
-
-        $fullFileName = "{$path}{$className}";
-        if (file_exists("$fullFileName")) {
-            require($fullFileName);
-        } else {
-            throw new Exception("The namespace for '{$class}' resolves to " .
-                "{$fullFileName}', which does not exist!");
-        }
-    }
-}
+//require_once(__DIR__ . '../');
