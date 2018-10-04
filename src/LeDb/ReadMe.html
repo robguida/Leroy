@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>LeDbService Specifications</h1>
+<h2>Basics</h2>
+<ol>
+    <li>LeDbService is a singleton class</li>
+    <li>The code that calls this class provides it with a full server path to the database configuration file, and the data source name of the initial request.</li>
+    <li>The database credentials are a json encode array stored in a json file.</li>
+    <li>@todo: Additional data source names can be added as needed, but the object can handle only one configuration file, so additional dsn's must exist in the file used to instatiate the object.</li>
+</ol>
+<h2>Persistent Data</h2>
+<ol>
+    <li>The database configuration file is stored as an array for the entire life of the object.</li>
+    <li>The PDO objects stored in an array, one PDO object per unique connection string</li>
+    <li>@todo: The dsn will be set, but update-able with each request.</li>
+</ol>
+<h2>Output</h2>
+<ol>
+    <li>The service object does not persist the output. Rather, it returns a LeDbResultInterface object.</li>
+    <li>A LeDbResultInterface object will store the PDOStatement object so that it can perform different function on the record set.</li>
+    <li>The default LeDbResultInterface object is LeDbResult.</li>
+</ol>
+<h2>Improvements</h2>
+<ol>
+    <li>The system now stores the database configurations for one single dsn, however, it needs to store the entire contents of the json file as an array.</li>
+    <li>There will be a current dsn, that can be overwritten using a setter function.</li>
+    <li>Explore the possibility of linking sql statements with the dsn, so that it would not be necessary to set the dsn.</li>
+</ol>
+</body>
+</html>
