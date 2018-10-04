@@ -29,11 +29,26 @@ class LeDbService
      * @param string $data_source_name - the dsn to use
      * @throws Exception
      */
-    public function __construct($domain_name, $data_source_name)
+    private function __construct($domain_name, $data_source_name)
     {
         $this->statement_cache = [];
         $this->pdo_cache = [];
         $this->domain_credentials = $this->getDomainCredentials($domain_name, $data_source_name);
+     }
+
+    /**
+     * @param string $domain_name
+     * @param string $data_source_name
+     * @return LeDbService
+     * @throws Exception
+     */
+     public static function init($domain_name, $data_source_name)
+     {
+         static $LeDbServiceSingleton;
+         if (is_null($LeDbServiceSingleton)) {
+             $LeDbServiceSingleton = new LeDbService($domain_name, $data_source_name);
+         }
+         return $LeDbServiceSingleton;
      }
 
     //<editor-fold desc="Getter/Setter Functions">

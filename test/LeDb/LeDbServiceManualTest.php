@@ -5,12 +5,12 @@
  * Date: 9/25/2018
  * Time: 11:48 PM
  */
-require_once '../bootstrap.php';
+require_once '../../src/bootstrap.php';
 
 use LeroysBackside\LeDb\LeDbService;
 
 try {
-    $db = new LeDbService(
+    $db = LeDbService::init(
         '/var/www/LeroysBackside/test/LeDb/db_settings/dev.robguida.com.json',
         'leroysbackside'
     );
