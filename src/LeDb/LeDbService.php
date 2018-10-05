@@ -9,6 +9,7 @@
 namespace LeroysBackside\LeDb;
 
 use Exception;
+use InvalidArgumentException;
 use PDO;
 use PDOStatement;
 
@@ -25,31 +26,62 @@ class LeDbService
 
     /**
      * LeDbService constructor.
-     * @param string $domain_name - used to find the file with the db credentials
-     * @param string $data_source_name - the dsn to use
+     * @param string $data_source_name
+     * @param string $db_config_file
      * @throws Exception
      */
-    private function __construct($domain_name, $data_source_name)
+    private function __construct($data_source_name, $db_config_file)
     {
         $this->statement_cache = [];
         $this->pdo_cache = [];
-        $this->domain_credentials = $this->getDomainCredentials($domain_name, $data_source_name);
+        $this->domain_credentials = $this->getDomainCredentials($db_config_file, $data_source_name);
      }
 
     /**
-     * @param string $domain_name
      * @param string $data_source_name
+     * @param string|null $db_config_file
      * @return LeDbService
      * @throws Exception
      */
-     public static function init($domain_name, $data_source_name)
+     public static function init($data_source_name, $db_config_file = null)
      {
+         /** @var array $LeDbServiceSingleton caches the LeDbService objects */
          static $LeDbServiceSingleton;
-         if (is_null($LeDbServiceSingleton)) {
-             $LeDbServiceSingleton = new LeDbService($domain_name, $data_source_name);
+         /** @var array $LeDbConfigFileStatic caches the config file, so it only has to be entered once */
+         static $LeDbConfigFileStatic;
+
+         /* load the db con file, which will be required with the first init. Subsequent inits can be empty */
+         if (is_null($LeDbConfigFileStatic)) {
+             $LeDbConfigFileStatic = [];
+             if (is_null($data_source_name)) {
+                 throw new InvalidArgumentException('Configuration file path not provided');
+             }
          }
-         return $LeDbServiceSingleton;
+         /* We need a key, so if one a new file is passed in, we use that.
+            If not, we use the first file used to init the object */
+         if (!is_null($db_config_file)) {
+             $conf_array_key = md5($db_config_file);
+         } else {
+             $conf_array_key = current(array_keys($LeDbConfigFileStatic));
+         }
+         /* Add the file to the cache */
+         if (!array_key_exists($conf_array_key, $LeDbConfigFileStatic)) {
+             $LeDbConfigFileStatic[$conf_array_key] = $db_config_file;
+         }
+
+         /* Cache the LeDbService object. Every DSN will be a new LeDbService object. */
+         if (is_null($LeDbServiceSingleton)) {
+             $LeDbServiceSingleton = [];
+         }
+         if (!array_key_exists($data_source_name, $LeDbServiceSingleton)) {
+             $LeDbServiceSingleton[$data_source_name] = new LeDbService(
+                 $data_source_name,
+                 $LeDbConfigFileStatic[$conf_array_key]
+             );
+         }
+         return $LeDbServiceSingleton[$data_source_name];
      }
+
 
     //<editor-fold desc="Getter/Setter Functions">
     /**
@@ -124,6 +156,7 @@ class LeDbService
 
     /**
      * @return array
+     * @note for debugging
      */
     public function toArray()
     {
@@ -143,7 +176,7 @@ class LeDbService
      */
     private function getStatement($sql, PDO $pdo, $prepare = false)
     {
-        $key = md5($sql);
+        $key = 'SQL' . md5($sql);
         if (!array_key_exists($key, $this->statement_cache)) {
             if ($prepare) {
                 $this->statement_cache[$key] = $pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
@@ -184,8 +217,10 @@ class LeDbService
             $cred = $slaves[$slave];
         }
         $conn_str = "mysql:host={$cred->host};dbname={$cred->dbName};port={$cred->port};";
-        if (!array_key_exists($conn_str, $this->pdo_cache)) {
-            $this->pdo_cache[$conn_str] = new PDO(
+        //$key = 'CONN' . md5($conn_str);
+        $key = 'CONN_' . $conn_str;
+        if (!array_key_exists($key, $this->pdo_cache)) {
+            $this->pdo_cache[$key] = new PDO(
                 $conn_str,
                 $cred->userName,
                 $cred->password,
@@ -196,7 +231,7 @@ class LeDbService
                 ]
             );
         }
-        return $this->pdo_cache[$conn_str];
+        return $this->pdo_cache[$key];
     }
 
     /**

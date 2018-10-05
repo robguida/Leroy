@@ -162,4 +162,28 @@ class LeDbResult implements LeDbResultInterface
         }
         return $output;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstValue()
+    {
+        $output = $this->getFirstRow();
+        if (0 < count($output)) {
+            $output = current($output);
+        }
+        return $output;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFirstRow()
+    {
+        $output = $this->fetchAssoc();
+        if (0 < count($output)) {
+            $output = current($output);
+        }
+        return $output;
+    }
 }

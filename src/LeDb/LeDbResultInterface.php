@@ -64,6 +64,16 @@ interface LeDbResultInterface
     public function setErrorInfo($input);
 
     /**
+     * @return mixed
+     */
+    public function getFirstValue();
+
+    /**
+     * @return array
+     */
+    public function getFirstRow();
+
+    /**
      * @return int
      */
     public function getRowCount();

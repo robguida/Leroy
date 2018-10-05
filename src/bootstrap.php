@@ -5,8 +5,14 @@
  * Date: 6/3/18
  * Time: 6:06 PM
  */
-define('DEVENV', 'dev' == $_SERVER['USER']);
+
+/* The code is running in the dev environment when LeroysBackside is not being accessed from the vendors folder */
+define('DEVENV', false === strpos($_SERVER['SCRIPT_NAME'], '/vendor/robguida/leroysbackside/'));
 if (DEVENV) {
+    /* Only in the dev environment should this code be run. Since this is designed to be used as a
+        dependency for another project, those projects would have their own bootstrap file. */
     error_reporting(E_ALL);
     require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
+    define('DBCONFIGFILE1', '/var/www/LeroysBackside/test/test_resources/dev.robguida.com.json');
+    define('DBCONFIGFILE2', '');
 }
