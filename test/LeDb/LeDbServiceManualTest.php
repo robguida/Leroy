@@ -13,23 +13,25 @@ use LeroysBackside\LeDb\LeDbService;
 try {
     /* Test the different variations of LeDbService */
     foreach (['leroysbackside', 'leroysbackside2'] as $dsn) {
-        $db = LeDbService::init($dsn, DBCONFIGFILE1);
         if ('leroysbackside' == $dsn) {
+            $db = LeDbService::init($dsn, DBCONFIGFILE1);
             $result1 = $db->execute('TRUNCATE TABLE contact;');
-            $result1 = $db->execute('INSERT INTO contact (first_name, last_name) VALUES ("John", "Doe");');
-            $result2 = $db->execute('SELECT COUNT(*) as cnt FROM contact;');
+            $result2 = $db->execute('INSERT INTO contact (first_name, last_name) VALUES ("John", "Doe");');
+            $result3 = $db->execute('SELECT COUNT(*) as cnt FROM contact;');
         } else {
+            $db = LeDbService::init($dsn);
             $result1 = $db->execute('TRUNCATE TABLE address;');
-            $result1 = $db->execute(
+            $result2 = $db->execute(
                 'INSERT INTO address (address_1, city, state)
                 VALUES ("912 Feist Ave", "Pottstown", "PA");'
             );
-            $result2 = $db->execute('SELECT COUNT(*) as cnt FROM address;');
+            $result3 = $db->execute('SELECT COUNT(*) as cnt FROM address;');
         }
         echo "Testing: {$dsn}\n";
         print_r($db);
         print_r($result1);
-        echo "Get First Value = {$result2->getFirstValue()}\n";
+        print_r($result2);
+        echo "Get First Value = {$result3->getFirstValue()}\n";
     }
 
 } catch (Exception $e) {
