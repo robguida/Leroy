@@ -47,12 +47,12 @@ class LeDbService
      {
          /** @var array $LeDbServiceSingleton caches the LeDbService objects */
          static $LeDbServiceSingleton;
-         /** @var array $LeDbConfigFileStatic caches the config file, so it only has to be entered once */
-         static $LeDbConfigFileStatic;
+         /** @var array $LeDbConfigFileCache caches the config file, so it only has to be entered once */
+         static $LeDbConfigFileCache;
 
          /* load the db con file, which will be required with the first init. Subsequent inits can be empty */
-         if (is_null($LeDbConfigFileStatic)) {
-             $LeDbConfigFileStatic = [];
+         if (is_null($LeDbConfigFileCache)) {
+             $LeDbConfigFileCache = [];
              if (is_null($data_source_name)) {
                  throw new InvalidArgumentException('Configuration file path not provided');
              }
@@ -62,11 +62,11 @@ class LeDbService
          if (!is_null($db_config_file)) {
              $conf_array_key = md5($db_config_file);
          } else {
-             $conf_array_key = current(array_keys($LeDbConfigFileStatic));
+             $conf_array_key = current(array_keys($LeDbConfigFileCache));
          }
          /* Add the file to the cache */
-         if (!array_key_exists($conf_array_key, $LeDbConfigFileStatic)) {
-             $LeDbConfigFileStatic[$conf_array_key] = $db_config_file;
+         if (!array_key_exists($conf_array_key, $LeDbConfigFileCache)) {
+             $LeDbConfigFileCache[$conf_array_key] = $db_config_file;
          }
 
          /* Cache the LeDbService object. Every DSN will be a new LeDbService object. */
@@ -76,7 +76,7 @@ class LeDbService
          if (!array_key_exists($data_source_name, $LeDbServiceSingleton)) {
              $LeDbServiceSingleton[$data_source_name] = new LeDbService(
                  $data_source_name,
-                 $LeDbConfigFileStatic[$conf_array_key]
+                 $LeDbConfigFileCache[$conf_array_key]
              );
          }
          return $LeDbServiceSingleton[$data_source_name];
