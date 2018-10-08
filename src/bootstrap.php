@@ -13,6 +13,6 @@ if (DEVENV) {
         dependency for another project, those projects would have their own bootstrap file. */
     error_reporting(E_ALL);
     require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
-    define('DBCONFIGFILE1', '/var/www/LeroysBackside/test/test_resources/dev.robguida.com.json');
-    define('DBCONFIGFILE2', '');
+    define('DBCONFIGFILE1', '/var/www/LeroysBackside/test/test_resources/dev1.robguida.com.json');
+    define('DBCONFIGFILE2', '/var/www/LeroysBackside/test/test_resources/dev2.robguida.com.json');
 }

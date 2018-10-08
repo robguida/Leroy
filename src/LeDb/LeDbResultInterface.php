@@ -91,4 +91,9 @@ interface LeDbResultInterface
      * @return array
      */
     public function fetchAssoc();
+
+    /**
+     * @return string
+     */
+    public function getSql();
 }

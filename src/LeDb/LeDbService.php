@@ -15,8 +15,6 @@ use PDOStatement;
 
 class LeDbService
 {
-    /** @var LeDbResultInterface */
-    private $resultObject;
     /** @var  array */
     private $statement_cache;
     /** @var  array */
@@ -35,7 +33,7 @@ class LeDbService
         $this->statement_cache = [];
         $this->pdo_cache = [];
         $this->domain_credentials = $this->getDomainCredentials($db_config_file, $data_source_name);
-     }
+    }
 
     /**
      * @param string $data_source_name
@@ -43,67 +41,52 @@ class LeDbService
      * @return LeDbService
      * @throws Exception
      */
-     public static function init($data_source_name, $db_config_file = null)
-     {
-         /** @var array $LeDbServiceSingleton caches the LeDbService objects */
-         static $LeDbServiceSingleton;
-         /** @var array $LeDbConfigFileCache caches the config file, so it only has to be entered once */
-         static $LeDbConfigFileCache;
-
-         /* load the db con file, which will be required with the first init. Subsequent inits can be empty */
-         if (is_null($LeDbConfigFileCache)) {
-             $LeDbConfigFileCache = [];
-             if (is_null($data_source_name)) {
-                 throw new InvalidArgumentException('Configuration file path not provided');
-             }
-         }
-         /* We need a key, so if one a new file is passed in, we use that.
-            If not, we use the first file used to init the object */
-         if (!is_null($db_config_file)) {
-             $conf_array_key = md5($db_config_file);
-         } else {
-             $conf_array_key = current(array_keys($LeDbConfigFileCache));
-         }
-         /* Add the file to the cache */
-         if (!array_key_exists($conf_array_key, $LeDbConfigFileCache)) {
-             $LeDbConfigFileCache[$conf_array_key] = $db_config_file;
-         }
-
-         /* Cache the LeDbService object. Every DSN will be a new LeDbService object. */
-         if (is_null($LeDbServiceSingleton)) {
-             $LeDbServiceSingleton = [];
-         }
-         if (!array_key_exists($data_source_name, $LeDbServiceSingleton)) {
-             $LeDbServiceSingleton[$data_source_name] = new LeDbService(
-                 $data_source_name,
-                 $LeDbConfigFileCache[$conf_array_key]
-             );
-         }
-         return $LeDbServiceSingleton[$data_source_name];
-     }
-
-
-    //<editor-fold desc="Getter/Setter Functions">
-    /**
-     * @param LeDbResultInterface|null $resultObject
-     */
-    public function setDbResult(LeDbResultInterface $resultObject = null)
+    public static function init($data_source_name, $db_config_file = null)
     {
-        if (is_null($resultObject)) {
-            $resultObject = new LeDbResult();
+        /** @var array $LeDbServiceSingleton caches the LeDbService objects */
+        static $LeDbServiceSingleton;
+        /** @var array $LeDbConfigFileCache caches the config file, so it only has to be entered once */
+        static $LeDbConfigFileCache;
+
+        /* load the db con file, which will be required with the first init. Subsequent inits can be empty */
+        if (is_null($LeDbConfigFileCache)) {
+            $LeDbConfigFileCache = [];
+            if (is_null($data_source_name)) {
+                throw new InvalidArgumentException('Configuration file path not provided');
+            }
         }
-        $this->resultObject = $resultObject;
+        /* We need a key, so if one a new file is passed in, we use that.
+           If not, we use the first file used to init the object */
+        if (!is_null($db_config_file)) {
+            $conf_array_key = md5($db_config_file);
+        } else {
+            $conf_array_key = current(array_keys($LeDbConfigFileCache));
+        }
+        /* Add the file to the cache */
+        if (!array_key_exists($conf_array_key, $LeDbConfigFileCache)) {
+            $LeDbConfigFileCache[$conf_array_key] = $db_config_file;
+        }
+
+        /* Cache the LeDbService object. Every DSN will be a new LeDbService object. */
+        if (is_null($LeDbServiceSingleton)) {
+            $LeDbServiceSingleton = [];
+        }
+        if (!array_key_exists($data_source_name, $LeDbServiceSingleton)) {
+            $LeDbServiceSingleton[$data_source_name] = new LeDbService(
+                $data_source_name,
+                $LeDbConfigFileCache[$conf_array_key]
+            );
+        }
+        return $LeDbServiceSingleton[$data_source_name];
     }
 
+    //<editor-fold desc="Getter/Setter Functions">
     /**
      * @return LeDbResultInterface
      */
     protected function getDbResult()
     {
-        if (is_null($this->resultObject)) {
-            $this->setDbResult();
-        }
-        return clone $this->resultObject;
+        return new LeDbResult();
     }
     //</editor-fold>
 
@@ -179,10 +162,11 @@ class LeDbService
         $key = 'SQL' . md5($sql);
         if (!array_key_exists($key, $this->statement_cache)) {
             if ($prepare) {
-                $this->statement_cache[$key] = $pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+                $stmt = $pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             } else {
-                $this->statement_cache[$key] = $pdo->query($sql);
+                $stmt = $pdo->query($sql);
             }
+            $this->statement_cache[$key] = $stmt;
         }
         return $this->statement_cache[$key];
     }

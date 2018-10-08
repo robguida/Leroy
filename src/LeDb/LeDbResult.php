@@ -35,6 +35,9 @@ class LeDbResult implements LeDbResultInterface
     /** @var string */
     private $error_info;
 
+    /** @var array */
+    private $output;
+
     /**
      * @param null|PDOStatement $pdoStatement
      */
@@ -65,6 +68,14 @@ class LeDbResult implements LeDbResultInterface
     public function setException($exception)
     {
         $this->exception = $exception;
+    }
+
+    /**
+     * @return bool
+     */
+    public function success()
+    {
+        return ($this->getPdoStatement() instanceof PDOStatement);
     }
 
     /**
@@ -156,11 +167,13 @@ class LeDbResult implements LeDbResultInterface
      */
     public function fetchAssoc()
     {
-        $output = null;
-        if ($this->pdoStatement instanceof PDOStatement) {
-            $output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+        if (is_null($this->output)) {
+            $this->output = [];
+            if ($this->pdoStatement instanceof PDOStatement) {
+                $this->output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+            }
         }
-        return $output;
+        return $this->output;
     }
 
     /**
@@ -184,6 +197,15 @@ class LeDbResult implements LeDbResultInterface
         if (0 < count($output)) {
             $output = current($output);
         }
+        return $output;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSql()
+    {
+        $output = $this->getPdoStatement()->queryString;
         return $output;
     }
 }
