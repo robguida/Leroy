@@ -12,6 +12,7 @@ if (DEVENV) {
     /* Only in the dev environment should this code be run. Since this is designed to be used as a
         dependency for another project, those projects would have their own bootstrap file. */
     error_reporting(E_ALL);
+    date_default_timezone_set('America/New_York');
     require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
     define('DBCONFIGFILE1', '/var/www/LeroysBackside/test/test_resources/dev1.robguida.com.json');
     define('DBCONFIGFILE2', '/var/www/LeroysBackside/test/test_resources/dev2.robguida.com.json');
