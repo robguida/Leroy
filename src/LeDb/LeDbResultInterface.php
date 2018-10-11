@@ -39,6 +39,16 @@ interface LeDbResultInterface
     public function getPdoStatement();
 
     /**
+     * @param string $input
+     */
+    public function setSqlType($input);
+
+    /**
+     * @return string
+     */
+    public function getSqlType();
+
+    /**
      * @return integer
      */
     public function getLastInsertId();
@@ -79,14 +89,29 @@ interface LeDbResultInterface
     public function getFirstRow();
 
     /**
+     * @Note Same as PDOStatement::rowCount(), the number of rows affected by INSERT, UPDATE, DELETE, but not SELECT
+     * @return int
+     */
+    public function getRowsAffected();
+
+    /**
+     * @Note gets the number of records in from the select statement. Do not use with SQL_CALC_FOUND_ROWS
      * @return int
      */
     public function getRowCount();
 
     /**
-     * @return integer
+     * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
+     * @param int $input
      */
-    public function getTotalRecordsFound();
+    public function setRowsFound($input);
+
+    /**
+     * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
+     * @return int
+     */
+    public function getRowsFound();
+
     /**
      * @return bool
      */

@@ -130,9 +130,14 @@ class LeDbService
                 }
                 $stmt->execute($bindings);
             }
+            $output->setSqlType($sql_type);
             $output->setPdoStatement($stmt);
             if ('master' == $sql_type) {
                 $output->setLastInsertId($pdo->lastInsertId());
+            }
+            if (0 === strpos($sql, 'SELECT SQL_CALC_FOUND_ROWS')) {
+                $rows_found = $pdo->query('SELECT FOUND_ROWS();')->fetchColumn();
+                $output->setRowsFound($rows_found);
             }
             if ($pdo->errorCode()) {
                 $output->setErrorCode($pdo->errorCode());

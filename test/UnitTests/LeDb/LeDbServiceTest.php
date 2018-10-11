@@ -48,22 +48,33 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
             $result1 = $db->execute($queries['truncate']);
             $result2 = $db->execute($queries['insert']);
             $result3 = $db->execute($queries['select']);
+
             $this->assertEquals($queries['truncate'], $result1->getSql());
+            $this->assertEquals(0, $result1->getRowsAffected());
+
             $this->assertEquals($queries['insert'], $result2->getSql());
             $this->assertEquals(1, $result2->getLastInsertId());
+            $this->assertEquals(1, $result2->getRowsAffected());
+
             $this->assertEquals($queries['select'], $result3->getSql());
             $this->assertEquals(1, $result3->getFirstValue());
+            $this->assertEquals(1, $result3->getRowCount());
         }
         foreach ($this->connectionsAndQueries2() as $dsn => $queries) {
             $db = LeDbService::init($dsn, DBCONFIGFILE2);
             $result1 = $db->execute($queries['truncate']);
             $result2 = $db->execute($queries['insert']);
             $result3 = $db->execute($queries['select']);
+
             $this->assertEquals($queries['truncate'], $result1->getSql());
+
             $this->assertEquals($queries['insert'], $result2->getSql());
             $this->assertEquals(1, $result2->getLastInsertId());
+            $this->assertEquals(1, $result2->getRowsAffected());
+
             $this->assertEquals($queries['select'], $result3->getSql());
             $this->assertEquals(1, $result3->getFirstValue());
+            $this->assertEquals(1, $result3->getRowCount());
         }
     }
 
@@ -73,32 +84,39 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
             if ('leroysbackside' == $dsn) {
                 $db = LeDbService::init($dsn, DBCONFIGFILE1);
                 $db->execute($queries['truncate']);
+
                 $result = $db->execute($queries['insert'], ['jane', 'doe']);
-                //echo __METHOD__ . ' $result: ' . print_r($result, true) . PHP_EOL;
                 $this->assertEquals($queries['insert'], $result->getSql());
                 $this->assertEquals(1, $result->getLastInsertId());
+                $this->assertEquals(1, $result->getRowsAffected());
+
                 $result2 = $db->execute($queries['select'], ['jane', 'doe']);
-                $this->assertEquals($queries['select'], $result2->getSql());
                 $rs = $result2->getFirstRow();
+                $dateAdded = new DateTime($rs['date_added']);
+                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals($queries['select'], $result2->getSql());
                 $this->assertEquals($result->getLastInsertId(), $rs['contact_id']);
                 $this->assertEquals('jane', $rs['first_name']);
                 $this->assertEquals('doe', $rs['last_name']);
-                $dateAdded = new DateTime($rs['date_added']);
                 $this->assertEquals((new DateTime())->format('Y-m-d'), $dateAdded->format('Y-m-d'));
             } else {
                 $db = LeDbService::init($dsn, DBCONFIGFILE2);
                 $db->execute($queries['truncate']);
+
                 $result = $db->execute($queries['insert'], ['1 Abby Road', 'London', 'England']);
                 $this->assertEquals($queries['insert'], $result->getSql());
                 $this->assertEquals(1, $result->getLastInsertId());
+                $this->assertEquals(1, $result->getRowsAffected());
+
                 $result2 = $db->execute($queries['select'], ['1 Abby Road', 'London', 'England']);
                 $this->assertEquals($queries['select'], $result2->getSql());
                 $rs = $result2->getFirstRow();
+                $dateAdded = new DateTime($rs['date_added']);
+                $this->assertEquals(1, $result2->getRowCount());
                 $this->assertEquals($result->getLastInsertId(), $rs['address_id']);
                 $this->assertEquals('1 Abby Road', $rs['address_1']);
                 $this->assertEquals('London', $rs['city']);
                 $this->assertEquals('England', $rs['state']);
-                $dateAdded = new DateTime($rs['date_added']);
                 $this->assertEquals((new DateTime())->format('Y-m-d'), $dateAdded->format('Y-m-d'));
             }
         }
@@ -110,42 +128,108 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
             if ('leroysbackside2' == $dsn) {
                 $db = LeDbService::init($dsn, DBCONFIGFILE1);
                 $db->execute($queries['truncate']);
+
                 $result = $db->execute($queries['insert'], ['last_name' => 'jane', 'first_name' => 'doe'], true);
                 $this->assertEquals($queries['insert'], $result->getSql());
                 $this->assertEquals(1, $result->getLastInsertId());
+                $this->assertEquals(1, $result->getRowsAffected());
+
                 $result2 = $db->execute($queries['select'], ['last_name' => 'jane', 'first_name' => 'doe'], true);
-                $this->assertEquals($queries['select'], $result2->getSql());
                 $rs = $result2->getFirstRow();
+                $dateAdded = new DateTime($rs['date_added']);
+                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals($queries['select'], $result2->getSql());
                 $this->assertEquals($result->getLastInsertId(), $rs['contact_id']);
                 $this->assertEquals('jane', $rs['last_name']);
                 $this->assertEquals('doe', $rs['first_name']);
-                $dateAdded = new DateTime($rs['date_added']);
                 $this->assertEquals((new DateTime())->format('Y-m-d'), $dateAdded->format('Y-m-d'));
             } else {
                 $db = LeDbService::init($dsn, DBCONFIGFILE2);
                 $db->execute($queries['truncate']);
-                $empty = $db->execute('SELECT * FROM address');
-                //echo __METHOD__ . ' $empty: ' . print_r($empty, true) . PHP_EOL;
+
                 $result = $db->execute(
                     $queries['insert'],
                     ['address_1' =>'1 Abby Road', 'city' => 'London', 'state' => 'England']
                 );
                 $this->assertEquals($queries['insert'], $result->getSql());
                 $this->assertEquals(1, $result->getLastInsertId());
+                $this->assertEquals(1, $result->getRowsAffected());
+
                 $result2 = $db->execute(
                     $queries['select'],
                     ['address_1' =>'1 Abby Road', 'city' => 'London', 'state' => 'England']
                 );
-                $this->assertEquals($queries['select'], $result2->getSql());
                 $rs = $result2->getFirstRow();
+                $dateAdded = new DateTime($rs['date_added']);
+                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals($queries['select'], $result2->getSql());
                 $this->assertEquals($result->getLastInsertId(), $rs['address_id']);
                 $this->assertEquals('1 Abby Road', $rs['address_1']);
                 $this->assertEquals('London', $rs['city']);
                 $this->assertEquals('England', $rs['state']);
-                $dateAdded = new DateTime($rs['date_added']);
                 $this->assertEquals((new DateTime())->format('Y-m-d'), $dateAdded->format('Y-m-d'));
             }
         }
+    }
+
+    public function testGetRowsCount()
+    {
+        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db->execute('TRUNCATE TABLE contact');
+
+        $sql = 'INSERT INTO contact (last_name, first_name) VALUES (\'jane\', \'doe\');';
+        $result = $db->execute($sql);
+        $this->assertEquals(1, $result->getRowsAffected());
+        $this->assertEquals(1, $result->getLastInsertId());
+        $this->assertEquals(0, $result->getRowCount());
+
+        $sql = 'SELECT * FROM contact;';
+        $result2 = $db->execute($sql);
+        $this->assertEquals(1, $result2->getRowCount());
+
+        $sql = 'INSERT INTO contact (last_name, first_name) VALUES (\'doe\', \'jane\');';
+        $result = $db->execute($sql);
+        $this->assertEquals(1, $result->getRowsAffected());
+        $this->assertEquals(2, $result->getLastInsertId());
+        $this->assertEquals(0, $result->getRowCount());
+
+        $sql = 'SELECT * FROM contact;';
+        $result2 = $db->execute($sql);
+        $this->assertEquals(2, $result2->getRowCount());
+    }
+
+    public function testRowsFound()
+    {
+        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db->execute('TRUNCATE TABLE contact');
+
+        $sql = 'INSERT INTO contact (last_name, first_name)
+                VALUES (\'jane\', \'doe\'),  (\'doe\', \'jane\'),  (\'doe\', \'jim\')
+                    ,  (\'jane\', \'calamity\'),  (\'doe\', \'joe\'),  (\'doe\', \'pogo\')
+                    ,  (\'janes\', \'poggota\'),  (\'doe\', \'Fred\'),  (\'doe\', \'Slim\');';
+        $db->execute($sql);
+
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS first_name, last_name FROM contact LIMIT 2';
+        $result = $db->execute($sql);
+        $this->assertEquals(9, $result->getRowsFound());
+        $this->assertEquals(2, $result->getRowCount());
+    }
+
+    public function testGetRowsAffected()
+    {
+        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db->execute('TRUNCATE TABLE contact');
+        $bindings = ['jane', 'doe'];
+        $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
+        $result = $db->execute($sql, $bindings);
+        $this->assertEquals(1, $result->getRowsAffected());
+        $sql_update = 'UPDATE contact SET last_name = ?, first_name = ? WHERE contact_id = ?';
+        $bindings[] = $result->getLastInsertId();
+        $result2 = $db->execute($sql_update, $bindings);
+        $this->assertEquals(1, $result2->getRowsAffected());
+        $sql_delete = 'DELETE FROM contact WHERE contact_id = ?';
+        $result3 = $db->execute($sql_delete, [$result->getLastInsertId()]);
+        $this->assertEquals(1, $result3->getRowsAffected());
     }
 
     private function connectionsAndQueries1()

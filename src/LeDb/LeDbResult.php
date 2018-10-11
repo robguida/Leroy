@@ -38,6 +38,11 @@ class LeDbResult implements LeDbResultInterface
     /** @var array */
     private $output;
 
+    /** @var integer */
+    private $rows_found;
+    /** @var string */
+    private $sql_type;
+
     /**
      * @param null|PDOStatement $pdoStatement
      */
@@ -127,9 +132,10 @@ class LeDbResult implements LeDbResultInterface
     }
 
     /**
+     * @Note Same as PDOStatement::rowCount(), the number of rows affected by INSERT, UPDATE, DELETE, but not SELECT
      * @return int
      */
-    public function getRowCount()
+    public function getRowsAffected()
     {
         $output = null;
         if ($this->pdoStatement instanceof PDOStatement) {
@@ -137,17 +143,31 @@ class LeDbResult implements LeDbResultInterface
         }
         return $output;
     }
+    /**
+     * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
+     * @param int $input
+     */
+    public function setRowsFound($input)
+    {
+        $this->rows_found = (int)$input;
+    }
 
     /**
-     * @return integer
+     * @Note gets Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
+     * @return int
      */
-    public function getTotalRecordsFound()
+    public function getRowsFound()
     {
-        $output = null;
-        if ($this->pdoStatement instanceof PDOStatement) {
-            $output = (int)$this->getPdoStatement()->query('SELECT FOUND_ROWS()')->fetchColumn();
-        }
-        return $output;
+        return $this->rows_found;
+    }
+
+    /**
+     * @Note gets the number of records in from the select statement. Do not use with SQL_CALC_FOUND_ROWS
+     * @return int
+     */
+    public function getRowCount()
+    {
+        return count($this->fetchAssoc());
     }
 
     /**
@@ -169,7 +189,8 @@ class LeDbResult implements LeDbResultInterface
     {
         if (is_null($this->output)) {
             $this->output = [];
-            if ($this->pdoStatement instanceof PDOStatement) {
+            /* The code can only fetch on a select */
+            if ($this->pdoStatement instanceof PDOStatement && 'slave' == $this->getSqlType()) {
                 $this->output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
             }
         }
@@ -207,5 +228,21 @@ class LeDbResult implements LeDbResultInterface
     {
         $output = $this->getPdoStatement()->queryString;
         return $output;
+    }
+
+    /**
+     * @param string $input
+     */
+    public function setSqlType($input)
+    {
+        $this->sql_type = $input;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSqlType()
+    {
+        return $this->sql_type;
     }
 }
