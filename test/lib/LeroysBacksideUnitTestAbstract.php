@@ -6,7 +6,7 @@
  * Time: 12:37 AM
  */
 
-namespace LeroysBacksideTest\lib;
+namespace LeroysBacksideTestLib;
 
 use PHPUnit\Framework\TestCase;
 

@@ -9,7 +9,7 @@
 namespace LeroysBacksideTest\LeDb;
 
 use DateTime;
-use LeroysBacksideTest\lib\LeroysBacksideUnitTestAbstract;
+use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
 use LeroysBackside\LeDb\LeDbService;
 
 class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
