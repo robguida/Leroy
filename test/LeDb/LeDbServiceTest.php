@@ -74,6 +74,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
                 $db = LeDbService::init($dsn, DBCONFIGFILE1);
                 $db->execute($queries['truncate']);
                 $result = $db->execute($queries['insert'], ['jane', 'doe']);
+                //echo __METHOD__ . ' $result: ' . print_r($result, true) . PHP_EOL;
                 $this->assertEquals($queries['insert'], $result->getSql());
                 $this->assertEquals(1, $result->getLastInsertId());
                 $result2 = $db->execute($queries['select'], ['jane', 'doe']);
@@ -84,7 +85,6 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
                 $this->assertEquals('doe', $rs['last_name']);
                 $dateAdded = new DateTime($rs['date_added']);
                 $this->assertEquals((new DateTime())->format('Y-m-d'), $dateAdded->format('Y-m-d'));
-
             } else {
                 $db = LeDbService::init($dsn, DBCONFIGFILE2);
                 $db->execute($queries['truncate']);
@@ -124,6 +124,8 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
             } else {
                 $db = LeDbService::init($dsn, DBCONFIGFILE2);
                 $db->execute($queries['truncate']);
+                $empty = $db->execute('SELECT * FROM address');
+                //echo __METHOD__ . ' $empty: ' . print_r($empty, true) . PHP_EOL;
                 $result = $db->execute(
                     $queries['insert'],
                     ['address_1' =>'1 Abby Road', 'city' => 'London', 'state' => 'England']

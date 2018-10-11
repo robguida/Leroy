@@ -21,28 +21,36 @@ class LeDbService
     private $pdo_cache;
     /** @var  string */
     private $domain_credentials;
+    /** @var array */
+    private $pdo_parameters;
 
     /**
      * LeDbService constructor.
      * @param string $data_source_name
      * @param string $db_config_file
+     * @param $pdo_parameters
      * @throws Exception
      */
-    private function __construct($data_source_name, $db_config_file)
+    private function __construct($data_source_name, $db_config_file, $pdo_parameters)
     {
         $this->statement_cache = [];
         $this->pdo_cache = [];
+        $this->pdo_parameters = $pdo_parameters;
         $this->domain_credentials = $this->getDomainCredentials($db_config_file, $data_source_name);
     }
 
     /**
      * @param string $data_source_name
      * @param string|null $db_config_file
+     * @param array $pdo_parameters
      * @return LeDbService
      * @throws Exception
      */
-    public static function init($data_source_name, $db_config_file = null)
-    {
+    public static function init(
+        $data_source_name,
+        $db_config_file = null,
+        array $pdo_parameters = [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
+    ) {
         /** @var array $LeDbServiceSingleton caches the LeDbService objects */
         static $LeDbServiceSingleton;
         /** @var array $LeDbConfigFileCache caches the config file, so it only has to be entered once */
@@ -74,7 +82,8 @@ class LeDbService
         if (!array_key_exists($data_source_name, $LeDbServiceSingleton)) {
             $LeDbServiceSingleton[$data_source_name] = new LeDbService(
                 $data_source_name,
-                $LeDbConfigFileCache[$conf_array_key]
+                $LeDbConfigFileCache[$conf_array_key],
+                $pdo_parameters
             );
         }
         return $LeDbServiceSingleton[$data_source_name];
@@ -159,16 +168,17 @@ class LeDbService
      */
     private function getStatement($sql, PDO $pdo, $prepare = false)
     {
-        $key = 'SQL' . md5($sql);
-        if (!array_key_exists($key, $this->statement_cache)) {
-            if ($prepare) {
-                $stmt = $pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-            } else {
-                $stmt = $pdo->query($sql);
+        $output = null;
+        if ($prepare) {
+            $key = 'SQL' . md5($sql);
+            if (!array_key_exists($key, $this->statement_cache)) {
+                $this->statement_cache[$key] = $pdo->prepare($sql, $this->pdo_parameters);
             }
-            $this->statement_cache[$key] = $stmt;
+            $output = $this->statement_cache[$key];
+        } else {
+            $output = $pdo->query($sql);
         }
-        return $this->statement_cache[$key];
+        return $output;
     }
 
     /**
