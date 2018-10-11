@@ -20,7 +20,7 @@
     "autoload": {
         "psr-4": {
             "LeroysBackside\\":"src/",
-            "LeroysBacksideTest\\":"test/Tests/",
+            "LeroysBacksideTest\\":"test/UnitTests/",
             "LeroysBacksideTestLib\\":"test/lib/"
         }
     }

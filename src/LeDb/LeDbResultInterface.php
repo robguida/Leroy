@@ -24,6 +24,11 @@ interface LeDbResultInterface
     public function setException($exception);
 
     /**
+     * @return bool
+     */
+    public function success();
+
+    /**
      * @param null|PDOStatement $pdoStatement
      */
     public function setPdoStatement(PDOStatement $pdoStatement);
