@@ -215,7 +215,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
         $this->assertEquals(2, $result->getRowCount());
     }
 
-    public function testGetRowsAffected()
+    public function testGetRowsAffectedWhenNoValueChanges()
     {
         $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
         $db->execute('TRUNCATE TABLE contact');
@@ -230,6 +230,19 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
         $sql_delete = 'DELETE FROM contact WHERE contact_id = ?';
         $result3 = $db->execute($sql_delete, [$result->getLastInsertId()]);
         $this->assertEquals(1, $result3->getRowsAffected());
+    }
+
+    public function testGetRowsAffectedWhenValuesChange()
+    {
+        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db->execute('TRUNCATE TABLE contact');
+        foreach ($this->getDataForContactNotAssociated() as $bindings) {
+            $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
+            $db->execute($sql, $bindings);
+        }
+        $sql = "UPDATE contact SET last_name = 'estare' WHERE first_name = 'jane';";
+        $result = $db->execute($sql);
+        $this->assertEquals(4, $result->getRowsAffected());
     }
 
     private function connectionsAndQueries1()
