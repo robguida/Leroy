@@ -21,7 +21,8 @@
         "psr-4": {
             "LeroysBackside\\":"src/",
             "LeroysBacksideTest\\":"test/UnitTests/",
-            "LeroysBacksideTestLib\\":"test/lib/"
+            "LeroysBacksideTestLib\\":"test/lib/",
+            "LeroysBacksideTestResource\\":"test/test_resources/"
         }
     }
 }
