@@ -8,6 +8,8 @@
 
 namespace LeroysBackside\LeDb;
 
+use InvalidArgumentException;
+
 abstract class LeModelAbstract
 {
     /** @var string|integer */
@@ -22,6 +24,85 @@ abstract class LeModelAbstract
     private $data = [];
     /** @var LeDbService */
     protected $db;
+    /** @var LeDbResultInterface */
+    protected $dbResult;
+
+
+    //<editor-fold desc="Getters/Setters">
+    /**
+     * @return int|string
+     */
+    protected function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $val
+     */
+    protected function setData($key, $val)
+    {
+        if (!array_key_exists($key, $this->schema)) {
+            throw new InvalidArgumentException("{$key} is not define in LeModelAbstract:schema");
+        }
+        // could perform validation here
+        $this->data[$key] = $val;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllData()
+    {
+        if ($this->dbResult instanceof LeDbResultInterface
+            && LeDbService::SQL_TYPE_READ == $this->dbResult->getSqlType()
+        ) {
+            $this->data = $this->dbResult->getOutput();
+        }
+        return $this->data;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    protected function getData($key)
+    {
+        if (!array_key_exists($key, $this->schema)) {
+            throw new InvalidArgumentException("{$key} is not define in LeModelAbstract::schema");
+        }
+        $output = null;
+        $data = $this->getAllData();
+        if (array_key_exists($key, $data)) {
+            $output = $data[$key];
+        }
+        return $output;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return $this->table_name;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPrimaryKey()
+    {
+        return $this->primary_key;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSchema()
+    {
+        return $this->schema;
+    }
 
     /**
      * LeModelAbstract constructor.
@@ -29,116 +110,142 @@ abstract class LeModelAbstract
      */
     protected function __construct(LeDbService $db)
     {
+        $this->setPrimaryKey();
+        $this->setSchema();
+        $this->setTableName();
         $this->db = $db;
     }
+
+    /**
+     * @return LeDbService
+     */
+    protected function getDb()
+    {
+        return $this->db;
+    }
+    //</editor-fold>
 
     abstract protected function setPrimaryKey();
     abstract protected function setSchema();
     abstract protected function setTableName();
 
+    //<editor-fold desc="Initializing Functions">
     /**
      * @param int|string $id
      * @param LeDbService $db
      * @return LeModelAbstract|null
      */
-    public static function loadFromId($id, LeDbService $db)
+    public static function initWithId($id, LeDbService $db)
+    {
+        /**
+         * @var LeModelAbstract $model
+         */
+        $class = get_called_class();
+        $model = new $class($db);
+        $model->loadFromId($id);
+        return $model;
+    }
+
+    /**
+     * @param array $input
+     * @param LeDbService $db
+     * @return LeModelAbstract|null
+     */
+    public static function initWithArray(array $input, LeDbService $db)
     {
         /**
          * @var LeModelAbstract $model
          * @var LeDbResultInterface $result
          */
-
         $class = get_called_class();
         $model = new $class($db);
-        $sql = "SELECT * FROM {$model->table_name} WHERE {$model->primary_key} = ?";
-        $result = $model->db->execute($sql, [$id]);
-        if ($result->success()) {
-            $model->loadData($result->fetchAssoc());
-            $output = $model;
+        $model->loadData($input);
+        return $model;
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Core DB Functions">
+    /**
+     * @return bool|int
+     */
+    public function save()
+    {
+        if (is_null($this->getId())) {
+            $output = $this->insert();
         } else {
-            $output = null;
+            $output = $this->update();
         }
         return $output;
     }
-//
-//    /**
-//     * @param array $input
-//     * @param LeDbService $db
-//     * @return SiteModel
-//     */
-//    public static function loadFromArray(array $input, LeDbService $db)
-//    {
-//        $output = new SiteModel($db);
-//        return $output;
-//    }
-//
-//    /**
-//     * @throws Exception
-//     */
-//    public function save()
-//    {
-//        if (is_null($this->getSiteId())) {
-//            $output = $this->insert();
-//        } else {
-//            $output = $this->update();
-//        }
-//        return $output;
-//    }
-//
-//    /**
-//     * @throws Exception
-//     */
-//    protected function insert()
-//    {
-//        $cols = [];
-//        $bindings = [];
-//
-//        if (!is_null($this->getSiteName())) {
-//            $cols[] = 'site_name = ?';
-//            $bindings[] = $this->getSiteName();
-//        } else {
-//            throw new Exception('Site name is required for this record.');
-//        }
-//
-//        $sql = 'INSERT INTO site (site_name) VALUES (?);';
-//        /** @var LeDbResultInterface $result */
-//        $result = $this->getDb()->execute($sql, $bindings);
-//        print_r($result);
-//        $this->setSiteId($result->getLastInsertId());
-//        return $this->getSiteId();
-//    }
-//
-//    /**
-//     * @return integer|boolean
-//     * @throws Exception
-//     */
-//    protected function update()
-//    {
-//        $output = false;
-//        $sets = [];
-//        $bindings = [];
-//        if (!is_null($this->getSiteName())) {
-//            $sets[] = 'site_name = ?';
-//            $bindings[] = $this->getSiteName();
-//        }
-//
-//        if (!empty($sets)) {
-//            $bindings[] = $this->getSiteId();
-//            $sql = 'UPDATE site SET ' . implode(', ', $sets) . ' WHERE site_id = ?';
-//            $result = $this->getDb()->execute($sql, $bindings);
-//            $output = $result->getRowsAffected();
-//        }
-//        return $output;
-//    }
-//
+
+    /**
+     * @return int|false
+     */
+    protected function update()
+    {
+        $cols = [];
+        foreach (array_keys($this->data) as $col) {
+            $cols[] = "`{$col}` = ?";
+        }
+        $bindings = array_values($this->data);
+        $bindings[] = $this->id;
+        $sql = "UPDATE `{$this->getTableName()}` SET " .
+            implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ?;";
+        $this->dbResult = $this->getDb()->execute($sql, $bindings);
+        if ($this->dbResult->success()) {
+            $output = $this->dbResult->getRowsAffected();
+        } else {
+            $output = false;
+        }
+        return $output;
+    }
+
+    /**
+     * @return int|false
+     */
+    protected function insert()
+    {
+        $cols = array_keys($this->data);
+        $needles = array_fill(0, count($cols), '?');
+        $bindings = array_values($this->data);
+        $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
+            "VALUES (" . implode(', ', $needles) . ");";
+        $this->dbResult = $this->getDb()->execute($sql, $bindings);
+        if ($this->dbResult->success()) {
+            $output = $this->dbResult->getLastInsertId();
+            $this->loadFromId($output, true);
+        } else {
+            $output = false;
+        }
+        return $output;
+    }
+
+    /**
+     * @param $id
+     * @param bool $use_prime
+     */
+    protected function loadFromId($id, $use_prime = false)
+    {
+        $sql = "SELECT * FROM {$this->table_name} WHERE {$this->primary_key} = ?";
+        $result = $this->db->execute($sql, [$id], false, $use_prime);
+        if ($result->success()) {
+            $this->loadData($result->getFirstRow());
+        }
+    }
+
     /**
      * @param array $input
      */
     protected function loadData(array $input)
     {
+        echo __METHOD__ . ' $input: ' . print_r($input, true) . PHP_EOL;
         foreach ($this->schema as $column => $attrs) {
             if (isset($input[$column])) {
                 $value = $input[$column];
+                if ($this->getPrimaryKey() == $column) {
+                    $this->id = $value;
+                }
                 if ('string' == $attrs['type']) {
                     $value = substr($value, 0, $attrs['length']);
                 }
@@ -147,5 +254,7 @@ abstract class LeModelAbstract
             }
             $this->data[$column] = $value;
         }
+        echo __METHOD__ . ' $this->data: ' . print_r($this->data, true) . PHP_EOL;
     }
+    //</editor-fold>
 }

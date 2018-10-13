@@ -120,7 +120,7 @@ interface LeDbResultInterface
     /**
      * @return array
      */
-    public function fetchAssoc();
+    public function getOutput();
 
     /**
      * @return string

@@ -8,12 +8,21 @@
 
 namespace LeroysBacksideTestLib;
 
+use LeroysBackside\LeDb\LeDbService;
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__FILE__, 3) . '/src/bootstrap.php';
 
 abstract class LeroysBacksideUnitTestAbstract extends TestCase
 {
+    protected $db;
+
+    protected function setUp()
+    {
+        $this->db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $this->db->execute('TRUNCATE TABLE address;');
+    }
+
     protected function getDataForContactNotAssociated()
     {
         return [

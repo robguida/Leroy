@@ -40,6 +40,7 @@ class LeDbResult implements LeDbResultInterface
 
     /** @var integer */
     private $rows_found;
+
     /** @var string */
     private $sql_type;
 
@@ -143,6 +144,7 @@ class LeDbResult implements LeDbResultInterface
         }
         return $output;
     }
+
     /**
      * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
      * @param int $input
@@ -167,7 +169,7 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getRowCount()
     {
-        return count($this->fetchAssoc());
+        return count($this->getOutput());
     }
 
     /**
@@ -175,23 +177,34 @@ class LeDbResult implements LeDbResultInterface
      */
     public function nextSet()
     {
-        $output = null;
-        if ($this->pdoStatement instanceof PDOStatement) {
-            $output = $this->getPdoStatement()->nextRowset();
+        if (is_null($this->output)) {
+            $this->output = [];
         }
-        return $output;
+        $key = 'LeDbResultRowSet_' . count($this->output);
+        if ($this->pdoStatement instanceof PDOStatement) {
+            $this->output[$key] = $this->getPdoStatement()->nextRowset();
+        }
+        return $this->output[$key];
     }
 
     /**
+     * @param null $col indicates using a column's value to create an associated array output
      * @return array
      */
-    public function fetchAssoc()
+    public function getOutput($col = null)
     {
         if (is_null($this->output)) {
-            $this->output = [];
+            $output = $this->output = [];
             /* The code can only fetch on a select */
-            if ($this->pdoStatement instanceof PDOStatement && 'slave' == $this->getSqlType()) {
-                $this->output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+            if ($this->pdoStatement instanceof PDOStatement && LeDbService::SQL_TYPE_READ == $this->getSqlType()) {
+                $output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+            }
+            if (!is_null($col) && !empty($output)) {
+                foreach ($output as $row) {
+                    $this->output[$row[$col]] = $row;
+                }
+            } else {
+                $this->output = $output;
             }
         }
         return $this->output;
@@ -214,7 +227,7 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getFirstRow()
     {
-        $output = $this->fetchAssoc();
+        $output = $this->getOutput();
         if (0 < count($output)) {
             $output = current($output);
         }

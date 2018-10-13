@@ -24,6 +24,12 @@ class LeDbService
     /** @var array */
     private $pdo_parameters;
 
+    const SERVER_TYPE_PRIME = 'nexus';
+    const SERVER_TYPE_REPLICA = 'replicant';
+    const SQL_TYPE_WRITE = 'write';
+    const SQL_TYPE_INSERT = 'insert';
+    const SQL_TYPE_READ = 'read';
+
     /**
      * LeDbService constructor.
      * @param string $data_source_name
@@ -103,15 +109,17 @@ class LeDbService
      * @param string $sql
      * @param array $bindings
      * @param bool $associate
+     * @param bool $use_prime
      * @return LeDbResultInterface
      */
-    public function execute($sql, array $bindings = [], $associate = false)
+    public function execute($sql, array $bindings = [], $associate = false, $use_prime = false)
     {
         /** @var LeDbResultInterface $output */
         $output = $this->getDbResult();
         try {
-            $sql_type = $this->evalSql($sql);
-            $pdo = $this->initPdo($sql_type);
+            $sql_type = $this->getSqlType($sql);
+            $server_type = $this->getServerType($use_prime, $sql_type);
+            $pdo = $this->initPdo($server_type);
             $stmt = $this->getStatement($sql, $pdo, !empty($bindings));
             if (!empty($bindings)) {
                 if ($associate) {
@@ -132,7 +140,7 @@ class LeDbService
             }
             $output->setSqlType($sql_type);
             $output->setPdoStatement($stmt);
-            if ('master' == $sql_type) {
+            if (self::SQL_TYPE_INSERT == $sql_type) {
                 $output->setLastInsertId($pdo->lastInsertId());
             }
             if (0 === strpos($sql, 'SELECT SQL_CALC_FOUND_ROWS')) {
@@ -208,7 +216,7 @@ class LeDbService
      */
     private function initPdo($type)
     {
-        if ('master' == $type) {
+        if (self::SERVER_TYPE_PRIME == $type) {
             $cred = $this->domain_credentials->master;
         } else {
             $slaves = (array)$this->domain_credentials->slave;
@@ -216,8 +224,7 @@ class LeDbService
             $cred = $slaves[$slave];
         }
         $conn_str = "mysql:host={$cred->host};dbname={$cred->dbName};port={$cred->port};";
-        //$key = 'CONN' . md5($conn_str);
-        $key = 'CONN_' . $conn_str;
+        $key = 'CONN' . md5($conn_str);
         if (!array_key_exists($key, $this->pdo_cache)) {
             $this->pdo_cache[$key] = new PDO(
                 $conn_str,
@@ -234,17 +241,29 @@ class LeDbService
     }
 
     /**
+     * @param boolean $use_prime
+     * @param string|null $sql_type
+     * @return string
+     */
+    private function getServerType($use_prime, $sql_type = null)
+    {
+        return ($use_prime || self::SQL_TYPE_WRITE == $sql_type) ? self::SERVER_TYPE_PRIME : self::SERVER_TYPE_REPLICA;
+    }
+
+    /**
      * @param string $sql
      * @return string
      */
-    private function evalSql($sql)
+    private function getSqlType($sql)
     {
         $parts = explode(' ', trim($sql));
-        $first_word = current($parts);
-        if (strtolower($first_word) === 'select') {
-            $output = 'slave';
+        $first_word = strtolower(current($parts));
+        if ($first_word === 'select') {
+            $output = self::SQL_TYPE_READ;
+        } elseif ($first_word === self::SQL_TYPE_INSERT) {
+            $output = self::SQL_TYPE_INSERT;
         } else {
-            $output = 'master';
+            $output = self::SQL_TYPE_WRITE;
         }
         return $output;
     }

@@ -2,6 +2,7 @@
 
 namespace LeroysBacksideTestResource;
 
+use DateTime;
 use LeroysBackside\LeDb\LeDbService;
 use LeroysBackside\LeDb\LeModelAbstract;
 
@@ -13,10 +14,65 @@ use LeroysBackside\LeDb\LeModelAbstract;
  */
 class LeModelTestObject extends LeModelAbstract
 {
+    public function setAddress1($input)
+    {
+        $this->setData('address_1', $input);
+    }
+
+    public function setCity($input)
+    {
+        $this->setData('city', $input);
+    }
+
+    public function setState($input)
+    {
+        $this->setData('state', $input);
+    }
+
+    public function setDateAdded($input)
+    {
+        $this->setData('date_added', $input);
+    }
+
+    /**
+     * @return int
+     */
+    public function getAddressId()
+    {
+        return (int)$this->getId();
+    }
+
+    public function getAddress1()
+    {
+        return $this->getData('address_1');
+    }
+
+    public function getCity()
+    {
+        return $this->getData('city');
+    }
+
+    public function getState()
+    {
+        return $this->getData('state');
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getDateAdded()
+    {
+        $output = null;
+        $date_added = parent::getData('date_added');
+        if (!empty($date_added)) {
+            $output = new DateTime($date_added);
+        }
+        return $output;
+    }
 
     protected function setPrimaryKey()
     {
-        $this->primary_key = 'address_1';
+        $this->primary_key = 'address_id';
     }
 
     protected function setSchema()
@@ -44,6 +100,7 @@ class LeModelTestObject extends LeModelAbstract
             ],
         ];
     }
+
     protected function setTableName()
     {
         $this->table_name = 'address';
@@ -56,5 +113,55 @@ class LeModelTestObject extends LeModelAbstract
     public function __construct(LeDbService $db)
     {
         parent::__construct($db);
+    }
+
+    /**
+     * @param int $id
+     * @param LeDbService $db
+     * @return LeModelTestObject|null
+     */
+    public static function initWithId($id, LeDbService $db)
+    {
+        return parent::initWithId($id, $db);
+    }
+
+    /**
+     * @param array $input
+     * @param LeDbService $db
+     * @return LeModelTestObject|null
+     */
+    public static function initWithArray(array $input, LeDbService $db)
+    {
+        return parent::initWithArray($input, $db);
+    }
+
+    public function getSchema()
+    {
+        return parent::getSchema();
+    }
+
+    public function getAllData()
+    {
+        return parent::getAllData();
+    }
+
+    public function getData($key)
+    {
+        return parent::getData($key);
+    }
+
+    public function getTableName()
+    {
+        return parent::getTableName();
+    }
+
+    public function getPrimaryKey()
+    {
+        return parent::getPrimaryKey();
+    }
+
+    public function getDb()
+    {
+        return parent::getDb();
     }
 }
