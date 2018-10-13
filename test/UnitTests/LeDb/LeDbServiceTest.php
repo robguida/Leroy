@@ -9,6 +9,7 @@
 namespace LeroysBacksideTest\LeDb;
 
 use DateTime;
+use Exception;
 use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
 use LeroysBackside\LeDb\LeDbService;
 
@@ -39,6 +40,24 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
         $this->assertInstanceOf('Exception', $result->getException());
         $this->assertEmpty($result->getErrorCode());
         $this->assertEmpty($result->getErrorInfo());
+    }
+
+    /**
+     * @throws Exception
+     *
+     */
+    public function testValueExceedsDataLength()
+    {
+        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db->execute('TRUNCATE TABLE address;');
+        $sql = 'INSERT INTO address (address_1, city, state)
+                VALUES
+                ("12345678901234567890123456789012345678901234567890",
+                "12345678901234567890123456789012345678901234567890",
+                "12345678901234567890123456789012345678901234567890");';
+        $result = $db->execute($sql);
+        $this->assertNotInstanceOf('PDOStatement', $result->getPdoStatement());
+        $this->assertInstanceOf('Exception', $result->getException());
     }
 
     public function testQueriesAndDifferentConfigFiles()
