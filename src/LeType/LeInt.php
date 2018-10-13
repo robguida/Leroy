@@ -8,14 +8,12 @@
 
 namespace LeroysBackside\LeType;
 
-use Exception;
-
-class LeInt extends LeNumber
+class LeInt extends LeNumber implements LeNumericInterface
 {
     /**
      * @return float|int
      */
-    public function getMin()
+    public static function getMin()
     {
         return -2147483648;
     }
@@ -23,17 +21,25 @@ class LeInt extends LeNumber
     /**
      * @return float|int
      */
-    public function getMax()
+    public static function getMax()
     {
         return 2147483647;
+    }
+    /**
+     * @param mixed $value
+     * @return LeNumericInterface|LeTypeInterface|LeNumber|LeInt
+     */
+    public static function set($value)
+    {
+        return parent::init($value, self::getMin(), self::getMax(), true, 0);
     }
 
     /**
      * @param mixed $value
-     * @return LeNumber
+     * @return false|LeNumber|LeNumericInterface|LeTypeInterface|LeInt
      */
-    public static function set($value)
+    public static function verify($value)
     {
-        $output = new LeInt($value);
+        return parent::validate($value, self::getMin(), self::getMax(), true, 0);
     }
 }

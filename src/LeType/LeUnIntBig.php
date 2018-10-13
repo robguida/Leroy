@@ -9,12 +9,12 @@
 namespace LeroysBackside\LeType;
 
 
-class LeUnIntBig extends LeNumber implements LeTypeInterface
+class LeUnIntBig extends LeNumber implements LeNumericInterface
 {
     /**
      * @return float|int
      */
-    public function getMin()
+    public static function getMin()
     {
         return 0;
     }
@@ -24,24 +24,24 @@ class LeUnIntBig extends LeNumber implements LeTypeInterface
      */
     public static function getMax()
     {
-        return pow(2, 64) - 1;
+        return 9223372036854775807;
     }
 
     /**
      * @param float|int $value
-     * @return LeNumber|LeTypeInterface|LeInt
+     * @return LeNumericInterface|LeTypeInterface|LeNumber|LeUnIntBig
      */
     public static function set($value)
     {
-        return parent::init($value, 0, self::getMin(), self::getMax());
+        return parent::init($value, self::getMin(), self::getMax(), false, 0);
     }
 
     /**
      * @param float|int $value
-     * @return bool|LeNumber
+     * @return false|LeNumber|LeNumericInterface|LeTypeInterface|LeUnIntBig
      */
     public static function verify($value)
     {
-        return parent::validate($value, 0, self::getMin(), self::getMax());
+        return parent::validate($value, self::getMin(), self::getMax(), false, 0);
     }
 }

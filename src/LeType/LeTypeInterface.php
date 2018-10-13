@@ -12,13 +12,23 @@ interface LeTypeInterface
 {
     /**
      * @return float|int
+     * @note MySql BigInt do not convert to PHP. MySql smallest value for a signed BigInt
+     *          is -1 * pow(2, 63), with ends up being an exponential value.
+     *          PHP's min value is -9223372036854775807
+     *          So, use MySql BigInt values with caution.
+     * @link http://php.net/manual/en/language.types.integer.php
      */
-    public function getMin();
+    public static function getMin();
 
     /**
      * @return float|int
+     * @note MySql BigInt do not convert to PHP. MySql largest value for a signed BigInt
+     *          is pow(2, 63), with ends up being an exponential value.
+     *          PHP's max value is 9223372036854775807
+     *          So, use MySql BigInt values with caution.
+     * @link http://php.net/manual/en/language.types.integer.php
      */
-    public function getMax();
+    public static function getMax();
 
     /**
      * @return float|int|boolean|string

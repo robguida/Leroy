@@ -9,48 +9,48 @@
 namespace LeroysBacksideTest\LeType;
 
 use Exception;
-use LeroysBackside\LeType\LeInt;
+use LeroysBackside\LeType\LeUnIntTiny;
 use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
 
-class LeIntTest extends LeroysBacksideUnitTestAbstract
+class LeUnIntTinyTest extends LeroysBacksideUnitTestAbstract
 {
-    public function testLeInt()
+    public function testLeUnIntTiny()
     {
         $values = ['string', 'test', 'leint', pow(2, 63)];
         for ($i = 0; $i < 10; $i++) {
-            $values[] = rand(LeInt::getMin(), LeInt::getMax());
+            $values[] = rand(LeUnIntTiny::getMin(), LeUnIntTiny::getMax());
         }
         $i = 0;
         foreach ($values as $value) {
             try {
-                $number = LeInt::set($value);
-                $this->assertInstanceOf('LeroysBackside\LeType\LeInt', $number);
+                $number = LeUnIntTiny::set($value);
+                $this->assertInstanceOf('LeroysBackside\LeType\LeUnIntTiny', $number);
                 $this->assertEquals($value, $number->get());
             } catch (Exception $e) {
                 if (2 >= $i) {
                     $this->assertEquals("{$value} is not numeric", $e->getMessage());
                 } else {
-                    $this->assertEquals("{$value} cannot be greater than " . LeInt::getMax(), $e->getMessage());
+                    $this->assertEquals("{$value} cannot be greater than " . LeUnIntTiny::getMax(), $e->getMessage());
                 }
             }
             $i++;
         }
     }
 
-    public function testLeIntValidate()
+    public function testLeUnIntTinyValidate()
     {
         $values = ['string', 'test', 'leint', pow(2, 63)];
         foreach ($values as $value) {
-            $number = LeInt::verify($value);
+            $number = LeUnIntTiny::verify($value);
             $this->assertFalse($number);
         }
         $values = [];
         for ($i = 0; $i < 10; $i++) {
-            $values[] = rand(LeInt::getMin(), LeInt::getMax());
+            $values[] = rand(LeUnIntTiny::getMin(), LeUnIntTiny::getMax());
         }
         foreach ($values as $value) {
-            $number = LeInt::verify($value);
-            $this->assertInstanceOf('LeroysBackside\LeType\LeInt', $number);
+            $number = LeUnIntTiny::verify($value);
+            $this->assertInstanceOf('LeroysBackside\LeType\LeUnIntTiny', $number);
         }
     }
 }

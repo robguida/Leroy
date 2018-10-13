@@ -11,6 +11,10 @@ namespace LeroysBackside\LeType;
 use Exception;
 use InvalidArgumentException;
 
+/**
+ * Class LeNumber
+ * @package LeroysBackside\LeType
+ */
 class LeNumber implements LeTypeInterface
 {
     /** @var integer|float */
@@ -21,6 +25,32 @@ class LeNumber implements LeTypeInterface
     private $precision;
 
     /**
+     * @return float|int
+     * @note MySql BigInt do not convert to PHP. MySql lowest value for a signed BigInt
+     *          is -1 * pow(2, 63), with ends up being an exponential value.
+     *          PHP's min value is -9223372036854775807
+     *          So, use MySql BigInt values with caution.
+     * @link http://php.net/manual/en/language.types.integer.php
+     */
+    public static function getMin()
+    {
+        return -9223372036854775807;
+    }
+
+    /**
+     * @return float|int
+     * @note MySql BigInt do not convert to PHP. MySql largest value for a signed BigInt
+     *          is pow(2, 63), with ends up being an exponential value.
+     *          PHP's max value is 9223372036854775807
+     *          So, use MySql BigInt values with caution.
+     * @link http://php.net/manual/en/language.types.integer.php
+     */
+    public static function getMax()
+    {
+        return 9223372036854775807;
+    }
+
+    /**
      * LeNumber constructor.
      * @param integer|float $value
      * @param LeUnIntSmall|null $min
@@ -29,7 +59,7 @@ class LeNumber implements LeTypeInterface
      * @param LeUnIntSmall|null $precision
      * @param bool $validate
      */
-    protected function __construct(
+    private function __construct(
         $value,
         $min = null,
         $max = null,
@@ -85,11 +115,18 @@ class LeNumber implements LeTypeInterface
      * @param LeUnIntSmall|null $max
      * @param bool|null $signed
      * @param LeUnIntSmall|null $precision
-     * @return LeNumber
+     * @return LeTypeInterface
      */
     public static function init($value, $min = null, $max = null, $signed = null, $precision = null)
     {
-        $output = new LeNumber($value, $min, $max, $signed, $precision);
+        $class = get_called_class();
+        if (is_null($min)) {
+            $min = self::getMin();
+        }
+        if (is_null($max)) {
+            $max = self::getMax();
+        }
+        $output = new $class($value, $min, $max, $signed, $precision);
         return $output;
     }
 
@@ -99,12 +136,19 @@ class LeNumber implements LeTypeInterface
      * @param LeUnIntSmall|null $max
      * @param bool|null $signed
      * @param LeUnIntSmall|null $precision
-     * @return bool|LeNumber
+     * @return bool|LeTypeInterface
      */
     public static function validate($value, $min = null, $max = null, $signed = null, $precision = null)
     {
         try {
-            $output = new LeNumber($value, $min, $max, $signed, $precision, true);
+            $class = get_called_class();
+            if (is_null($min)) {
+                $min = self::getMin();
+            }
+            if (is_null($max)) {
+                $max = self::getMax();
+            }
+            $output = new $class($value, $min, $max, $signed, $precision, true);
         } catch (Exception $e) {
             $output = false;
         }
@@ -142,21 +186,5 @@ class LeNumber implements LeTypeInterface
     protected function detectPrecision($value)
     {
         return (int)strlen(substr(strrchr($value, "."), 1));
-    }
-
-    /**
-     * @return float|int
-     */
-    public function getMin()
-    {
-        return -1 * pow(2, 63);
-    }
-
-    /**
-     * @return float|int
-     */
-    public function getMax()
-    {
-        return pow(2, 63) - 1;
     }
 }

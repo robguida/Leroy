@@ -17,7 +17,8 @@ class LeNumberTest extends LeroysBacksideUnitTestAbstract
 {
     public function testNumericType()
     {
-        $values = [2, 23.44, 44, -22, 'test', -34.33, 1000000000000000000222222222222222222222222222, 'string'];
+        $values = ['test', LeNumber::getMin(), LeNumber::getMax(), 'string'];
+        echo __METHOD__ . ' $values: ' . print_r($values, true) . PHP_EOL;
         foreach ($values as $value) {
             try {
                 $number = LeNumber::init($value);
