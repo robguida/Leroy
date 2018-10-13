@@ -239,7 +239,6 @@ abstract class LeModelAbstract
      */
     protected function loadData(array $input)
     {
-        echo __METHOD__ . ' $input: ' . print_r($input, true) . PHP_EOL;
         foreach ($this->schema as $column => $attrs) {
             if (isset($input[$column])) {
                 $value = $input[$column];
@@ -254,7 +253,6 @@ abstract class LeModelAbstract
             }
             $this->data[$column] = $value;
         }
-        echo __METHOD__ . ' $this->data: ' . print_r($this->data, true) . PHP_EOL;
     }
     //</editor-fold>
 }

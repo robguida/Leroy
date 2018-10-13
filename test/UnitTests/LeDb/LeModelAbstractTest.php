@@ -9,7 +9,6 @@
 namespace LeroysBacksideTest\LeDb;
 
 use Exception;
-use LeroysBackside\LeDb\LeDbService;
 use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
 use LeroysBacksideTestResource\LeModelTestObject;
 

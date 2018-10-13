@@ -96,7 +96,7 @@ class LeModelTestObject extends LeModelAbstract
             ],
             'date_added' => [
                 'type' => 'datetime',
-                'length' => 45
+                'length' => null
             ],
         ];
     }
