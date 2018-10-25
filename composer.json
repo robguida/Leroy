@@ -19,7 +19,6 @@
     },
     "autoload": {
         "psr-4": {
-            "Leroy\\":"src/",
             "LeroysBackside\\":"src/",
             "LeroysBacksideTest\\":"test/UnitTests/",
             "LeroysBacksideTestLib\\":"test/lib/",
