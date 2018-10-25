@@ -163,6 +163,17 @@ abstract class LeModelAbstract
         return $model;
     }
 
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return [
+            'error' => $this->dbResult->getErrorInfo(),
+            'code' => $this->dbResult->getErrorCode(),
+            'exception' => $this->dbResult->getException()->getMessage()
+        ];
+    }
     //</editor-fold>
 
     //<editor-fold desc="Core DB Functions">
