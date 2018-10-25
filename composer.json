@@ -1,6 +1,6 @@
 {
     "name": "robguida/leroy",
-    "description": "The back-end portion of the Leroy framework",
+    "description": "A common-sense framework for most PHP projects",
     "type": "package",
     "authors": [
         {
