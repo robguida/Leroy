@@ -6,14 +6,14 @@
  * Time: 8:28 PM
  */
 
-namespace LeroysBackside\LeType;
+namespace Leroy\LeType;
 
 use Exception;
 use InvalidArgumentException;
 
 /**
  * Class LeNumber
- * @package LeroysBackside\LeType
+ * @package Leroy\LeType
  */
 class LeNumber implements LeTypeInterface
 {

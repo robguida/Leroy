@@ -6,15 +6,15 @@
  * Time: 11:35 PM
  */
 
-namespace LeroysBackside\LeDb;
+namespace Leroy\LeDb;
 
 use Exception;
 use PDO;
 use PDOStatement;
 
 /**
- * Class LeDbResut
- * @package LeroysBackside\LeDb
+ * Class LeDbResult
+ * @package Leroy\LeDb
  *
  * This object is passed back with every query done in LeDbService
  */

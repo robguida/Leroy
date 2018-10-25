@@ -6,13 +6,13 @@
  * Time: 9:48 PM
  */
 
-namespace LeroysBacksideTest\LeType;
+namespace LeroyTest\LeType;
 
 use Exception;
-use LeroysBackside\LeType\LeIntMed;
-use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
+use Leroy\LeType\LeIntMed;
+use LeroyTestLib\LeroyUnitTestAbstract;
 
-class LeIntMedTest extends LeroysBacksideUnitTestAbstract
+class LeIntMedTest extends LeroyUnitTestAbstract
 {
     public function testLeIntMed()
     {
@@ -24,7 +24,7 @@ class LeIntMedTest extends LeroysBacksideUnitTestAbstract
         foreach ($values as $value) {
             try {
                 $number = LeIntMed::set($value);
-                $this->assertInstanceOf('LeroysBackside\LeType\LeIntMed', $number);
+                $this->assertInstanceOf('Leroy\LeType\LeIntMed', $number);
                 $this->assertEquals($value, $number->get());
             } catch (Exception $e) {
                 if (2 >= $i) {
@@ -50,7 +50,7 @@ class LeIntMedTest extends LeroysBacksideUnitTestAbstract
         }
         foreach ($values as $value) {
             $number = LeIntMed::verify($value);
-            $this->assertInstanceOf('LeroysBackside\LeType\LeIntMed', $number);
+            $this->assertInstanceOf('Leroy\LeType\LeIntMed', $number);
         }
     }
 }

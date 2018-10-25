@@ -6,13 +6,13 @@
  * Time: 9:01 PM
  */
 
-namespace LeroysBacksideTest\LetType;
+namespace LeroyTest\LetType;
 
 use Exception;
-use LeroysBackside\LeType\LeUnIntBig;
-use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
+use Leroy\LeType\LeUnIntBig;
+use LeroyTestLib\LeroyUnitTestAbstract;
 
-class LeUnIntBigTest extends LeroysBacksideUnitTestAbstract
+class LeUnIntBigTest extends LeroyUnitTestAbstract
 {
     public function testLeUnIntBig()
     {
@@ -23,7 +23,7 @@ class LeUnIntBigTest extends LeroysBacksideUnitTestAbstract
         foreach ($values as $value) {
             try {
                 $number = LeUnIntBig::set($value);
-                $this->assertInstanceOf('LeroysBackside\LeType\LeUnIntBig', $number);
+                $this->assertInstanceOf('Leroy\LeType\LeUnIntBig', $number);
                 $this->assertEquals($value, $number->get());
             } catch (Exception $e) {
                 $this->assertEquals("{$value} is not numeric", $e->getMessage());
@@ -44,7 +44,7 @@ class LeUnIntBigTest extends LeroysBacksideUnitTestAbstract
         }
         foreach ($values as $value) {
             $number = LeUnIntBig::verify($value);
-            $this->assertInstanceOf('LeroysBackside\LeType\LeUnIntBig', $number);
+            $this->assertInstanceOf('Leroy\LeType\LeUnIntBig', $number);
         }
     }
 }

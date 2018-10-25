@@ -6,7 +6,7 @@
  * Time: 11:13 PM
  */
 
-namespace LeroysBackside\LeDb;
+namespace Leroy\LeDb;
 
 use Exception;
 use PDOStatement;

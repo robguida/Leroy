@@ -7,3 +7,4 @@
  */
 ?>
 <h1>Test Sweet!</h1>
+<?php phpinfo(); ?>

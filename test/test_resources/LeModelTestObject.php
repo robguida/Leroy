@@ -1,10 +1,10 @@
 <?php
 
-namespace LeroysBacksideTestResource;
+namespace LeroyTestResource;
 
 use DateTime;
-use LeroysBackside\LeDb\LeDbService;
-use LeroysBackside\LeDb\LeModelAbstract;
+use Leroy\LeDb\LeDbService;
+use Leroy\LeMVCS\LeModelAbstract;
 
 /**
  * Created by PhpStorm.

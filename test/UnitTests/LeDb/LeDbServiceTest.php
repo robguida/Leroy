@@ -6,26 +6,26 @@
  * Time: 12:11 AM
  */
 
-namespace LeroysBacksideTest\LeDb;
+namespace LeroyTest\LeDb;
 
 use DateTime;
 use Exception;
-use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
-use LeroysBackside\LeDb\LeDbService;
+use LeroyTestLib\LeroyUnitTestAbstract;
+use Leroy\LeDb\LeDbService;
 
-class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
+class LeDbServiceTest extends LeroyUnitTestAbstract
 {
     public function testInstantiated()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
-        $this->assertInstanceOf('LeroysBackside\LeDb\LeDbService', $db);
-        $db2 = LeDbService::init('leroysbackside', DBCONFIGFILE2);
-        $this->assertInstanceOf('LeroysBackside\LeDb\LeDbService', $db2);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $this->assertInstanceOf('Leroy\LeDb\LeDbService', $db);
+        $db2 = LeDbService::init('leroy', DBCONFIGFILE2);
+        $this->assertInstanceOf('Leroy\LeDb\LeDbService', $db2);
     }
 
     public function testPdoStatement()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $result = $db->execute('SELECT * FROM contact;');
         $this->assertTrue($result->success());
         $this->assertInstanceOf('PDOStatement', $result->getPdoStatement());
@@ -33,7 +33,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
 
     public function testException()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $result = $db->execute('This is a bad query;');
         $this->assertFalse($result->success());
         $this->assertNotInstanceOf('PDOStatement', $result->getPdoStatement());
@@ -48,7 +48,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
      */
     public function testValueExceedsDataLength()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $db->execute('TRUNCATE TABLE address;');
         $sql = 'INSERT INTO address (address_1, city, state)
                 VALUES
@@ -100,7 +100,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
     public function testQueriesWithBindings()
     {
         foreach ($this->connectionsAndBoundQueries() as $dsn => $queries) {
-            if ('leroysbackside' == $dsn) {
+            if ('leroy' == $dsn) {
                 $db = LeDbService::init($dsn, DBCONFIGFILE1);
                 $db->execute($queries['truncate']);
 
@@ -144,7 +144,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
     public function testQueriesWithAssociatedBindings()
     {
         foreach ($this->connectionsAndAssociativelyBoundQueries() as $dsn => $queries) {
-            if ('leroysbackside2' == $dsn) {
+            if ('leroy2' == $dsn) {
                 $db = LeDbService::init($dsn, DBCONFIGFILE1);
                 $db->execute($queries['truncate']);
 
@@ -193,7 +193,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
 
     public function testGetRowsCount()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $db->execute('TRUNCATE TABLE contact');
 
         $sql = 'INSERT INTO contact (last_name, first_name) VALUES (\'jane\', \'doe\');';
@@ -219,7 +219,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
 
     public function testRowsFound()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $db->execute('TRUNCATE TABLE contact');
 
         $sql = 'INSERT INTO contact (last_name, first_name)
@@ -236,7 +236,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
 
     public function testGetRowsAffectedWhenNoValueChanges()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $db->execute('TRUNCATE TABLE contact');
         $bindings = ['jane', 'doe'];
         $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
@@ -253,7 +253,7 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
 
     public function testGetRowsAffectedWhenValuesChange()
     {
-        $db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
         $db->execute('TRUNCATE TABLE contact');
         foreach ($this->getDataForContactNotAssociated() as $bindings) {
             $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
@@ -267,12 +267,12 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
     private function connectionsAndQueries1()
     {
         return [
-            'leroysbackside' => [
+            'leroy' => [
                 'truncate' => 'TRUNCATE TABLE contact;',
                 'insert' => 'INSERT INTO contact (first_name, last_name) VALUES ("John", "Doe");',
                 'select' => 'SELECT COUNT(*) as cnt FROM contact;',
             ],
-            'leroysbackside2' => [
+            'leroy2' => [
                 'truncate' => 'TRUNCATE TABLE address;',
                 'insert' => 'INSERT INTO address (address_1, city, state) VALUES ("912 Feist Ave", "Pottstown", "PA");',
                 'select' => 'SELECT COUNT(*) as cnt FROM address;',
@@ -283,12 +283,12 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
     private function connectionsAndQueries2()
     {
         return [
-            'leroysbackside3' => [
+            'leroy3' => [
                 'truncate' => 'TRUNCATE TABLE contact;',
                 'insert' => 'INSERT INTO contact (first_name, last_name) VALUES ("John", "Doe");',
                 'select' => 'SELECT COUNT(*) as cnt FROM contact;',
             ],
-            'leroysbackside4' => [
+            'leroy4' => [
                 'truncate' => 'TRUNCATE TABLE address;',
                 'insert' => 'INSERT INTO address (address_1, city, state) VALUES ("912 Feist Ave", "Pottstown", "PA");',
                 'select' => 'SELECT COUNT(*) as cnt FROM address;',
@@ -299,12 +299,12 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
     private function connectionsAndBoundQueries()
     {
         return [
-            'leroysbackside' => [
+            'leroy' => [
                 'truncate' => 'TRUNCATE TABLE contact;',
                 'insert' => 'INSERT INTO contact (first_name, last_name) VALUES (?, ?);',
                 'select' => 'SELECT * FROM contact WHERE first_name = ? AND last_name = ?;',
             ],
-            'leroysbackside3' => [
+            'leroy3' => [
                 'truncate' => 'TRUNCATE TABLE address;',
                 'insert' => 'INSERT INTO address (address_1, city, state) VALUES (?, ?, ?);',
                 'select' => 'SELECT * FROM address WHERE address_1 = ? AND city = ? AND state = ?;',
@@ -315,14 +315,14 @@ class LeDbServiceTest extends LeroysBacksideUnitTestAbstract
     private function connectionsAndAssociativelyBoundQueries()
     {
         return [
-            'leroysbackside2' => [
+            'leroy2' => [
                 'truncate' => 'TRUNCATE TABLE contact;',
                 'insert' => 'INSERT INTO contact (last_name, first_name)
                                   VALUES (:last_name, :first_name);',
                 'select' => 'SELECT * FROM contact
                               WHERE first_name = :first_name AND last_name = :last_name;',
             ],
-            'leroysbackside4' => [
+            'leroy4' => [
                 'truncate' => 'TRUNCATE TABLE address;',
                 'insert' => 'INSERT INTO address (state, address_1, city)
                               VALUES (:state, :address_1, :city);',

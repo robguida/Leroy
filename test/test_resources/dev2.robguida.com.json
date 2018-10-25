@@ -1,10 +1,10 @@
 {
-  "leroysbackside3": {
+  "leroy3": {
     "master": {
       "host": "dbmaster3.development.com",
       "userName": "dev",
       "password": "123456",
-      "dbName": "leroysbackside",
+      "dbName": "leroy",
       "port": "3306"
     },
     "slave": {
@@ -12,24 +12,24 @@
         "host": "dbslave5.development.com",
         "userName": "dev",
         "password": "123456",
-        "dbName": "leroysbackside",
+        "dbName": "leroy",
         "port": "3306"
       },
       "1": {
         "host": "dbslave6.development.com",
         "userName": "dev",
         "password": "123456",
-        "dbName": "leroysbackside",
+        "dbName": "leroy",
         "port": "3306"
       }
     }
   },
-  "leroysbackside4": {
+  "leroy4": {
     "master": {
       "host": "dbmaster4.development.com",
       "userName": "dev",
       "password": "123456",
-      "dbName": "leroysbackside",
+      "dbName": "leroy",
       "port": "3306"
     },
     "slave": {
@@ -37,14 +37,14 @@
         "host": "dbslave7.development.com",
         "userName": "dev",
         "password": "123456",
-        "dbName": "leroysbackside",
+        "dbName": "leroy",
         "port": "3306"
       },
       "1": {
         "host": "dbslave8.development.com",
         "userName": "dev",
         "password": "123456",
-        "dbName": "leroysbackside",
+        "dbName": "leroy",
         "port": "3306"
       }
     }

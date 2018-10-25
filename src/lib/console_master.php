@@ -5,7 +5,7 @@
  * Date: 9/27/2018
  * Time: 12:20 AM
  *
- * This file should be included in every console file created in LeroysBackside, just after all
+ * This file should be included in every console file created in Leroy, just after all
  *      variables are defined.
  */
 

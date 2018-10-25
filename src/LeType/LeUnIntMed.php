@@ -6,7 +6,7 @@
  * Time: 12:34 AM
  */
 
-namespace LeroysBackside\LeType;
+namespace Leroy\LeType;
 
 
 class LeUnIntMed extends LeNumber implements LeNumericInterface

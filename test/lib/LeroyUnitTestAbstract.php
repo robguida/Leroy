@@ -6,20 +6,20 @@
  * Time: 12:37 AM
  */
 
-namespace LeroysBacksideTestLib;
+namespace LeroyTestLib;
 
-use LeroysBackside\LeDb\LeDbService;
+use Leroy\LeDb\LeDbService;
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__FILE__, 3) . '/src/bootstrap.php';
 
-abstract class LeroysBacksideUnitTestAbstract extends TestCase
+abstract class LeroyUnitTestAbstract extends TestCase
 {
     protected $db;
 
     protected function setUp()
     {
-        $this->db = LeDbService::init('leroysbackside', DBCONFIGFILE1);
+        $this->db = LeDbService::init('leroy', DBCONFIGFILE1);
         $this->db->execute('TRUNCATE TABLE address;');
     }
 

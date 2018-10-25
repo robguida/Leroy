@@ -6,13 +6,13 @@
  * Time: 4:05 PM
  */
 
-namespace LeroysBacksideTest\LeDb;
+namespace LeroyTest\LeDb;
 
 use Exception;
-use LeroysBacksideTestLib\LeroysBacksideUnitTestAbstract;
-use LeroysBacksideTestResource\LeModelTestObject;
+use LeroyTestLib\LeroyUnitTestAbstract;
+use LeroyTestResource\LeModelTestObject;
 
-class LeModelAbstractTest extends LeroysBacksideUnitTestAbstract
+class LeModelAbstractTest extends LeroyUnitTestAbstract
 {
     /**
      * @throws Exception
@@ -20,9 +20,9 @@ class LeModelAbstractTest extends LeroysBacksideUnitTestAbstract
     public function testInstantiate()
     {
         $model = new LeModelTestObject($this->db);
-        $this->assertInstanceOf('LeroysBacksideTestResource\LeModelTestObject', $model);
-        $this->assertInstanceOf('LeroysBackside\LeDb\LeModelAbstract', $model);
-        $this->assertInstanceOf('LeroysBackside\LeDb\LeDbService', $model->getDb());
+        $this->assertInstanceOf('LeroyTestResource\LeModelTestObject', $model);
+        $this->assertInstanceOf('Leroy\LeMVCS\LeModelAbstract', $model);
+        $this->assertInstanceOf('Leroy\LeDb\LeDbService', $model->getDb());
         $this->assertArrayHasKey('address_id', $model->getSchema());
         $this->assertEquals('address', $model->getTableName());
         $this->assertEquals('address_id', $model->getPrimaryKey());
@@ -58,7 +58,7 @@ class LeModelAbstractTest extends LeroysBacksideUnitTestAbstract
         $model = $this->insertRecord(true);
         $model2 = LeModelTestObject::initWithArray($model->getAllData(), $this->db);
         echo __METHOD__ . ' $model2: ' . print_r($model2->getAllData(), true) . PHP_EOL;
-        $this->assertInstanceOf('LeroysBackside\LeDb\LeModelAbstract', $model2);
+        $this->assertInstanceOf('Leroy\LeMVCS\LeModelAbstract', $model2);
         $this->assertEquals(1, $model2->getAddressId());
         $this->assertEquals('1 Phoenix St', $model2->getAddress1());
         $this->assertEquals('Devon', $model2->getCity());

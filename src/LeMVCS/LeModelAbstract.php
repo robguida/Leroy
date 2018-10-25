@@ -6,7 +6,7 @@
  * Time: 11:45 AM
  */
 
-namespace LeroysBackside\LeDb;
+namespace Leroy\LeMVCS;
 
 use InvalidArgumentException;
 

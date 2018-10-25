@@ -6,7 +6,7 @@
  * Time: 12:39 AM
  */
 
-namespace LeroysBackside\LeType;
+namespace Leroy\LeType;
 
 
 interface LeNumericInterface

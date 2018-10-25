@@ -6,7 +6,7 @@
  * Time: 12:34 AM
  */
 
-namespace LeroysBackside\LeType;
+namespace Leroy\LeType;
 
 class LeIntBig extends LeNumber implements LeNumericInterface
 {
