@@ -24,8 +24,8 @@ class LeDbService
     /** @var array */
     private $pdo_parameters;
 
-    const SERVER_TYPE_PRIME = 'nexus';
-    const SERVER_TYPE_REPLICA = 'replicant';
+    const SERVER_TYPE_PRIME = 'nexus';// master server
+    const SERVER_TYPE_REPLICA = 'replicant';// slave server
     const SQL_TYPE_WRITE = 'write';
     const SQL_TYPE_INSERT = 'insert';
     const SQL_TYPE_READ = 'read';
