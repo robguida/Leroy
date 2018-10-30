@@ -10,8 +10,8 @@ namespace LeroyTest\LeDb;
 
 use DateTime;
 use Exception;
-use LeroyTestLib\LeroyUnitTestAbstract;
 use Leroy\LeDb\LeDbService;
+use LeroyTestLib\LeroyUnitTestAbstract;
 
 class LeDbServiceTest extends LeroyUnitTestAbstract
 {
