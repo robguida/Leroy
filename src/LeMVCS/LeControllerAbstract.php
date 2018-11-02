@@ -8,8 +8,7 @@
 
 namespace Leroy\LeMVCS;
 
-use RobGuida\Leroy\Package\LeMVCS\ViewObjects\LeFormElement;
-use RobGuida\Leroy\Package\LeMVCS\ViewObjects\LeFormElements\ViewElement\ViewElementAbstract;
+use Leroy\LeMVCS\ViewObjects\LeFormElement;
 
 class LeControllerAbstract
 {
@@ -44,7 +43,7 @@ class LeControllerAbstract
         /** @var ViewElementAbstract $Elements This will be available in the view file */
         $elements = new LeFormElement();
         if (0 < count($params)) {
-             foreach ($params as $variable => $param) {
+            foreach ($params as $variable => $param) {
                 $$variable = $param; // create the new variable using the class name
             }
             unset($params);// no longer needed
