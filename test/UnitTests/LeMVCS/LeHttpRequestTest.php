@@ -58,6 +58,23 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
         $this->assertFalse($request->get('key_does_not_exist'));
     }
 
+    public function testNoneOfTheseIsQuiteLikeTheOther()
+    {
+        $array = ['just' => 'a', 'typical' => 'array'];
+        $requestPost = LeHttpRequest::loadPost($array);
+        $requestGet = LeHttpRequest::loadGet($array);
+        $requestCli = LeHttpRequest::loadArgv($array);
+        $this->assertNotEquals($requestPost, $requestGet);
+        $this->assertNotEquals($requestPost, $requestCli);
+        $this->assertNotEquals($requestGet, $requestCli);
+        $post_resource_num = spl_object_hash($requestPost);
+        $get_resource_num = spl_object_hash($requestGet);
+        $cli_resource_num = spl_object_hash($requestCli);
+        $this->assertNotEquals($post_resource_num, $get_resource_num);
+        $this->assertNotEquals($post_resource_num, $cli_resource_num);
+        $this->assertNotEquals($get_resource_num, $cli_resource_num);
+    }
+
     public function testAdd()
     {
         $request = LeHttpRequest::loadPost($this->_POST);
