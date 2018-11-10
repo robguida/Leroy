@@ -147,10 +147,13 @@ class LeDbService
                 $rows_found = $pdo->query('SELECT FOUND_ROWS();')->fetchColumn();
                 $output->setRowsFound($rows_found);
             }
-            if ($pdo->errorCode()) {
+            /* On successful transactions, errorCode() and errorInfo() will be populated with 0000.
+                We do not want to count that as an error, so we check for that and skip it if true. */
+            if (0 !== (int)$pdo->errorCode()) {
                 $output->setErrorCode($pdo->errorCode());
             }
-            if ($pdo->errorInfo()) {
+            $error_info = $pdo->errorInfo();
+            if (0 !== (int)current($error_info)) {
                 $output->setErrorInfo($pdo->errorInfo());
             }
         } catch (Exception $e) {

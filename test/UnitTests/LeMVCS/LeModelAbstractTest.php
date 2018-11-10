@@ -6,7 +6,7 @@
  * Time: 4:05 PM
  */
 
-namespace LeroyTest\LeDb;
+namespace LeroyTest\LeMVCS;
 
 use Exception;
 use LeroyTestLib\LeroyUnitTestAbstract;

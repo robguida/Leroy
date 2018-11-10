@@ -42,6 +42,14 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
         $this->assertEmpty($result->getErrorInfo());
     }
 
+    public function testError()
+    {
+        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $result = $db->execute('SELECT * FROM contact;');
+        $this->assertNull($result->getErrorCode());
+        $this->assertNull($result->getErrorInfo());
+    }
+
     /**
      * @throws Exception
      *
