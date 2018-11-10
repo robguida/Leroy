@@ -75,6 +75,36 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
         $this->assertNotEquals($get_resource_num, $cli_resource_num);
     }
 
+    public function testSingletonObjectCreation()
+    {
+        $array1 = ['just' => 'a', 'typical' => 'array'];
+        $array2 = ['just' => 'another', 'night' => 'in', 'the' => 'city'];
+        $requestPost1 = LeHttpRequest::loadPost($array1);
+        $requestPost2 = LeHttpRequest::loadPost($array2);
+        $requestGet1 = LeHttpRequest::loadGet($array1);
+        $requestGet2 = LeHttpRequest::loadGet($array2);
+        $requestCli1 = LeHttpRequest::loadArgv($array1);
+        $requestCli2 = LeHttpRequest::loadArgv($array2);
+        $this->assertEquals($requestPost1, $requestPost2);
+        $this->assertFalse($array2 == $requestPost2->get());
+        $this->assertTrue($array1 == $requestPost2->get());
+        $this->assertEquals($requestGet1, $requestGet2);
+        $this->assertFalse($array2 == $requestGet2->get());
+        $this->assertTrue($array1 == $requestGet2->get());
+        $this->assertEquals($requestCli1, $requestCli2);
+        $this->assertFalse($array2 == $requestCli2->get());
+        $this->assertTrue($array1 == $requestCli2->get());
+        $post1_resource_num = spl_object_hash($requestPost1);
+        $post2_resource_num = spl_object_hash($requestPost2);
+        $get1_resource_num = spl_object_hash($requestGet1);
+        $get2_resource_num = spl_object_hash($requestGet2);
+        $cli1_resource_num = spl_object_hash($requestCli1);
+        $cli2_resource_num = spl_object_hash($requestCli2);
+        $this->assertEquals($post1_resource_num, $post2_resource_num);
+        $this->assertEquals($get1_resource_num, $get2_resource_num);
+        $this->assertEquals($cli1_resource_num, $cli2_resource_num);
+    }
+
     public function testAdd()
     {
         $request = LeHttpRequest::loadPost($this->_POST);
