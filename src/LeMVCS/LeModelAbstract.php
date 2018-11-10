@@ -258,7 +258,7 @@ abstract class LeModelAbstract
                 if ($this->getPrimaryKey() == $column) {
                     $this->id = $value;
                 }
-                if (is_null($attrs['length']) && 'string' == $attrs['type']) {
+                if (!is_null($attrs['length']) && 'string' == $attrs['type']) {
                     $value = substr($value, 0, $attrs['length']);
                 }
             } else {
