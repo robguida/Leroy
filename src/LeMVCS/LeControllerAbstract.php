@@ -9,6 +9,7 @@
 namespace Leroy\LeMVCS;
 
 use Leroy\LeMVCS\ViewObjects\LeFormElement;
+use Leroy\LeMVCS\ViewObjects\LeFormElements\ViewElementAbstract;
 
 class LeControllerAbstract
 {

@@ -9,6 +9,8 @@
 namespace Leroy\LeMVCS;
 
 use InvalidArgumentException;
+use Leroy\LeDb\LeDbResultInterface;
+use Leroy\LeDb\LeDbService;
 
 abstract class LeModelAbstract
 {
