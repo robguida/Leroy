@@ -11,6 +11,7 @@ namespace LeroyTest\LeMVCS;
 use Exception;
 use LeroyTestLib\LeroyUnitTestAbstract;
 use LeroyTestResource\LeModelTestObject;
+use LeroyTestResource\LeModelWithCallBacksTestObject;
 
 class LeModelAbstractTest extends LeroyUnitTestAbstract
 {
@@ -64,6 +65,19 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
         $this->assertEquals('Devon', $model2->getCity());
         $this->assertEquals('PA', $model2->getState());
         $this->assertInstanceOf('DateTime', $model2->getDateAdded());
+    }
+
+    public function testCallBack()
+    {
+        $model = new LeModelWithCallBacksTestObject($this->db);
+        $model->setAddress1('1 Phoenix St');
+        $model->setCity('Devon');
+        $model->setState('PA');
+        $id = $model->save();
+        $this->assertEquals(1, $id);
+        $model2 = LeModelWithCallBacksTestObject::initWithId($model->getAddressId(), $this->db);
+
+
     }
 
     private function insertRecord($return_object = false)

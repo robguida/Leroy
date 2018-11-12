@@ -22,6 +22,8 @@ abstract class LeModelAbstract
     protected $table_name = '';
     /** @var array */
     protected $schema = [];
+    /** @var boolean */
+    private $schema_has_call_backs = false;
     /** @var array */
     private $data = [];
     /** @var LeDbService */
@@ -104,6 +106,16 @@ abstract class LeModelAbstract
     protected function getSchema()
     {
         return $this->schema;
+    }
+
+    protected function doesSchemaUseCallBacks()
+    {
+        return $this->schema_has_call_backs;
+    }
+
+    protected function schemaUsesCallBacks()
+    {
+        $this->schema_has_call_backs = true;
     }
 
     /**
@@ -201,7 +213,18 @@ abstract class LeModelAbstract
         foreach (array_keys($this->data) as $col) {
             $cols[] = "`{$col}` = ?";
         }
-        $bindings = array_values($this->data);
+        $bindings = [];
+        if ($this->doesSchemaUseCallBacks()) {
+            foreach ($this->data as $column => $value) {
+                $attrs = $this->schema[$column];
+                if (isset($attrs['call_back_get']) && $call_back = $attrs['call_back_get']) {
+                    $value = $this->$call_back($value);
+                }
+                $bindings[] = $value;
+            }
+        } else {
+            $bindings = array_values($this->data);
+        }
         $bindings[] = $this->id;
         $sql = "UPDATE `{$this->getTableName()}` SET " .
             implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ?;";
@@ -221,7 +244,18 @@ abstract class LeModelAbstract
     {
         $cols = array_keys($this->data);
         $needles = array_fill(0, count($cols), '?');
-        $bindings = array_values($this->data);
+        $bindings = [];
+        if ($this->doesSchemaUseCallBacks()) {
+            foreach ($this->data as $column => $value) {
+                $attrs = $this->schema[$column];
+                if (isset($attrs['call_back_get']) && $call_back = $attrs['call_back_get']) {
+                    $value = $this->$call_back($value);
+                }
+                $bindings[] = $value;
+            }
+        } else {
+            $bindings = array_values($this->data);
+        }
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
             "VALUES (" . implode(', ', $needles) . ");";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
@@ -264,7 +298,11 @@ abstract class LeModelAbstract
             } else {
                 $value = null;
             }
-            $this->data[$column] = $value;
+            if (isset($attrs['call_back_set']) && $call_back = $attrs['call_back_set']) {
+                $this->$call_back($value);
+            } else {
+                $this->data[$column] = $value;
+            }
         }
     }
     //</editor-fold>
