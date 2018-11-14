@@ -192,42 +192,47 @@ abstract class LeModelAbstract
 
     //<editor-fold desc="Core DB Functions">
     /**
+     * @param boolean $on_dupe_update
      * @return bool|int
      */
-    public function save()
+    public function save($on_dupe_update = false)
     {
         if (is_null($this->getId())) {
             $output = $this->insert();
         } else {
-            $output = $this->update();
+            $output = $this->update($on_dupe_update);
         }
         return $output;
     }
 
     /**
+     * @param boolean $on_dupe_update
      * @return int|false
      */
-    protected function update()
+    protected function update($on_dupe_update)
     {
+        /* create the columns and build the on_dupes array while we are at it. */
         $cols = [];
+        $on_dupes = [];
         foreach (array_keys($this->data) as $col) {
             $cols[] = "`{$col}` = ?";
+            $on_dupes[] = "`{$col}` = VALUES(`{$col}`)";
         }
-        $bindings = [];
-        if ($this->doesSchemaUseCallBacks()) {
-            foreach ($this->data as $column => $value) {
-                $attrs = $this->schema[$column];
-                if (isset($attrs['call_back_get']) && $call_back = $attrs['call_back_get']) {
-                    $value = $this->$call_back($value);
-                }
-                $bindings[] = $value;
-            }
-        } else {
-            $bindings = array_values($this->data);
+
+        /* if $on_dupe_update = false, then clear them out */
+        $on_dupe = '';
+        if ($on_dupe_update) {
+            $on_dupe = ' ON DUPLICATE KEY UPDATE ' . implode(', ', $on_dupes);
         }
+
+        /* populate the bindings */
+        $bindings = $this->populateBindings();
         $bindings[] = $this->id;
+
+         /* create and run the sql */
         $sql = "UPDATE `{$this->getTableName()}` SET " .
-            implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ?;";
+            implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ?" .
+            "{$on_dupe};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
         if ($this->dbResult->success()) {
             $output = $this->dbResult->getRowsAffected();
@@ -244,18 +249,7 @@ abstract class LeModelAbstract
     {
         $cols = array_keys($this->data);
         $needles = array_fill(0, count($cols), '?');
-        $bindings = [];
-        if ($this->doesSchemaUseCallBacks()) {
-            foreach ($this->data as $column => $value) {
-                $attrs = $this->schema[$column];
-                if (isset($attrs['call_back_get']) && $call_back = $attrs['call_back_get']) {
-                    $value = $this->$call_back($value);
-                }
-                $bindings[] = $value;
-            }
-        } else {
-            $bindings = array_values($this->data);
-        }
+        $bindings = $this->populateBindings();
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
             "VALUES (" . implode(', ', $needles) . ");";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
@@ -304,6 +298,26 @@ abstract class LeModelAbstract
                 $this->data[$column] = $value;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function populateBindings()
+    {
+        $bindings = [];
+        if ($this->doesSchemaUseCallBacks()) {
+            foreach ($this->data as $column => $value) {
+                $attrs = $this->schema[$column];
+                if (isset($attrs['call_back_get']) && $call_back = $attrs['call_back_get']) {
+                    $value = $this->$call_back($value);
+                }
+                $bindings[] = $value;
+            }
+        } else {
+            $bindings = array_values($this->data);
+        }
+        return $bindings;
     }
     //</editor-fold>
 }
