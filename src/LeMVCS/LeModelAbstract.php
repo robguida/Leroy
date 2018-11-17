@@ -292,7 +292,7 @@ abstract class LeModelAbstract
             } else {
                 $value = null;
             }
-            if (isset($attrs['call_back_set']) && $call_back = $attrs['call_back_set']) {
+            if (isset($attrs['callback_set']) && $call_back = $attrs['callback_set']) {
                 $this->$call_back($value);
             } else {
                 $this->data[$column] = $value;
@@ -309,7 +309,7 @@ abstract class LeModelAbstract
         if ($this->doesSchemaUseCallBacks()) {
             foreach ($this->data as $column => $value) {
                 $attrs = $this->schema[$column];
-                if (isset($attrs['call_back_get']) && $call_back = $attrs['call_back_get']) {
+                if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
                     $value = $this->$call_back($value);
                 }
                 $bindings[] = $value;

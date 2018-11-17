@@ -81,31 +81,31 @@ class LeModelWithCallBacksTestObject extends LeModelAbstract
             'address_id' => [
                 'type' => 'integer',
                 'length' => 10,
-                'call_back_set' => null,
+                'callback_set' => null,
             ],
             'address_1' => [
                 'type' => 'string',
                 'length' => 45,
-                'call_back_set' => 'setAddress1',
-                'call_back_get' => 'getAddress1',
+                'callback_set' => 'setAddress1',
+                'callback_get' => 'getAddress1',
             ],
             'city' => [
                 'type' => 'string',
                 'length' => 45,
-                'call_back_set' => 'setCity',
-                'call_back_get' => 'getCity',
+                'callback_set' => 'setCity',
+                'callback_get' => 'getCity',
             ],
             'state' => [
                 'type' => 'string',
                 'length' => 45,
-                'call_back_set' => 'setState',
-                'call_back_get' => 'getState',
+                'callback_set' => 'setState',
+                'callback_get' => 'getState',
             ],
             'date_added' => [
                 'type' => 'datetime',
                 'length' => null,
-                'call_back_set' => 'setDateAdded',
-                'call_back_get' => 'getDateAdded',
+                'callback_set' => 'setDateAdded',
+                'callback_get' => 'getDateAdded',
             ],
         ];
     }
