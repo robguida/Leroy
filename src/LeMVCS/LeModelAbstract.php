@@ -23,7 +23,7 @@ abstract class LeModelAbstract
     /** @var array */
     protected $schema = [];
     /** @var boolean */
-    private $schema_has_call_backs = false;
+    private $schema_has_callbacks = false;
     /** @var array */
     private $data = [];
     /** @var LeDbService */
@@ -110,12 +110,12 @@ abstract class LeModelAbstract
 
     protected function doesSchemaUseCallBacks()
     {
-        return $this->schema_has_call_backs;
+        return $this->schema_has_callbacks;
     }
 
     protected function schemaUsesCallBacks()
     {
-        $this->schema_has_call_backs = true;
+        $this->schema_has_callbacks = true;
     }
 
     /**
@@ -292,8 +292,8 @@ abstract class LeModelAbstract
             } else {
                 $value = null;
             }
-            if (isset($attrs['callback_set']) && $call_back = $attrs['callback_set']) {
-                $this->$call_back($value);
+            if (isset($attrs['callback_set']) && $callback_set = $attrs['callback_set']) {
+                $this->$callback_set($value);
             } else {
                 $this->data[$column] = $value;
             }
