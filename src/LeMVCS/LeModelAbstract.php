@@ -68,6 +68,14 @@ abstract class LeModelAbstract
     }
 
     /**
+     * @param LeDbService $db
+     */
+    public function setDb(LeDbService $db)
+    {
+        $this->db = $db;
+    }
+
+    /**
      * @param string $key
      * @return mixed
      */
@@ -120,9 +128,9 @@ abstract class LeModelAbstract
 
     /**
      * LeModelAbstract constructor.
-     * @param LeDbService $db
+     * @param LeDbService|null $db
      */
-    protected function __construct(LeDbService $db)
+    protected function __construct(LeDbService $db = null)
     {
         $this->setPrimaryKey();
         $this->setSchema();
@@ -146,10 +154,10 @@ abstract class LeModelAbstract
     //<editor-fold desc="Initializing Functions">
     /**
      * @param int|string $id
-     * @param LeDbService $db
+     * @param LeDbService|null $db
      * @return LeModelAbstract|null
      */
-    public static function initWithId($id, LeDbService $db)
+    public static function initWithId($id, LeDbService $db = null)
     {
         /**
          * @var LeModelAbstract $model
@@ -162,10 +170,10 @@ abstract class LeModelAbstract
 
     /**
      * @param array $input
-     * @param LeDbService $db
+     * @param LeDbService|null $db
      * @return LeModelAbstract|null
      */
-    public static function initWithArray(array $input, LeDbService $db)
+    public static function initWithArray(array $input, LeDbService $db = null)
     {
         /**
          * @var LeModelAbstract $model
