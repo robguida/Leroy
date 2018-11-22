@@ -35,6 +35,8 @@ class ModelMaker
     private $namespace;
     /** @var int */
     private $all_values_set;
+    /** @var string */
+    private $directory;
 
     private $questions;
 
@@ -144,8 +146,12 @@ class ModelMaker
     /**
      * ModelMaker constructor
      */
-    public function __construct()
+    public function __construct($dir)
     {
+        if ('/' != substr($dir, -1)) {
+            $dir .= '/';
+        }
+        $this->directory = $dir;
         $this->all_values_set = 0;
         $this->questions = [
             ['setDestinationPath', 'What is full path where model is saved?'],
@@ -169,6 +175,7 @@ class ModelMaker
     }
 
     /**
+     * @return bool|string
      * @throws Exception
      */
     public function create()
@@ -187,15 +194,15 @@ class ModelMaker
         $stmt = $pdo->query("Describe `{$this->db_name}`.`{$this->table_name}`;");
         if ($stmt instanceof PDOStatement) {
             $class_name = $this->getClassName();
-            $model_template = file_get_contents('resources/model/model_template.leroy');
+            $model_template = file_get_contents("{$this->directory}resources/model/model_template.leroy");
             $model_template = str_replace('$(author}', $this->author, $model_template);
             $model_template = str_replace('${date}', date('m/d/Y g:i A'), $model_template);
             $model_template = str_replace('${namespace}', $this->namespace, $model_template);
             $model_template = str_replace('${class_name}', $class_name, $model_template);
             $model_template = str_replace('${table_name}', $this->table_name, $model_template);
-            $getter_setter_template = file_get_contents('resources/model/model_getter_setter.leroy');
+            $getter_setter_template = file_get_contents("{$this->directory}resources/model/model_getter_setter.leroy");
             $getters_and_setters = '';
-            $schema_template = file_get_contents('resources/model/model_schema_column.leroy');
+            $schema_template = file_get_contents("{$this->directory}resources/model/model_schema_column.leroy");
             $schemas = '';
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $method_name = $this->removeUnderscores($row['Field']);
@@ -226,10 +233,14 @@ class ModelMaker
                 $time = time();
                 $file_name = "{$this->destination_path}{$class_name}_{$time}.php";
             }
-            file_put_contents($file_name, $model_template);
+            $output = file_put_contents($file_name, $model_template);
+            if ($output) {
+                $output = $file_name;
+            }
         } else {
             throw new Exception("There is no information for `{$this->db_name}`.`{$this->table_name}`");
         }
+        return $output;
     }
 
     /**
@@ -263,10 +274,19 @@ class ModelMaker
             }
         }
         switch ($mysql_type) {
+            case 'enum':
+                $length = 'null';
+                $signed = 'null';
+                // this intentionally falls through to the next case
             case 'char':
             case 'varchar':
-                $type = 'string';
+            case 'binary':
+                 $type = 'string';
                 break;
+            case 'bigint':
+            case 'medint':
+            case 'smallint':
+            case 'tinyint':
             case 'int':
                 $type = 'integer';
                 break;
@@ -281,7 +301,8 @@ class ModelMaker
             default:
                 throw new InvalidArgumentException("'{$mysql_type}' is not a recognized type");
         }
-        return [$type, $length, $signed];
+        $output = [$type, $length, $signed];
+        return $output;
     }
 
     /**

@@ -32,7 +32,7 @@ function help()
 }
 
 try {
-    $modelMaker = new ModelMaker();
+    $modelMaker = new ModelMaker(__DIR__);
     $handle = fopen("php://stdin", "r");
     while (!$modelMaker->areAllValesSet()) {
         list($setter, $question) = $modelMaker->getNextQuestion();
@@ -41,7 +41,9 @@ try {
         $modelMaker->$setter($value);
     }
     fclose($handle);
-    $modelMaker->create();
+    if ($file_name = $modelMaker->create()) {
+        echo "{$file_name} was created\n";
+    }
 } catch (Exception $e) {
     echo 'Exception: ' . $e->getMessage() . PHP_EOL;
 }
