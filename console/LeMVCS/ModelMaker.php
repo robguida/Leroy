@@ -195,18 +195,26 @@ class ModelMaker
         if ($stmt instanceof PDOStatement) {
             $class_name = $this->getClassName();
             $model_template = file_get_contents("{$this->directory}resources/model/model_template.leroy");
+            $getter_setter_template = file_get_contents("{$this->directory}resources/model/model_getter_setter.leroy");
+            $schema_template = file_get_contents("{$this->directory}resources/model/model_schema_column.leroy");
+
+            $getters_and_setters = '';
+            $schemas = '';
+            $uses = '';
+
             $model_template = str_replace('$(author}', $this->author, $model_template);
             $model_template = str_replace('${date}', date('m/d/Y g:i A'), $model_template);
             $model_template = str_replace('${namespace}', $this->namespace, $model_template);
             $model_template = str_replace('${class_name}', $class_name, $model_template);
             $model_template = str_replace('${table_name}', $this->table_name, $model_template);
-            $getter_setter_template = file_get_contents("{$this->directory}resources/model/model_getter_setter.leroy");
-            $getters_and_setters = '';
-            $schema_template = file_get_contents("{$this->directory}resources/model/model_schema_column.leroy");
-            $schemas = '';
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $method_name = $this->removeUnderscores($row['Field']);
                 list($type, $length, $signed) = $this->getType($row['Type']);
+
+                if (0 === strpos($type, 'DateTime')) {
+                    $uses .= 'use DateTime;' . PHP_EOL;
+                }
 
                 /* Set the Getters and Setters */
                 $getter_and_setter = str_replace('${method_name}', $method_name, $getter_setter_template);
@@ -228,6 +236,7 @@ class ModelMaker
             }
             $model_template = str_replace('${getters_setters}', $getters_and_setters, $model_template);
             $model_template = str_replace('${schema}', $schemas, $model_template);
+            $model_template = str_replace('${uses}', $uses, $model_template);
             $file_name = "{$this->destination_path}{$class_name}.php";
             if (file_exists($file_name)) {
                 $time = time();
@@ -281,6 +290,7 @@ class ModelMaker
             case 'char':
             case 'varchar':
             case 'binary':
+            case 'text':
                  $type = 'string';
                 break;
             case 'bigint':
