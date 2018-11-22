@@ -21,6 +21,7 @@
     "autoload": {
         "psr-4": {
             "Leroy\\":"src/",
+            "LeroyConsole\\":"console/",
             "LeroyTest\\":"test/UnitTests/",
             "LeroyTestLib\\":"test/lib/",
             "LeroyTestResource\\":"test/test_resources/"

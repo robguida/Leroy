@@ -1,0 +1,78 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: $(author} via Leroy's ModelMaker
+ * Date: ${date}
+ */
+
+namespace ${namespace};
+
+use Leroy\LeDb\LeDbService;
+use Leroy\LeMVCS\LeModelAbstract;
+
+/**
+ * Class ${class_name}
+ * @package ${namespace}
+ */
+class ${class_name} extends LeModelAbstract
+{
+    //<editor-fold desc="Getters/Setters Functions">
+    ${getters_setters}
+
+    /**
+     * @var LeDbService $db
+     */
+    public function setDb(LeDbService $db)
+    {
+        $this->db = $db;
+    }
+    //</editor-fold>
+
+    /**
+     * ${class_name} constructor.
+     * @param LeDbService|null $db
+     */
+    public function __construct(LeDbService $db = null)
+    {
+        parent::__construct($db);
+    }
+
+    /**
+     * @param int|string $id
+     * @param LeDbService $db
+     * @return ${class_name}|LeModelAbstract|null
+     */
+    public static function initWithId($id, LeDbService $db = null)
+    {
+        return parent::initWithId($id, $db);
+    }
+
+    /**
+     * @param array $input
+     * @param LeDbService $db
+     * @return ${class_name}|LeModelAbstract|null
+     */
+    public static function initWithArray(array $input, LeDbService $db = null)
+    {
+        return parent::initWithArray($input, $db);
+    }
+
+    //<editor-fold desc="${class_name} Config Functions">
+    protected function setPrimaryKey()
+    {
+        $this->primary_key = '${primary_key}';
+    }
+
+    protected function setSchema()
+    {
+        $this->schema = [
+            ${schema}
+        ];
+    }
+
+    protected function setTableName()
+    {
+        $this->table_name = '${table_name}';
+    }
+    //</editor-fold>
+}

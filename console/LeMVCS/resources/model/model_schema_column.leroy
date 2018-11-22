@@ -1,0 +1,7 @@
+'${column}' => [
+    'type' => '${type}',
+    'length' => ${length},
+    'signed' => ${signed},
+    'callback_get' => null,
+    'callback_set' => null,
+],
