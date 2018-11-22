@@ -237,7 +237,6 @@ class ModelMaker
      */
     public function areAllValesSet()
     {
-        echo __METHOD__ . ' $this->all_values_set: ' . print_r($this->all_values_set, true) . PHP_EOL;
         return count($this->questions) === $this->all_values_set;
     }
 
