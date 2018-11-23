@@ -41,9 +41,12 @@ class ModelMaker
     private $questions;
     /** @var resource */
     private $stdin_stream;
+    /** @var PDO */
+    private $pdo;
+    /** @var PDOStatement */
+    private $stmt;
 
     //<editor-fold desc="Getters/Setters">
-
     /**
      * @param string $destination_path
      * @return string
@@ -171,22 +174,22 @@ class ModelMaker
         $this->directory = $dir;
         $this->all_values_set = 0;
         $this->questions = [
-            ['setDestinationPath', 'What is full path to save the model?'],
-            ['setHost', 'What is the server name?'],
-            ['setPort', 'What is the port number (it is usually 3306)?'],
-            ['setDbName', 'What is the name of the database?'],
-            ['setUserName', 'What is the user name?'],
-            ['setPassword', 'What is the password?'],
-            ['setTableName', 'What is the name of the table?'],
-            ['setNamespace', 'What is the name space?'],
-            ['setAuthor', 'Who is the author of the model?'],
+            ['callback' => '', 'setter' => 'setDestinationPath', 'question' => 'What is full path to save the model?'],
+            ['callback' => '', 'setter' => 'setHost', 'question' => 'What is the server name?'],
+            ['callback' => '', 'setter' => 'setPort', 'question' => 'What is the port number (it is usually 3306)?'],
+            ['callback' => '', 'setter' => 'setDbName', 'question' => 'What is the name of the database?'],
+            ['callback' => '', 'setter' => 'setUserName', 'question' => 'What is the user name?'],
+            ['callback' => 'setPdo', 'setter' => 'setPassword', 'question' => 'What is the password?'],
+            ['callback' => 'setStmt', 'setter' => 'setTableName', 'question' => 'What is the name of the table?'],
+            ['callback' => '', 'setter' => 'setNamespace', 'question' => 'What is the name space?'],
+            ['callback' => '', 'setter' => 'setAuthor', 'question' => 'Who is the author of the model?'],
         ];
-        $this->handle = fopen("php://stdin", "r");
+        $this->stdin_stream = fopen("php://stdin", "r");
     }
 
     public function __destruct()
     {
-        fclose($this->handle);
+        fclose($this->stdin_stream);
     }
 
     /**
@@ -197,12 +200,17 @@ class ModelMaker
     {
         while (!$this->areAllValesSet()) {
             if (is_null($setter) || is_null($question)) {
-                list($setter, $question) = $this->getNextQuestion();
+                list($callback, $setter, $question) = $this->getNextQuestion();
             }
             echo "{$question}\t";
-            $value = fgets($this->handle);
+            $value = fgets($this->stdin_stream);
+            /* If the setter returns a question, that means there was an error,
+                and the error_question needs to be satisfied before moving forward. */
             if ($error_question = $this->$setter($value)) {
                 $this->gatherData($setter, $error_question);
+            }
+            if (!empty($callback) && $error_question = $this->$callback()) {
+               echo $error_question;
             }
             $setter = $question = null;
         }
@@ -213,7 +221,7 @@ class ModelMaker
      */
     public function getNextQuestion()
     {
-        return $this->questions[$this->all_values_set];
+        return array_values($this->questions[$this->all_values_set]);
     }
 
     /**
@@ -222,19 +230,7 @@ class ModelMaker
      */
     public function create()
     {
-        $db_conn = "mysql:host={$this->host};dbname={$this->db_name};port={$this->port};";
-        $pdo = new PDO(
-            $db_conn,
-            $this->user_name,
-            $this->password,
-            [
-                PDO::ATTR_PERSISTENT => true,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::MYSQL_ATTR_FOUND_ROWS => true
-            ]
-        );
-        $stmt = $pdo->query("Describe `{$this->db_name}`.`{$this->table_name}`;");
-        if ($stmt instanceof PDOStatement) {
+        if ($this->stmt instanceof PDOStatement) {
             $class_name = $this->getClassName();
             $model_template = file_get_contents("{$this->directory}resources/model/model_template.leroy");
             $getter_setter_template = file_get_contents("{$this->directory}resources/model/model_getter_setter.leroy");
@@ -250,7 +246,7 @@ class ModelMaker
             $model_template = str_replace('${class_name}', $class_name, $model_template);
             $model_template = str_replace('${table_name}', $this->table_name, $model_template);
 
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            while ($row = $this->stmt->fetch(PDO::FETCH_ASSOC)) {
                 $method_name = $this->removeUnderscores($row['Field']);
                 list($type, $length, $signed) = $this->getType($row['Type']);
                 $type_for_schema = $type;
@@ -285,6 +281,7 @@ class ModelMaker
                     $model_template = str_replace('${primary_key}', $row['Field'], $model_template);
                 }
             }
+
             $model_template = str_replace('${getters_setters}', $getters_and_setters, $model_template);
             $model_template = str_replace('${schema}', $schemas, $model_template);
             $model_template = str_replace('${uses}', $uses, $model_template);
@@ -312,10 +309,57 @@ class ModelMaker
     }
 
     /**
+     * @return string
+     */
+    protected function setPdo()
+    {
+        $output = '';
+        try {
+            $db_conn = "mysql:host={$this->host};dbname={$this->db_name};port={$this->port};";
+            $this->pdo = new PDO(
+                $db_conn,
+                $this->user_name,
+                $this->password,
+                [
+                    PDO::ATTR_PERSISTENT => true,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::MYSQL_ATTR_FOUND_ROWS => true
+                ]
+            );
+        } catch (Exception $e) {
+            $this->host = null;
+            $this->db_name = null;
+            $this->port = null;
+            $this->user_name = null;
+            $this->password = null;
+            $this->all_values_set -= 5;
+            $output = "PDO failed with \"{$e->getMessage()}\". Check your credentials. Press enter to continue\n";
+        }
+        return $output;
+    }
+
+    /**
+     * @return string
+     */
+    protected function setStmt()
+    {
+        $output = '';
+        try {
+            $this->stmt = $this->pdo->query("Describe `{$this->db_name}`.`{$this->table_name}`;");
+        } catch (Exception $e) {
+            $this->table_name = null;
+            $this->all_values_set--;
+            $output = "PDO:query() failed with \"{$e->getMessage()}\". Re-enter the table name, or create " .
+                "it if it does not exist. Press enter to continue.\n";
+        }
+        return $output;
+    }
+
+    /**
      * @param string $input
      * @return array [type, length, signed]
      */
-    private function getType($input)
+    protected function getType($input)
     {
         $length = 0;
         $signed = 'false';
@@ -370,7 +414,7 @@ class ModelMaker
     /**
      * @return string
      */
-    private function getClassName()
+    protected function getClassName()
     {
         return "{$this->removeUnderscores($this->table_name)}Model";
     }
@@ -379,7 +423,7 @@ class ModelMaker
      * @param string $input
      * @return string
      */
-    private function removeUnderscores($input)
+    protected function removeUnderscores($input)
     {
         $output = ucfirst($input);
         if (false !== strpos($output, '_')) {
