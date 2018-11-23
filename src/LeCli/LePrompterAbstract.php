@@ -60,11 +60,21 @@ abstract class LePrompterAbstract
     public function gatherData($setter = null, $question = null)
     {
         while (!$this->areAllValesSet()) {
+            $hide = false;
+            $callback = '';
             if (is_null($setter) || is_null($question)) {
-                list($callback, $setter, $question) = $this->getNextQuestion();
+                list($hide, $callback, $setter, $question) = $this->getNextQuestion();
+            }
+            if ($hide) {
+                system('stty -echo');
+                $question .= ' (Your entry will be hidden)';
             }
             echo "{$question}\t";
             $value = fgets($this->stdin_stream);
+            if ($hide) {
+                system('stty echo');
+                echo PHP_EOL;
+            }
             /* If the setter returns a question, that means there was an error,
                 and the error_question needs to be satisfied before moving forward. */
             if ($error_question = $this->$setter($value)) {
@@ -76,7 +86,7 @@ abstract class LePrompterAbstract
                 should reset the values that caused the error, and have the end-user start
                 from that point again. */
             if (!empty($callback) && $error_question = $this->$callback()) {
-                echo $error_question;
+                echo "$error_question\t";
             }
             $setter = $question = null;
         }
