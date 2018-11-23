@@ -145,6 +145,7 @@ class ModelMaker
 
     /**
      * ModelMaker constructor
+     * @param $dir
      */
     public function __construct($dir)
     {
@@ -155,12 +156,12 @@ class ModelMaker
         $this->all_values_set = 0;
         $this->questions = [
             ['setDestinationPath', 'What is full path where model is saved?'],
-            ['setHost', 'What is the server name the database is hosted?'],
-            ['setDbName', 'What is the name of the database?'],
+            ['setHost', 'What is the server name?'],
             ['setPort', 'What is the port number (it is usually 3306)?'],
-            ['setTableName', 'What is the name of the table?'],
+            ['setDbName', 'What is the name of the database?'],
             ['setUserName', 'What is the user name?'],
             ['setPassword', 'What is the password?'],
+            ['setTableName', 'What is the name of the table?'],
             ['setNamespace', 'What is the name space?'],
             ['setAuthor', 'Who is the author of the model?'],
         ];
@@ -211,9 +212,18 @@ class ModelMaker
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $method_name = $this->removeUnderscores($row['Field']);
                 list($type, $length, $signed) = $this->getType($row['Type']);
+                $type_for_schema = $type;
 
+                /* add a use when the type is DateTime */
                 if (0 === strpos($type, 'DateTime')) {
-                    $uses .= 'use DateTime;' . PHP_EOL;
+                    if (false === strpos($uses, 'DateTime')) {
+                        $uses .= 'use DateTime;' . PHP_EOL;
+                    }
+                    $type_for_schema = 'DateTime';
+                }
+                /* if length is an array, then make it a string for replacing the placeholder */
+                if (is_array($length)) {
+                    $length = '[' . implode(', ', $length) . ']';
                 }
 
                 /* Set the Getters and Setters */
@@ -224,9 +234,9 @@ class ModelMaker
 
                 /* Set the schema array */
                 $schema = str_replace('${column}', $row['Field'], $schema_template);
-                $schema = str_replace('${type}', $type, $schema);
-                $schema = str_replace('${length}', $length, $schema);
+                $schema = str_replace('${type}', $type_for_schema, $schema);
                 $schema = str_replace('${signed}', $signed, $schema);
+                $schema = str_replace('${length}', $length, $schema);
                 $schemas .= $schema;
 
                 /* Set the primary key */
@@ -267,7 +277,7 @@ class ModelMaker
     private function getType($input)
     {
         $length = 0;
-        $signed = null;
+        $signed = 'false';
         if (false !== strpos($input, '(')) {
             $input = str_replace(['(', ')'], ' ', $input);
         }
@@ -284,8 +294,8 @@ class ModelMaker
         }
         switch ($mysql_type) {
             case 'enum':
-                $length = 'null';
-                $signed = 'null';
+                $length = [$length];
+                $signed = 'false';
                 // this intentionally falls through to the next case
             case 'char':
             case 'varchar':
@@ -302,6 +312,7 @@ class ModelMaker
                 break;
             case 'decimal':
             case 'double':
+                $length = [$length];
                 $type = 'float';
                 break;
             case 'datetime':
