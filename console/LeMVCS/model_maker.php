@@ -33,16 +33,9 @@ function help()
 
 try {
     $modelMaker = new ModelMaker(__DIR__);
-    $handle = fopen("php://stdin", "r");
-    while (!$modelMaker->areAllValesSet()) {
-        list($setter, $question) = $modelMaker->getNextQuestion();
-        echo "{$question}\t";
-        $value = fgets($handle);
-        $modelMaker->$setter($value);
-    }
-    fclose($handle);
+    $modelMaker->gatherData();
     if ($file_name = $modelMaker->create()) {
-        echo "{$file_name} was created\n";
+        echo "The file \"{$file_name}\" is ready!\n";
     }
 } catch (Exception $e) {
     echo 'Exception: ' . $e->getMessage() . PHP_EOL;

@@ -37,21 +37,37 @@ class ModelMaker
     private $all_values_set;
     /** @var string */
     private $directory;
-
+    /** @var array */
     private $questions;
+    /** @var resource */
+    private $stdin_stream;
+
+    //<editor-fold desc="Getters/Setters">
 
     /**
      * @param string $destination_path
+     * @return string
      */
     public function setDestinationPath($destination_path)
     {
-        if (is_null($this->destination_path)) {
-            $this->all_values_set++;
+        $output = '';
+        $destination_path = trim($destination_path);
+        if (file_exists($destination_path)) {
+            if (is_null($this->destination_path)) {
+                $this->all_values_set++;
+            }
+            $this->destination_path = $destination_path;
+            if ('/' != substr($this->destination_path, -1)) {
+                $this->destination_path .= '/';
+            }
+        } elseif (mkdir($destination_path, 0777, true)) {
+            $this->setDestinationPath($destination_path);
+        } else {
+            $output = "This path, \"{$destination_path}\" does not exist, and the attempt to create it failed. " .
+                "ModelMaker must have write permissions to the directory. " .
+                "Re-enter the path where the model is to be saved.\t";
         }
-        $this->destination_path = trim($destination_path);
-        if ('/' != substr($this->destination_path, -1)) {
-            $this->destination_path .= '/';
-        }
+        return $output;
     }
 
     /**
@@ -141,7 +157,7 @@ class ModelMaker
         }
         $this->namespace = trim($author);
     }
-
+    //</editor-fold>
 
     /**
      * ModelMaker constructor
@@ -155,7 +171,7 @@ class ModelMaker
         $this->directory = $dir;
         $this->all_values_set = 0;
         $this->questions = [
-            ['setDestinationPath', 'What is full path where model is saved?'],
+            ['setDestinationPath', 'What is full path to save the model?'],
             ['setHost', 'What is the server name?'],
             ['setPort', 'What is the port number (it is usually 3306)?'],
             ['setDbName', 'What is the name of the database?'],
@@ -165,6 +181,31 @@ class ModelMaker
             ['setNamespace', 'What is the name space?'],
             ['setAuthor', 'Who is the author of the model?'],
         ];
+        $this->handle = fopen("php://stdin", "r");
+    }
+
+    public function __destruct()
+    {
+        fclose($this->handle);
+    }
+
+    /**
+     * @param string|null $setter
+     * @param string|null $question
+     */
+    public function gatherData($setter = null, $question = null)
+    {
+        while (!$this->areAllValesSet()) {
+            if (is_null($setter) || is_null($question)) {
+                list($setter, $question) = $this->getNextQuestion();
+            }
+            echo "{$question}\t";
+            $value = fgets($this->handle);
+            if ($error_question = $this->$setter($value)) {
+                $this->gatherData($setter, $error_question);
+            }
+            $setter = $question = null;
+        }
     }
 
     /**
