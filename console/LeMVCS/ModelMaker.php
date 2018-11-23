@@ -10,10 +10,11 @@ namespace LeroyConsole\LeMVCS;
 
 use Exception;
 use InvalidArgumentException;
+use Leroy\LeCli\LePrompterAbstract;
 use PDO;
 use PDOStatement;
 
-class ModelMaker
+class ModelMaker extends LePrompterAbstract
 {
     /** @var string */
     private $destination_path;
@@ -33,14 +34,8 @@ class ModelMaker
     private $author;
     /** @var string */
     private $namespace;
-    /** @var int */
-    private $all_values_set;
     /** @var string */
     private $directory;
-    /** @var array */
-    private $questions;
-    /** @var resource */
-    private $stdin_stream;
     /** @var PDO */
     private $pdo;
     /** @var PDOStatement */
@@ -57,7 +52,7 @@ class ModelMaker
         $destination_path = trim($destination_path);
         if (file_exists($destination_path)) {
             if (is_null($this->destination_path)) {
-                $this->all_values_set++;
+                $this->incrementStep();
             }
             $this->destination_path = $destination_path;
             if ('/' != substr($this->destination_path, -1)) {
@@ -79,7 +74,7 @@ class ModelMaker
     public function setHost($host)
     {
         if (is_null($this->host)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->host = trim($host);
     }
@@ -90,7 +85,7 @@ class ModelMaker
     public function setDbName($db_name)
     {
         if (is_null($this->db_name)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->db_name = trim($db_name);
     }
@@ -101,7 +96,7 @@ class ModelMaker
     public function setPort($port)
     {
         if (is_null($this->port)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->port = (int)trim($port);
     }
@@ -112,7 +107,7 @@ class ModelMaker
     public function setTableName($table_name)
     {
         if (is_null($this->table_name)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->table_name = trim($table_name);
     }
@@ -123,7 +118,7 @@ class ModelMaker
     public function setUserName($user_name)
     {
         if (is_null($this->user_name)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->user_name = trim($user_name);
     }
@@ -134,7 +129,7 @@ class ModelMaker
     public function setPassword($password)
     {
         if (is_null($this->password)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->password = trim($password);
     }
@@ -145,7 +140,7 @@ class ModelMaker
     public function setAuthor($author)
     {
         if (is_null($this->author)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->author = trim($author);
     }
@@ -156,72 +151,83 @@ class ModelMaker
     public function setNamespace($author)
     {
         if (is_null($this->namespace)) {
-            $this->all_values_set++;
+            $this->incrementStep();
         }
         $this->namespace = trim($author);
     }
     //</editor-fold>
 
     /**
-     * ModelMaker constructor
-     * @param $dir
+     * ModelMaker|LePrompter constructor.
+     * @param array $options
      */
-    public function __construct($dir)
+    public function __construct(array $options = null)
     {
-        if ('/' != substr($dir, -1)) {
-            $dir .= '/';
+        if (!isset($options['dir'])) {
+            $options['dir'] = __DIR__;
         }
-        $this->directory = $dir;
-        $this->all_values_set = 0;
-        $this->questions = [
-            ['callback' => '', 'setter' => 'setDestinationPath', 'question' => 'What is full path to save the model?'],
-            ['callback' => '', 'setter' => 'setHost', 'question' => 'What is the server name?'],
-            ['callback' => '', 'setter' => 'setPort', 'question' => 'What is the port number (it is usually 3306)?'],
-            ['callback' => '', 'setter' => 'setDbName', 'question' => 'What is the name of the database?'],
-            ['callback' => '', 'setter' => 'setUserName', 'question' => 'What is the user name?'],
-            ['callback' => 'setPdo', 'setter' => 'setPassword', 'question' => 'What is the password?'],
-            ['callback' => 'setStmt', 'setter' => 'setTableName', 'question' => 'What is the name of the table?'],
-            ['callback' => '', 'setter' => 'setNamespace', 'question' => 'What is the name space?'],
-            ['callback' => '', 'setter' => 'setAuthor', 'question' => 'Who is the author of the model?'],
+        if ('/' != substr($options['dir'], -1)) {
+            $options['dir'] .= '/';
+        }
+        $this->directory = $options['dir'];
+        unset($options['dir']);
+        $options['questions'] = [
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setDestinationPath',
+                'question' => 'What is full path to save the model?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setHost',
+                'question' => 'What is the server name?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setPort',
+                'question' => 'What is the port number (it is usually 3306)?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setDbName',
+                'question' => 'What is the name of the database?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setUserName',
+                'question' => 'What is the user name?'
+            ],
+            [
+                'hide_entry' => true,
+                'callback' => 'setPdo',
+                'setter' => 'setPassword',
+                'question' => 'What is the password?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => 'setStmt',
+                'setter' => 'setTableName',
+                'question' => 'What is the name of the table?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setNamespace',
+                'question' => 'What is the name space?'
+            ],
+            [
+                'hide_entry' => false,
+                'callback' => '',
+                'setter' => 'setAuthor',
+                'question' => 'Who is the author of the model?'
+            ],
         ];
-        $this->stdin_stream = fopen("php://stdin", "r");
-    }
-
-    public function __destruct()
-    {
-        fclose($this->stdin_stream);
-    }
-
-    /**
-     * @param string|null $setter
-     * @param string|null $question
-     */
-    public function gatherData($setter = null, $question = null)
-    {
-        while (!$this->areAllValesSet()) {
-            if (is_null($setter) || is_null($question)) {
-                list($callback, $setter, $question) = $this->getNextQuestion();
-            }
-            echo "{$question}\t";
-            $value = fgets($this->stdin_stream);
-            /* If the setter returns a question, that means there was an error,
-                and the error_question needs to be satisfied before moving forward. */
-            if ($error_question = $this->$setter($value)) {
-                $this->gatherData($setter, $error_question);
-            }
-            if (!empty($callback) && $error_question = $this->$callback()) {
-               echo $error_question;
-            }
-            $setter = $question = null;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getNextQuestion()
-    {
-        return array_values($this->questions[$this->all_values_set]);
+        parent::__construct($options);
     }
 
     /**
@@ -301,14 +307,6 @@ class ModelMaker
     }
 
     /**
-     * @return bool
-     */
-    public function areAllValesSet()
-    {
-        return count($this->questions) === $this->all_values_set;
-    }
-
-    /**
      * @return string
      */
     protected function setPdo()
@@ -332,7 +330,7 @@ class ModelMaker
             $this->port = null;
             $this->user_name = null;
             $this->password = null;
-            $this->all_values_set -= 5;
+            $this->decrementStep(5);
             $output = "PDO failed with \"{$e->getMessage()}\". Check your credentials. Press enter to continue\n";
         }
         return $output;
@@ -348,7 +346,7 @@ class ModelMaker
             $this->stmt = $this->pdo->query("Describe `{$this->db_name}`.`{$this->table_name}`;");
         } catch (Exception $e) {
             $this->table_name = null;
-            $this->all_values_set--;
+            $this->decrementStep();
             $output = "PDO:query() failed with \"{$e->getMessage()}\". Re-enter the table name, or create " .
                 "it if it does not exist. Press enter to continue.\n";
         }

@@ -32,7 +32,7 @@ function help()
 }
 
 try {
-    $modelMaker = new ModelMaker(__DIR__);
+    $modelMaker = new ModelMaker();
     $modelMaker->gatherData();
     if ($file_name = $modelMaker->create()) {
         echo "The file \"{$file_name}\" is ready!\n";
