@@ -12,6 +12,7 @@ use Exception;
 use InvalidArgumentException;
 use PDO;
 use PDOStatement;
+use stdClass;
 
 class LeDbService
 {
@@ -62,7 +63,8 @@ class LeDbService
         /** @var array $LeDbConfigFileCache caches the config file, so it only has to be entered once */
         static $LeDbConfigFileCache;
 
-        /* load the db con file, which will be required with the first init. Subsequent inits can be empty */
+        /* load the db con file, which will be required with the first init. Subsequent inits can be empty
+            as long as the db con data has the dsn. If it doesn't then things wont work out so well! */
         if (is_null($LeDbConfigFileCache)) {
             $LeDbConfigFileCache = [];
             if (is_null($data_source_name)) {
@@ -205,11 +207,15 @@ class LeDbService
      */
     private function getDomainCredentials($domain, $dsn)
     {
-        if (!file_exists($domain)) {
-            throw new Exception("'{$domain}' does not exist");
+        if (is_array($domain)) {
+            $stdClass = json_decode(json_encode($domain));
+        } elseif (is_string($domain) && !$stdClass = json_decode($domain)) {
+            if (!file_exists($domain)) {
+                throw new Exception("'{$domain}' does not exist");
+            }
+            $json_string = file_get_contents($domain);
+            $stdClass = json_decode($json_string);
         }
-        $json_string = file_get_contents($domain);
-        $stdClass = json_decode($json_string);
         return $stdClass->$dsn;
     }
 

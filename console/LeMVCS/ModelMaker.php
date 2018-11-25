@@ -379,7 +379,8 @@ class ModelMaker extends LePrompterAbstract
             case 'enum':
                 $length = [$length];
                 $signed = 'false';
-                // this intentionally falls through to the next case
+                $type = 'enum';
+                break;
             case 'char':
             case 'varchar':
             case 'binary':

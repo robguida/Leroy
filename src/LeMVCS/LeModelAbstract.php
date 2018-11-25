@@ -8,6 +8,7 @@
 
 namespace Leroy\LeMVCS;
 
+use Exception;
 use InvalidArgumentException;
 use Leroy\LeDb\LeDbResultInterface;
 use Leroy\LeDb\LeDbService;
@@ -285,6 +286,7 @@ abstract class LeModelAbstract
 
     /**
      * @param array $input
+     * @throws Exception
      */
     protected function loadData(array $input)
     {
@@ -294,8 +296,10 @@ abstract class LeModelAbstract
                 if ($this->getPrimaryKey() == $column) {
                     $this->id = $value;
                 }
-                if (!is_null($attrs['length']) && 'string' == $attrs['type']) {
+                if (!empty($attrs['length']) && 'string' == $attrs['type']) {
                     $value = substr($value, 0, $attrs['length']);
+                } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
+                    throw new Exception("'{$value}' is not a valid enum value for `{$column}`;");
                 }
             } else {
                 $value = null;
