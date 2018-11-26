@@ -173,6 +173,8 @@ abstract class LeModelAbstract
      * @param array $input
      * @param LeDbService|null $db
      * @return LeModelAbstract|null
+     *
+     * @throws Exception
      */
     public static function initWithArray(array $input, LeDbService $db = null)
     {
