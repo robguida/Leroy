@@ -21,6 +21,7 @@ abstract class LeroyUnitTestAbstract extends TestCase
     {
         $this->db = LeDbService::init('leroy', DBCONFIGFILE1);
         $this->db->execute('TRUNCATE TABLE address;');
+        $this->db->execute('TRUNCATE TABLE contact;');
     }
 
     protected function getDataForContactNotAssociated()

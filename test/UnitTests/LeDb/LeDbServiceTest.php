@@ -267,7 +267,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
             $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
             $db->execute($sql, $bindings);
         }
-        $sql = "UPDATE contact SET last_name = 'estare' WHERE first_name = 'jane';";
+        $sql = "UPDATE contact SET last_name = CONCAT('estare', contact_id) WHERE first_name = 'jane';";
         $result = $db->execute($sql);
         $this->assertEquals(4, $result->getRowsAffected());
     }

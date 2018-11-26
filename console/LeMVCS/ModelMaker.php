@@ -257,34 +257,34 @@ class ModelMaker extends LePrompterAbstract
                 list($type, $length, $signed) = $this->getType($row['Type']);
                 $type_for_schema = $type;
 
-                /* add a use when the type is DateTime */
-                if (0 === strpos($type, 'DateTime')) {
-                    if (false === strpos($uses, 'DateTime')) {
-                        $uses .= 'use DateTime;' . PHP_EOL;
-                    }
-                    $type_for_schema = 'DateTime';
-                }
-                /* if length is an array, then make it a string for replacing the placeholder */
-                if (is_array($length)) {
-                    $length = '[' . implode(', ', $length) . ']';
-                }
-
-                /* Set the Getters and Setters */
-                $getter_and_setter = str_replace('${method_name}', $method_name, $getter_setter_template);
-                $getter_and_setter = str_replace('${type}', $type, $getter_and_setter);
-                $getter_and_setter = str_replace('${column}', $row['Field'], $getter_and_setter);
-                $getters_and_setters .= $getter_and_setter;
-
-                /* Set the schema array */
-                $schema = str_replace('${column}', $row['Field'], $schema_template);
-                $schema = str_replace('${type}', $type_for_schema, $schema);
-                $schema = str_replace('${signed}', $signed, $schema);
-                $schema = str_replace('${length}', $length, $schema);
-                $schemas .= $schema;
-
                 /* Set the primary key */
                 if ('PRI' == $row['Key']) {
                     $model_template = str_replace('${primary_key}', $row['Field'], $model_template);
+                } else {
+                    /* add a use when the type is DateTime */
+                    if (0 === strpos($type, 'DateTime')) {
+                        if (false === strpos($uses, 'DateTime')) {
+                            $uses .= 'use DateTime;' . PHP_EOL;
+                        }
+                        $type_for_schema = 'DateTime';
+                    }
+                    /* if length is an array, then make it a string for replacing the placeholder */
+                    if (is_array($length)) {
+                        $length = '[' . implode(', ', $length) . ']';
+                    }
+
+                    /* Set the Getters and Setters */
+                    $getter_and_setter = str_replace('${method_name}', $method_name, $getter_setter_template);
+                    $getter_and_setter = str_replace('${type}', $type, $getter_and_setter);
+                    $getter_and_setter = str_replace('${column}', $row['Field'], $getter_and_setter);
+                    $getters_and_setters .= $getter_and_setter;
+
+                    /* Set the schema array */
+                    $schema = str_replace('${column}', $row['Field'], $schema_template);
+                    $schema = str_replace('${type}', $type_for_schema, $schema);
+                    $schema = str_replace('${signed}', $signed, $schema);
+                    $schema = str_replace('${length}', $length, $schema);
+                    $schemas .= $schema;
                 }
             }
 

@@ -29,14 +29,16 @@ class LeHttpRequest
     }
 
     //<editor-fold desc="Initializing functions">
+
     /**
      * @param array $input
+     * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadPost(array $input)
+    public static function loadPost(array $input, $force = false)
     {
         static $leHttpRequestPost;
-        if (is_null($leHttpRequestPost)) {
+        if ($force || is_null($leHttpRequestPost)) {
             $leHttpRequestPost = new LeHttpRequest($input);
         }
         return $leHttpRequestPost;
@@ -44,12 +46,13 @@ class LeHttpRequest
 
     /**
      * @param array $input
+     * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadGet(array $input)
+    public static function loadGet(array $input, $force = false)
     {
         static $leHttpRequestGet;
-        if (is_null($leHttpRequestGet)) {
+        if ($force || is_null($leHttpRequestGet)) {
             $leHttpRequestGet = new LeHttpRequest(null, $input);
         }
         return $leHttpRequestGet;
@@ -57,12 +60,13 @@ class LeHttpRequest
 
     /**
      * @param array $input
+     * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadArgv(array $input)
+    public static function loadArgv(array $input, $force = false)
     {
         static $leHttpRequestArgv;
-        if (is_null($leHttpRequestArgv)) {
+        if ($force || is_null($leHttpRequestArgv)) {
             $leHttpRequestArgv = new LeHttpRequest(null, null, $input);
         }
         return $leHttpRequestArgv;
