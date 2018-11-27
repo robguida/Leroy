@@ -34,28 +34,28 @@ class LeDbService
     /**
      * LeDbService constructor.
      * @param string $data_source_name
-     * @param string $db_config_file
+     * @param string|array|stdClass $db_configuration
      * @param $pdo_parameters
      * @throws Exception
      */
-    private function __construct($data_source_name, $db_config_file, $pdo_parameters)
+    private function __construct($data_source_name, $db_configuration, $pdo_parameters)
     {
         $this->statement_cache = [];
         $this->pdo_cache = [];
         $this->pdo_parameters = $pdo_parameters;
-        $this->domain_credentials = $this->getDomainCredentials($db_config_file, $data_source_name);
+        $this->domain_credentials = $this->getDomainCredentials($db_configuration, $data_source_name);
     }
 
     /**
      * @param string $data_source_name
-     * @param string|null $db_config_file
+     * @param string|null $db_configuration
      * @param array $pdo_parameters
      * @return LeDbService
      * @throws Exception
      */
     public static function init(
         $data_source_name,
-        $db_config_file = null,
+        $db_configuration = null,
         array $pdo_parameters = [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
     ) {
         /** @var array $LeDbServiceSingleton caches the LeDbService objects */
@@ -73,14 +73,14 @@ class LeDbService
         }
         /* We need a key, so if one a new file is passed in, we use that.
            If not, we use the first file used to init the object */
-        if (!is_null($db_config_file)) {
-            $conf_array_key = md5($db_config_file);
+        if (!empty($db_configuration)) {
+            $conf_array_key = md5(serialize($db_configuration));
         } else {
             $conf_array_key = current(array_keys($LeDbConfigFileCache));
         }
         /* Add the file to the cache */
         if (!array_key_exists($conf_array_key, $LeDbConfigFileCache)) {
-            $LeDbConfigFileCache[$conf_array_key] = $db_config_file;
+            $LeDbConfigFileCache[$conf_array_key] = $db_configuration;
         }
 
         /* Cache the LeDbService object. Every DSN will be a new LeDbService object. */
@@ -200,22 +200,33 @@ class LeDbService
     }
 
     /**
-     * @param string $domain
+     * @param string|array|stdClass $db_configuration
      * @param string $dsn
      * @return string
      * @throws Exception
      */
-    private function getDomainCredentials($domain, $dsn)
+    private function getDomainCredentials($db_configuration, $dsn)
     {
-        if (is_array($domain)) {
-            $stdClass = json_decode(json_encode($domain));
-        } elseif (is_string($domain) && !$stdClass = json_decode($domain)) {
-            if (!file_exists($domain)) {
-                throw new Exception("'{$domain}' does not exist");
+        $stdClass = null;
+        if (is_array($db_configuration)) {
+            $stdClass = json_decode(json_encode($db_configuration));
+        } elseif (is_string($db_configuration)) {
+            if (file_exists($db_configuration)) {
+                $json_string = file_get_contents($db_configuration);
+                $stdClass = json_decode($json_string);
+            } else {
+                $stdClass = json_decode($db_configuration);
             }
-            $json_string = file_get_contents($domain);
-            $stdClass = json_decode($json_string);
+        } elseif ($db_configuration instanceof stdClass) {
+            $stdClass = $db_configuration;
         }
+
+        if (! $stdClass instanceof stdClass) {
+            throw new Exception("Can't make heads or tails our of: " . print_r($db_configuration, true));
+        } elseif (!isset($stdClass->$dsn)) {
+            throw new Exception("The DSN '{$dsn}'' is not found in: " . print_r($db_configuration, true));
+        }
+
         return $stdClass->$dsn;
     }
 

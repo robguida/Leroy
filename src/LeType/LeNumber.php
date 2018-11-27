@@ -101,12 +101,10 @@ class LeNumber implements LeTypeInterface
             $this->precision = $precision;
             $this->value = round($value, $precision);
         } else {
-            $this->precision = filter_var($this->value, FILTER_VALIDATE_INT) ? 0 : self::detectPrecision($value);
+            $this->precision = filter_var($value, FILTER_VALIDATE_INT) ? 0 : self::detectPrecision($value);
             $this->value = $value;
         }
         $this->signed = !is_null($signed) ? $signed : (0 > $this->value);
-
-        $this->value = !is_null($precision) ? round($value, $precision) : $value;
     }
 
     /**

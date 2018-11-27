@@ -153,10 +153,12 @@ abstract class LeModelAbstract
     abstract protected function setTableName();
 
     //<editor-fold desc="Initializing Functions">
+
     /**
      * @param int|string $id
      * @param LeDbService|null $db
      * @return LeModelAbstract|null
+     * @throws Exception
      */
     public static function initWithId($id, LeDbService $db = null)
     {
@@ -205,6 +207,7 @@ abstract class LeModelAbstract
     /**
      * @param boolean $on_dupe_update
      * @return bool|int
+     * @throws Exception
      */
     public function save($on_dupe_update = false)
     {
@@ -255,6 +258,7 @@ abstract class LeModelAbstract
 
     /**
      * @return int|false
+     * @throws Exception
      */
     protected function insert()
     {
@@ -276,6 +280,7 @@ abstract class LeModelAbstract
     /**
      * @param $id
      * @param bool $use_prime
+     * @throws Exception
      */
     protected function loadFromId($id, $use_prime = false)
     {
@@ -289,15 +294,13 @@ abstract class LeModelAbstract
     /**
      * @param array $input
      * @throws Exception
+     * @todo loadData() and populateBindings() needs to use a common validation function that uses the types
      */
     protected function loadData(array $input)
     {
         foreach ($this->schema as $column => $attrs) {
             if (isset($input[$column])) {
                 $value = $input[$column];
-                if ($this->getPrimaryKey() == $column) {
-                    $this->id = $value;
-                }
                 if (!empty($attrs['length']) && 'string' == $attrs['type']) {
                     $value = substr($value, 0, $attrs['length']);
                 } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
@@ -319,6 +322,7 @@ abstract class LeModelAbstract
 
     /**
      * @return array
+     * @todo loadData() and populateBindings() needs to use a common validation function that uses the types
      */
     private function populateBindings()
     {

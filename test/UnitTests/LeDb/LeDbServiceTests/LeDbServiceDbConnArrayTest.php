@@ -6,18 +6,22 @@
  * Time: 12:11 AM
  */
 
-namespace LeroyTest\LeDb;
+namespace LeroyTest\LeDb\LeDbServiceTests;
 
 use DateTime;
 use Exception;
 use Leroy\LeDb\LeDbService;
 use LeroyTestLib\LeroyUnitTestAbstract;
 
-class LeDbServiceTest extends LeroyUnitTestAbstract
+/**
+ * Class LeDbServiceDbConnFileTest
+ * @package LeroyTest\LeDb\LeDbServiceTests
+ */
+class LeDbServiceDbConnArrayTest extends LeroyUnitTestAbstract
 {
     public function testInstantiated()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $this->assertInstanceOf('Leroy\LeDb\LeDbService', $db);
         $db2 = LeDbService::init('leroy', DBCONFIGFILE2);
         $this->assertInstanceOf('Leroy\LeDb\LeDbService', $db2);
@@ -25,7 +29,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testPdoStatement()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $result = $db->execute('SELECT * FROM contact;');
         $this->assertTrue($result->success());
         $this->assertInstanceOf('PDOStatement', $result->getPdoStatement());
@@ -33,7 +37,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testException()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $result = $db->execute('This is a bad query;');
         $this->assertFalse($result->success());
         $this->assertNotInstanceOf('PDOStatement', $result->getPdoStatement());
@@ -44,7 +48,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testError()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $result = $db->execute('SELECT * FROM contact;');
         $this->assertNull($result->getErrorCode());
         $this->assertNull($result->getErrorInfo());
@@ -56,7 +60,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
      */
     public function testValueExceedsDataLength()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $db->execute('TRUNCATE TABLE address;');
         $sql = 'INSERT INTO address (address_1, city, state)
                 VALUES
@@ -71,7 +75,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
     public function testQueriesAndDifferentConfigFiles()
     {
         foreach ($this->connectionsAndQueries1() as $dsn => $queries) {
-            $db = LeDbService::init($dsn, DBCONFIGFILE1);
+            $db = LeDbService::init($dsn, $this->getDbConnArray());
             $result1 = $db->execute($queries['truncate']);
             $result2 = $db->execute($queries['insert']);
             $result3 = $db->execute($queries['select']);
@@ -109,7 +113,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
     {
         foreach ($this->connectionsAndBoundQueries() as $dsn => $queries) {
             if ('leroy' == $dsn) {
-                $db = LeDbService::init($dsn, DBCONFIGFILE1);
+                $db = LeDbService::init($dsn, $this->getDbConnArray());
                 $db->execute($queries['truncate']);
 
                 $result = $db->execute($queries['insert'], ['jane', 'doe']);
@@ -153,7 +157,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
     {
         foreach ($this->connectionsAndAssociativelyBoundQueries() as $dsn => $queries) {
             if ('leroy2' == $dsn) {
-                $db = LeDbService::init($dsn, DBCONFIGFILE1);
+                $db = LeDbService::init($dsn, $this->getDbConnArray());
                 $db->execute($queries['truncate']);
 
                 $result = $db->execute($queries['insert'], ['last_name' => 'jane', 'first_name' => 'doe'], true);
@@ -201,7 +205,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testGetRowsCount()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $db->execute('TRUNCATE TABLE contact');
 
         $sql = 'INSERT INTO contact (last_name, first_name) VALUES (\'jane\', \'doe\');';
@@ -227,7 +231,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testRowsFound()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $db->execute('TRUNCATE TABLE contact');
 
         $sql = 'INSERT INTO contact (last_name, first_name)
@@ -244,7 +248,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testGetRowsAffectedWhenNoValueChanges()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $db->execute('TRUNCATE TABLE contact');
         $bindings = ['jane', 'doe'];
         $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
@@ -261,7 +265,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
 
     public function testGetRowsAffectedWhenValuesChange()
     {
-        $db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
         $db->execute('TRUNCATE TABLE contact');
         foreach ($this->getDataForContactNotAssociated() as $bindings) {
             $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
@@ -291,7 +295,7 @@ class LeDbServiceTest extends LeroyUnitTestAbstract
     private function connectionsAndQueries2()
     {
         return [
-            'leroy3' => [
+            'leroy2' => [
                 'truncate' => 'TRUNCATE TABLE contact;',
                 'insert' => 'INSERT INTO contact (first_name, last_name) VALUES ("John", "Doe");',
                 'select' => 'SELECT COUNT(*) as cnt FROM contact;',

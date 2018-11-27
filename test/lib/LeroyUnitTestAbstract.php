@@ -23,6 +23,63 @@ abstract class LeroyUnitTestAbstract extends TestCase
         $this->db->execute('TRUNCATE TABLE address;');
         $this->db->execute('TRUNCATE TABLE contact;');
     }
+    
+    protected function getDbConnArray()
+    {
+        return [
+            "leroy" => [
+                "master" => [
+                    "host" => "dbmaster.development.com",
+                    "userName" => "dev",
+                    "password" => "123456",
+                    "dbName" => "leroy",
+                    "port" => "3306"
+                ],
+                "slave" => [
+                    "0" => [
+                        "host" => "dbslave1.development.com",
+                        "userName" => "dev",
+                        "password" => "123456",
+                        "dbName" => "leroy",
+                        "port" => "3306"
+                    ],
+                    "1" => [
+                        "host" => "dbslave2.development.com",
+                        "userName" => "dev",
+                        "password" => "123456",
+                        "dbName" => "leroy",
+                        "port" => "3306"
+                    ]
+                ]
+            ],
+            "leroy2" => [
+                "master" => [
+                    "host" => "dbmaster2.development.com",
+                    "userName" => "dev",
+                    "password" => "123456",
+                    "dbName" => "leroy",
+                    "port" => "3306"
+                ],
+                "slave" => [
+                    "0" => [
+                        "host" => "dbslave3.development.com",
+                        "userName" => "dev",
+                        "password" => "123456",
+                        "dbName" => "leroy",
+                        "port" => "3306"
+                    ],
+                    "1" => [
+                        "host" => "dbslave4.development.com",
+                        "userName" => "dev",
+                        "password" => "123456",
+                        "dbName" => "leroy",
+                        "port" => "3306"
+                    ]
+                ]
+            ]
+        ];
+
+    }
 
     protected function getDataForContactNotAssociated()
     {
