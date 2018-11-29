@@ -17,7 +17,13 @@ class LeHttpRequest
     const METHOD_GET = 'get';
     const METHOD_CLI = 'cli';
 
-    private function __construct($post = null, $get = null, $argv = null)
+    /**
+     * LeHttpRequest constructor.
+     * @param array|null $post
+     * @param array|null $get
+     * @param array|null $argv
+     */
+    protected function __construct($post = null, $get = null, $argv = null)
     {
         if (!is_null($post)) {
             $this->data[self::METHOD_POST] = $post;
