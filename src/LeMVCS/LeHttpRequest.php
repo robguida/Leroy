@@ -32,44 +32,62 @@ class LeHttpRequest
 
     /**
      * @param array $input
+     * @param bool $clone
      * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadPost(array $input, $force = false)
+    public static function loadPost(array $input, $clone = false, $force = false)
     {
         static $leHttpRequestPost;
         if ($force || is_null($leHttpRequestPost)) {
             $leHttpRequestPost = new LeHttpRequest($input);
         }
-        return $leHttpRequestPost;
+        if (!$clone) {
+            $output = $leHttpRequestPost;
+        } else {
+            $output = clone $leHttpRequestPost;
+        }
+        return $output;
     }
 
     /**
      * @param array $input
+     * @param bool $clone
      * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadGet(array $input, $force = false)
+    public static function loadGet(array $input, $clone = false, $force = false)
     {
         static $leHttpRequestGet;
         if ($force || is_null($leHttpRequestGet)) {
             $leHttpRequestGet = new LeHttpRequest(null, $input);
         }
-        return $leHttpRequestGet;
+        if (!$clone) {
+            $output = $leHttpRequestGet;
+        } else {
+            $output = clone $leHttpRequestGet;
+        }
+        return $output;
     }
 
     /**
      * @param array $input
+     * @param bool $clone
      * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadArgv(array $input, $force = false)
+    public static function loadArgv(array $input, $clone = false, $force = false)
     {
         static $leHttpRequestArgv;
         if ($force || is_null($leHttpRequestArgv)) {
             $leHttpRequestArgv = new LeHttpRequest(null, null, $input);
         }
-        return $leHttpRequestArgv;
+        if (!$clone) {
+            $output = $leHttpRequestArgv;
+        } else {
+            $output = clone $leHttpRequestArgv;
+        }
+        return $output;
     }
     //</editor-fold>
 
