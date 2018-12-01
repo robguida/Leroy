@@ -24,7 +24,7 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
 
     public function testLoadPost()
     {
-        $request = LeHttpRequest::loadPost($this->_POST, false, true);
+        $request = LeHttpRequest::loadPost($this->_POST);
         $this->assertInstanceOf('Leroy\LeMVCS\LeHttpRequest', $request);
         $this->assertEquals(LeHttpRequest::METHOD_POST, $request->getMethod());
         $this->assertFalse(LeHttpRequest::METHOD_GET == $request->getMethod());
@@ -38,7 +38,7 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
 
     public function testLoadGet()
     {
-        $request = LeHttpRequest::loadGet($this->_GET, false, true);
+        $request = LeHttpRequest::loadGet($this->_GET);
         $this->assertInstanceOf('Leroy\LeMVCS\LeHttpRequest', $request);
         $this->assertEquals(LeHttpRequest::METHOD_GET, $request->getMethod());
         $this->assertFalse(LeHttpRequest::METHOD_POST == $request->getMethod());
@@ -51,7 +51,7 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
 
     public function testLoadCli()
     {
-        $request = LeHttpRequest::loadArgv($this->argv, false, true);
+        $request = LeHttpRequest::loadArgv($this->argv);
         $this->assertInstanceOf('Leroy\LeMVCS\LeHttpRequest', $request);
         $this->assertEquals(LeHttpRequest::METHOD_CLI, $request->getMethod());
         $this->assertFalse(LeHttpRequest::METHOD_GET == $request->getMethod());
@@ -66,9 +66,9 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
     public function testNoneOfTheseIsQuiteLikeTheOther()
     {
         $array = ['just' => 'a', 'typical' => 'array'];
-        $requestPost = LeHttpRequest::loadPost($array, false, true);
-        $requestGet = LeHttpRequest::loadGet($array, false, true);
-        $requestCli = LeHttpRequest::loadArgv($array, false, true);
+        $requestPost = LeHttpRequest::loadPost($array);
+        $requestGet = LeHttpRequest::loadGet($array);
+        $requestCli = LeHttpRequest::loadArgv($array);
         $this->assertNotEquals($requestPost, $requestGet);
         $this->assertNotEquals($requestPost, $requestCli);
         $this->assertNotEquals($requestGet, $requestCli);
@@ -80,49 +80,23 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
         $this->assertNotEquals($get_resource_num, $cli_resource_num);
     }
 
-    public function testSingletonObjectCreation()
-    {
-        $array1 = ['just' => 'a', 'typical' => 'array'];
-        $array2 = ['just' => 'another', 'night' => 'in', 'the' => 'city'];
-        $requestPost1 = LeHttpRequest::loadPost($array1, false, true);
-        $requestPost2 = LeHttpRequest::loadPost($array2);
-        $this->assertEquals($requestPost1, $requestPost2);
-        $this->assertEquals($array1, $requestPost1->get());
-        $this->assertEquals($array1, $requestPost2->get());
-        $this->assertEquals(spl_object_hash($requestPost1), spl_object_hash($requestPost2));
-
-        $requestGet1 = LeHttpRequest::loadGet($array1, false, true);
-        $requestGet2 = LeHttpRequest::loadGet($array2);
-        $this->assertEquals($requestGet1, $requestGet2);
-        $this->assertEquals($array1, $requestGet1->get());
-        $this->assertEquals($array1, $requestGet2->get());
-        $this->assertEquals(spl_object_hash($requestGet1), spl_object_hash($requestGet2));
-
-        $requestCli1 = LeHttpRequest::loadArgv($array1, false, true);
-        $requestCli2 = LeHttpRequest::loadArgv($array2);
-        $this->assertEquals($requestCli1, $requestCli2);
-        $this->assertFalse($array2 == $requestCli2->get());
-        $this->assertTrue($array1 == $requestCli2->get());
-        $this->assertEquals(spl_object_hash($requestCli1), spl_object_hash($requestCli2));
-    }
-
     public function testAdd()
     {
-        $request = LeHttpRequest::loadPost($this->_POST, false, true);
+        $request = LeHttpRequest::loadPost($this->_POST);
         $this->assertTrue($request->add('middle_name', 'Francis'));
         $this->assertEquals('Francis', $request->get('middle_name'));
     }
 
     public function testRemove()
     {
-        $request = LeHttpRequest::loadPost($this->_POST, false, true);
+        $request = LeHttpRequest::loadPost($this->_POST);
         $this->assertTrue($request->remove('first_name'));
         $this->assertFalse($request->remove('key_does_not_exist'));
     }
 
     public function testLoadArray()
     {
-        $request = LeHttpRequest::loadPost($this->_POST, false, true);
+        $request = LeHttpRequest::loadPost($this->_POST);
         $this->assertEquals('create', $request->get('action'));
         $this->assertFalse($request->get('id'));
         $request->loadArray($this->_GET);
@@ -130,9 +104,10 @@ class LeHttpRequestTest extends LeroyUnitTestAbstract
         $this->assertEquals('22', $request->get('id'));
     }
 
+
     public function testLoadArrayWillNotChangeMethod()
     {
-        $request = LeHttpRequest::loadPost($this->_POST, false, true);
+        $request = LeHttpRequest::loadPost($this->_POST);
         $this->assertEquals(LeHttpRequest::METHOD_POST, $request->getMethod());
         $request->loadArray($this->argv);
         $this->assertEquals(LeHttpRequest::METHOD_POST, $request->getMethod());

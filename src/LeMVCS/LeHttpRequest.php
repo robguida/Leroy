@@ -35,65 +35,31 @@ class LeHttpRequest
     }
 
     //<editor-fold desc="Initializing functions">
-
     /**
      * @param array $input
-     * @param bool $clone
-     * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadPost(array $input, $clone = false, $force = false)
+    public static function loadPost(array $input)
     {
-        static $leHttpRequestPost;
-        if ($force || is_null($leHttpRequestPost)) {
-            $leHttpRequestPost = new LeHttpRequest($input);
-        }
-        if (!$clone) {
-            $output = $leHttpRequestPost;
-        } else {
-            $output = clone $leHttpRequestPost;
-        }
-        return $output;
+        return new LeHttpRequest($input);
     }
 
     /**
      * @param array $input
-     * @param bool $clone
-     * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadGet(array $input, $clone = false, $force = false)
+    public static function loadGet(array $input)
     {
-        static $leHttpRequestGet;
-        if ($force || is_null($leHttpRequestGet)) {
-            $leHttpRequestGet = new LeHttpRequest(null, $input);
-        }
-        if (!$clone) {
-            $output = $leHttpRequestGet;
-        } else {
-            $output = clone $leHttpRequestGet;
-        }
-        return $output;
+        return new LeHttpRequest(null, $input);
     }
 
     /**
      * @param array $input
-     * @param bool $clone
-     * @param bool $force
      * @return LeHttpRequest
      */
-    public static function loadArgv(array $input, $clone = false, $force = false)
+    public static function loadArgv(array $input)
     {
-        static $leHttpRequestArgv;
-        if ($force || is_null($leHttpRequestArgv)) {
-            $leHttpRequestArgv = new LeHttpRequest(null, null, $input);
-        }
-        if (!$clone) {
-            $output = $leHttpRequestArgv;
-        } else {
-            $output = clone $leHttpRequestArgv;
-        }
-        return $output;
+        return new LeHttpRequest(null, null, $input);
     }
     //</editor-fold>
 
