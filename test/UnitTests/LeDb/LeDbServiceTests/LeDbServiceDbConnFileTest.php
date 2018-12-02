@@ -153,6 +153,9 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function testQueriesWithAssociatedBindings()
     {
         foreach ($this->connectionsAndAssociativelyBoundQueries() as $dsn => $queries) {

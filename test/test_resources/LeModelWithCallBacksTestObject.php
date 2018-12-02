@@ -128,7 +128,7 @@ class LeModelWithCallBacksTestObject extends LeModelAbstract
     /**
      * @param int $id
      * @param LeDbService $db
-     * @return LeModelTestObject|null|LeModelAbstract
+     * @return LeModelAbstractTestObject|null|LeModelAbstract
      */
     public static function initWithId($id, LeDbService $db)
     {
@@ -138,7 +138,7 @@ class LeModelWithCallBacksTestObject extends LeModelAbstract
     /**
      * @param array $input
      * @param LeDbService $db
-     * @return LeModelTestObject|null|LeModelAbstract
+     * @return LeModelAbstractTestObject|null|LeModelAbstract
      */
     public static function initWithArray(array $input, LeDbService $db)
     {

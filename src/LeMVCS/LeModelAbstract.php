@@ -316,7 +316,7 @@ abstract class LeModelAbstract
             }
         }
         if (array_key_exists($this->getPrimaryKey(), $input)) {
-            $this->id = $input[$this->getPrimaryKey()];
+            $this->data[$this->getPrimaryKey()] = $this->id = $input[$this->getPrimaryKey()];
         }
     }
 

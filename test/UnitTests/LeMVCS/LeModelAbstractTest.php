@@ -10,7 +10,7 @@ namespace LeroyTest\LeMVCS;
 
 use Exception;
 use LeroyTestLib\LeroyUnitTestAbstract;
-use LeroyTestResource\LeModelTestObject;
+use LeroyTestResource\LeModelAbstractTestObject;
 use LeroyTestResource\LeModelWithCallBacksTestObject;
 
 class LeModelAbstractTest extends LeroyUnitTestAbstract
@@ -20,11 +20,11 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
      */
     public function testInstantiate()
     {
-        $model = new LeModelTestObject($this->db);
-        $this->assertInstanceOf('LeroyTestResource\LeModelTestObject', $model);
+        $model = new LeModelAbstractTestObject($this->db);
+        $this->assertInstanceOf('LeroyTestResource\LeModelAbstractTestObject', $model);
         $this->assertInstanceOf('Leroy\LeMVCS\LeModelAbstract', $model);
         $this->assertInstanceOf('Leroy\LeDb\LeDbService', $model->getDb());
-        $this->assertArrayHasKey('address_id', $model->getSchema());
+        $this->assertArrayHasKey('address_1', $model->getSchema());
         $this->assertEquals('address', $model->getTableName());
         $this->assertEquals('address_id', $model->getPrimaryKey());
     }
@@ -43,7 +43,7 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
     public function testSaveUpdateAndInitWithId()
     {
         $id = $this->insertRecord();
-        $model = LeModelTestObject::initWithId($id, $this->db);
+        $model = LeModelAbstractTestObject::initWithId($id, $this->db);
         $model->setCity('Wayne');
         $result = $model->save();
         $this->assertEquals(1, $result);
@@ -57,8 +57,7 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
     public function testLoadFromArray()
     {
         $model = $this->insertRecord(true);
-        $model2 = LeModelTestObject::initWithArray($model->getAllData(), $this->db);
-        echo __METHOD__ . ' $model2: ' . print_r($model2->getAllData(), true) . PHP_EOL;
+        $model2 = LeModelAbstractTestObject::initWithArray($model->getAllData(), $this->db);
         $this->assertInstanceOf('Leroy\LeMVCS\LeModelAbstract', $model2);
         $this->assertEquals(1, $model2->getAddressId());
         $this->assertEquals('1 Phoenix St', $model2->getAddress1());
@@ -89,7 +88,7 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
 
     private function insertRecord($return_object = false)
     {
-        $model = new LeModelTestObject($this->db);
+        $model = new LeModelAbstractTestObject($this->db);
         $model->setAddress1('1 Phoenix St');
         $model->setCity('Devon');
         $model->setState('PA');

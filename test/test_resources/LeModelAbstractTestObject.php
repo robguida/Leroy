@@ -12,7 +12,7 @@ use Leroy\LeMVCS\LeModelAbstract;
  * Date: 10/11/2018
  * Time: 4:08 PM
  */
-class LeModelTestObject extends LeModelAbstract
+class LeModelAbstractTestObject extends LeModelAbstract
 {
     public function setAddress1($input)
     {
@@ -78,10 +78,6 @@ class LeModelTestObject extends LeModelAbstract
     protected function setSchema()
     {
         $this->schema = [
-            'address_id' => [
-                'type' => 'integer',
-                'length' => 10
-            ],
             'address_1' => [
                 'type' => 'string',
                 'length' => 45
@@ -110,7 +106,7 @@ class LeModelTestObject extends LeModelAbstract
      * LeModelTestObject constructor.
      * @param LeDbService $db
      */
-    public function __construct(LeDbService $db)
+    public function __construct(LeDbService $db = null)
     {
         parent::__construct($db);
     }
@@ -118,9 +114,10 @@ class LeModelTestObject extends LeModelAbstract
     /**
      * @param int $id
      * @param LeDbService $db
-     * @return LeModelTestObject|null
+     * @return LeModelAbstractTestObject|null
+     * @throws \Exception
      */
-    public static function initWithId($id, LeDbService $db)
+    public static function initWithId($id, LeDbService $db = null)
     {
         return parent::initWithId($id, $db);
     }
@@ -128,9 +125,10 @@ class LeModelTestObject extends LeModelAbstract
     /**
      * @param array $input
      * @param LeDbService $db
-     * @return LeModelTestObject|null
+     * @return LeModelAbstractTestObject|null
+     * @throws \Exception
      */
-    public static function initWithArray(array $input, LeDbService $db)
+    public static function initWithArray(array $input, LeDbService $db = null)
     {
         return parent::initWithArray($input, $db);
     }
