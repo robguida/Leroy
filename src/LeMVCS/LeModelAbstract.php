@@ -37,7 +37,7 @@ abstract class LeModelAbstract
     /**
      * @return int|string
      */
-    protected function getId()
+    public function getId()
     {
         return $this->id;
     }
