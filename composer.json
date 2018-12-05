@@ -1,6 +1,7 @@
 {
     "name": "robguida/leroy",
     "description": "A common-sense framework for most PHP projects",
+    "license": "MIT",
     "type": "package",
     "authors": [
         {
