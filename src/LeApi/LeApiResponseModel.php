@@ -199,9 +199,10 @@ class LeApiResponseModel
     }
 
     /**
+     * @param bool $return_response_object
      * @return string
      */
-    public function getHttpTransportResponse()
+    public function getHttpTransportResponse($return_response_object = true)
     {
         /* If the code is going to be sent HTTP, then the destination is unknown, and we do not want
             to reveal anything proprietary or give anyone a trace, which is like a map that can be used for hacking.
@@ -211,7 +212,12 @@ class LeApiResponseModel
         if ($this->isException()) {
             $this->exception = $this->exception->getMessage();
         }
-        return json_encode(['response' => serialize($this)]);
+        if ($return_response_object) {
+            $output = $this;
+        } else {
+            $output = $this->getResponse();
+        }
+        return json_encode(['response' => serialize($output)]);
     }
     //</editor-fold>
 }
