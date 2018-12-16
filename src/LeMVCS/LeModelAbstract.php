@@ -205,48 +205,45 @@ abstract class LeModelAbstract
 
     //<editor-fold desc="Core DB Functions">
     /**
-     * @param boolean $on_dupe_update
+     * @param boolean $on_duplicate_update
      * @return bool|int
      * @throws Exception
      */
-    public function save($on_dupe_update = false)
+    public function save($on_duplicate_update = false)
     {
+
+        /* Create the on duplicate key clause? */
+        $on_duplicate_key_clause = '';
+        if ($on_duplicate_update) {
+            $on_duplicate_key_clause = $this->getDuplicateKeyClause();
+        }
+
         if (is_null($this->getId())) {
-            $output = $this->insert();
+            $output = $this->insert($on_duplicate_key_clause);
         } else {
-            $output = $this->update($on_dupe_update);
+            $output = $this->update($on_duplicate_key_clause);
         }
         return $output;
     }
 
     /**
-     * @param boolean $on_dupe_update
+     * @param string $on_duplicate_key_clause
      * @return int|false
      */
-    protected function update($on_dupe_update)
+    protected function update($on_duplicate_key_clause)
     {
         /* create the columns and build the on_dupes array while we are at it. */
         $cols = [];
-        $on_dupes = [];
         foreach (array_keys($this->data) as $col) {
             $cols[] = "`{$col}` = ?";
-            $on_dupes[] = "`{$col}` = VALUES(`{$col}`)";
         }
-
-        /* if $on_dupe_update = false, then clear them out */
-        $on_dupe = '';
-        if ($on_dupe_update) {
-            $on_dupe = ' ON DUPLICATE KEY UPDATE ' . implode(', ', $on_dupes);
-        }
-
         /* populate the bindings */
         $bindings = $this->populateBindings();
         $bindings[] = $this->id;
-
          /* create and run the sql */
         $sql = "UPDATE `{$this->getTableName()}` SET " .
             implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ?" .
-            "{$on_dupe};";
+            "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
         if ($this->dbResult->success()) {
             $output = $this->dbResult->getRowsAffected();
@@ -257,16 +254,18 @@ abstract class LeModelAbstract
     }
 
     /**
+     * @param string $on_duplicate_key_clause
      * @return int|false
      * @throws Exception
      */
-    protected function insert()
+    protected function insert($on_duplicate_key_clause)
     {
         $cols = array_keys($this->data);
         $needles = array_fill(0, count($cols), '?');
         $bindings = $this->populateBindings();
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
-            "VALUES (" . implode(', ', $needles) . ");";
+            "VALUES (" . implode(', ', $needles) . ")" .
+            "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
         if ($this->dbResult->success()) {
             $output = $this->dbResult->getLastInsertId();
@@ -319,6 +318,22 @@ abstract class LeModelAbstract
             /* include the primary key in the data */
             $this->data[$this->getPrimaryKey()] = $this->id = $input[$this->getPrimaryKey()];
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getDuplicateKeyClause()
+    {
+        $output = '';
+        if ($this->data) {
+            $on_dupes = [];
+            foreach (array_keys($this->data) as $col) {
+                $on_dupes[] = "`{$col}` = VALUES(`{$col}`)";
+            }
+            $output = ' ON DUPLICATE KEY UPDATE ' . implode(', ', $on_dupes);
+        }
+        return $output;
     }
 
     /**
