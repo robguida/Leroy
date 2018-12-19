@@ -64,6 +64,7 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
         $this->assertEquals('Devon', $model2->getCity());
         $this->assertEquals('PA', $model2->getState());
         $this->assertInstanceOf('DateTime', $model2->getDateAdded());
+        $this->assertIsArray($model2->getAllData());
     }
 
     /**

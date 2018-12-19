@@ -25,7 +25,7 @@ abstract class LeModelAbstract
     protected $schema = [];
     /** @var boolean */
     private $schema_has_callbacks = false;
-    /** @var array */
+    /** @var array Stores data to save or use for getters - the data for the model. Key => value pair */
     private $data = [];
     /** @var LeDbService */
     protected $db;
@@ -40,6 +40,22 @@ abstract class LeModelAbstract
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int|string $id
+     * @throws Exception
+     */
+    private function setId($id)
+    {
+        if (!empty($this->id) && $this->id != $id) {
+            $class = get_called_class();
+            $exception = "{$class}::{$this->getPrimaryKey()} was instantiated with {$this->id}. " .
+                "Attempt to overwrite id using {$id}.";
+            throw new Exception($exception);
+        }
+        // do validation???
+        $this->id = $id;
     }
 
     /**
@@ -63,7 +79,10 @@ abstract class LeModelAbstract
         if ($this->dbResult instanceof LeDbResultInterface
             && LeDbService::SQL_TYPE_READ == $this->dbResult->getSqlType()
         ) {
-            $this->data = $this->dbResult->getOutput();
+            /* Using getFirstRow() since this is a model, and there is only one row, which will be
+                in position 0 (zero) of the LeDbResult::output. Using getOutput() will provide the
+                entire record set, and in this case there is only 1 record. */
+            $this->data = $this->dbResult->getFirstRow();
         }
         return $this->data;
     }
@@ -136,7 +155,7 @@ abstract class LeModelAbstract
         $this->setPrimaryKey();
         $this->setSchema();
         $this->setTableName();
-        $this->db = $db;
+        $this->setDb($db);
     }
 
     /**
@@ -239,10 +258,10 @@ abstract class LeModelAbstract
         }
         /* populate the bindings */
         $bindings = $this->populateBindings();
-        $bindings[] = $this->id;
+        $bindings[] = $this->getId();
          /* create and run the sql */
         $sql = "UPDATE `{$this->getTableName()}` SET " .
-            implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ?" .
+            implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ? " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
         if ($this->dbResult->success()) {
@@ -264,13 +283,15 @@ abstract class LeModelAbstract
         $needles = array_fill(0, count($cols), '?');
         $bindings = $this->populateBindings();
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
-            "VALUES (" . implode(', ', $needles) . ")" .
+            "VALUES (" . implode(', ', $needles) . ") " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
         if ($this->dbResult->success()) {
+            /* $this->dbLoadResult will be overwritten when loading the object */
             $output = $this->dbResult->getLastInsertId();
             $this->loadFromId($output, true);
         } else {
+            /* $this->dbLoadResult will be available to the calling class to get errors */
             $output = false;
         }
         return $output;
@@ -284,9 +305,9 @@ abstract class LeModelAbstract
     protected function loadFromId($id, $use_prime = false)
     {
         $sql = "SELECT * FROM {$this->table_name} WHERE {$this->primary_key} = ?";
-        $result = $this->db->execute($sql, [$id], false, $use_prime);
-        if ($result->success()) {
-            $this->loadData($result->getFirstRow());
+        $this->dbResult = $this->db->execute($sql, [$id], false, $use_prime);
+        if ($this->dbResult->success()) {
+            $this->loadData($this->dbResult->getFirstRow());
         }
     }
 
@@ -316,7 +337,9 @@ abstract class LeModelAbstract
         }
         if (array_key_exists($this->getPrimaryKey(), $input)) {
             /* include the primary key in the data */
-            $this->data[$this->getPrimaryKey()] = $this->id = $input[$this->getPrimaryKey()];
+            $primary_key = $this->getPrimaryKey();
+            $this->data[$primary_key] = $input[$primary_key];
+            $this->setId($input[$primary_key]);
         }
     }
 
