@@ -231,6 +231,21 @@ class ModelMaker extends LePrompterAbstract
     }
 
     /**
+     * @param string|null $setter
+     * @param string|null $question
+     * Note: This function loops through the questions and prompts the end-user, and collects the information.
+     *      It handles errors when attempting to store the data, so the end-user deals with each issue before
+     *      moving onto the next question. Each question may also have a callback that can test the values
+     *      of previous questions before moving onto another set of questions.
+     *
+     * @todo Break down into 2 functions, one that will recurse without the looping
+     */
+    public function gatherData($setter = null, $question = null)
+    {
+        parent::gatherData($setter, $question);
+    }
+
+    /**
      * @return bool|string
      * @throws Exception
      */
