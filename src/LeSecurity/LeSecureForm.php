@@ -1,6 +1,7 @@
 <?php
 
-namespace RobGuida\RgSecureForm;
+namespace Leroy\LeSecurity;
+
 use Exception;
 
 /**
