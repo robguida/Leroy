@@ -12,7 +12,7 @@ interface LeCacheInterface
 {
     /**
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      * @param int $life
      * @return bool
      */
@@ -32,7 +32,7 @@ interface LeCacheInterface
 
     /**
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      * @param int $life
      * @return bool
      */
