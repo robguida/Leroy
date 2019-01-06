@@ -51,6 +51,7 @@ class LeSecureForm
     {
         $this->allowable_servers[] = $server;
     }
+
     /**
      * @return array
      */
@@ -78,7 +79,7 @@ class LeSecureForm
             $this->cache_value['server'] = $this->server;
         }
         /* when a $life span is provided, use it, or store it until it is deleted */
-        $result = apc_add($cache_key, $this->cache_value, $life);
+        $result = $this->cacheEngine->add($cache_key, $this->cache_value, $life);
         if (!$result) {
             throw new Exception('apc_add() failed to save the data');
         }
@@ -86,6 +87,7 @@ class LeSecureForm
         $token = $this->generateToken($this->cache_value['salt']);
         return "{$this->cache_value['left']}{$token}{$this->cache_value['center']}{$cache_key}";
     }
+
     /**
      * @param string $token
      * @return bool
@@ -95,11 +97,9 @@ class LeSecureForm
     {
         $cache_key = substr($token, -17);
         /* if the key expires or was never set in the first place, a throw Exception */
-        if (apc_exists($cache_key)) {
-            /* get the array from the cache */
-            $cache_value = apc_fetch($cache_key);
+        if ($cache_value = $this->cacheEngine->get($cache_key)) {
             /* delete the key, because they are only allowed to be used one time */
-            apc_delete($cache_key);
+            $this->cacheEngine->delete($cache_key);
             /* If the "server" key is set, then we need to make sure there are allowable servers set
                 and if not, then there is an issue. The same method for getting the token needs to be done
                 to validate the token. If a token is created from the static method, then the static method
@@ -162,6 +162,7 @@ class LeSecureForm
         }
         return ($a < $b) ? -1 : 1;
     }
+
     /**
      * @return string
      */
