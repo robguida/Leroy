@@ -8,7 +8,7 @@ namespace Leroy\LeCache;
  * Date: 1/5/2019
  * Time: 4:25 PM
  */
-class LeCacheFactory
+class LeCacheFactory implements LeCacheInterface
 {
     private $cacheEngine;
 

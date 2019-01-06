@@ -3,6 +3,8 @@
 namespace Leroy\LeSecurity;
 
 use Exception;
+use Leroy\LeCache\LeCacheFactory;
+use Leroy\LeCache\LeCacheInterface;
 
 /**
  * Created by PhpStorm.
@@ -18,6 +20,8 @@ class LeSecureForm
     private $cache_value = ['salt' => '', 'left' => '', 'center' => '', 'server' => ''];
     /** @var string */
     private $server;
+    /** @var LeCacheFactory */
+    private $cacheEngine;
 
     /**
      * RgSecureForm constructor
@@ -28,6 +32,18 @@ class LeSecureForm
         $this->allowable_servers = $allowable_servers;
         $this->server = $_SERVER['SERVER_ADDR'];
     }
+
+    /**
+     * @param LeCacheInterface $leCacheEngine
+     */
+    public function setCacheEngine(LeCacheInterface $leCacheEngine = null)
+    {
+        if (is_null($leCacheEngine)) {
+            $leCacheEngine = new LeCacheFactory();
+        }
+        $this->cacheEngine = $leCacheEngine;
+    }
+
     /**
      * @param $server
      */
