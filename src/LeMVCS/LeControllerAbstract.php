@@ -50,13 +50,13 @@ class LeControllerAbstract
         $LeElements = new LeFormElement();
         /** @var LeViewTools $LeTools This will be available in the view file */
         $LeTools = new LeViewTools();
-        if (0 < count($params)) {
+        if ($params) {
             foreach ($params as $variable => $param) {
                 $$variable = $param; // create the new variable using the class name
             }
             unset($params);// no longer needed
         }
-        require_once($full_path);
+        require($full_path);
         $output = ob_get_contents();
         ob_clean();
         return $output;
