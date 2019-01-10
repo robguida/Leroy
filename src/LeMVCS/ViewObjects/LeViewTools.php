@@ -11,20 +11,26 @@ namespace Leroy\LeMVCS\ViewObjects;
 class LeViewTools
 {
     /**
-     * @param string $file full file path and file name
+     * @param string $relative_file_path file name and path relative to the web root
+     * @param string $full_file_path file name and path relative to the drive
      * @param string $key
      * @return string
      */
-    public static function getVersionedUrl($file, $key = 'r')
+    public function getVersionedUrl($relative_file_path, $full_file_path, $key = 'r')
     {
-        $mod_time = filemtime($file);
-        $qs_joiner = (false === strpos($file, '?')) ? '?' : '&';
-        $output = "{$file}{$qs_joiner}{$key}={$mod_time}";
+        $mod_time = filemtime($full_file_path);
+        $qs_joiner = (false === strpos($relative_file_path, '?')) ? '?' : '&';
+        $output = "{$relative_file_path}{$qs_joiner}{$key}={$mod_time}";
         return $output;
     }
 
-    public static function addVersionToUrl(& $file, $key = 'r')
+    /**
+     * @param string $relative_file_path file name and path relative to the web root
+     * @param string $full_file_path file name and path relative to the drive
+     * @param string $key
+     */
+    public function addVersionToUrl(& $relative_file_path, $full_file_path, $key = 'r')
     {
-        $file = self::getVersionedUrl($file, $key);
+        $relative_file_path = self::getVersionedUrl($relative_file_path, $full_file_path, $key);
     }
 }
