@@ -10,7 +10,7 @@ namespace Leroy\LeMVCS;
 
 use Leroy\LeMVCS\ViewObjects\LeFormElement;
 use Leroy\LeMVCS\ViewObjects\LeFormElements\ViewElementAbstract;
-use Leroy\LeMVCS\ViewObjects\LeViewTools;
+use Leroy\LeMVCS\ViewObjects\LeViewToolsTest;
 
 /**
  * Class LeControllerAbstract
@@ -47,9 +47,9 @@ class LeControllerAbstract
         $full_path = "{$this->getTemplateUrl()}{$file}";
         ob_start();
         /** @var ViewElementAbstract $LeElements This will be available in the view file */
-        $LeElements = new LeFormElement();
+        $leFormElements = new LeFormElement();
         /** @var LeViewTools $LeTools This will be available in the view file */
-        $LeTools = new LeViewTools();
+        $leViewTools = new LeViewTools();
         if ($params) {
             foreach ($params as $variable => $param) {
                 $$variable = $param; // create the new variable using the class name
