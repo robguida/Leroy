@@ -17,7 +17,7 @@ class LeCacheFactory implements LeCacheInterface
      * @param string $cache_engine
      * @param array $params
      */
-    public function __construct($cache_engine = 'memcached', array $params = ['host' => 'localhost', 'port' => ''])
+    public function __construct($cache_engine = 'memcached', array $params = ['host' => '127.0.0.1', 'port' => 11211])
     {
         switch($cache_engine) {
             case 'memcached':
