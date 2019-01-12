@@ -9,8 +9,7 @@
 namespace Leroy\LeMVCS;
 
 use Leroy\LeMVCS\ViewObjects\LeFormElement;
-use Leroy\LeMVCS\ViewObjects\LeFormElements\ViewElementAbstract;
-use Leroy\LeMVCS\ViewObjects\LeViewToolsTest;
+use Leroy\LeMVCS\ViewObjects\LeViewTools;
 
 /**
  * Class LeControllerAbstract
