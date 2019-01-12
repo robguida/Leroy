@@ -5,9 +5,14 @@
  * Date: 9/25/2018
  * Time: 11:42 PM
  */
-for ($i = 0; $i < 10; $i++) {
-    echo $i . ', ';
-}
+require_once dirname(__FILE__, 2) . '/src/bootstrap.php';
+
+//use Leroy\LeCache\LeCacheFactory;
+//$leCache = new LeCacheFactory('memcached');
+//use Leroy\LeSecurity\LeSecureForm;
+//$leSecure = new LeSecureForm();
+//echo 'token: ' . $leSecure->getToken() . '<br />';
+
 ?>
 <h1>Leroy!!!</h1>
 <?php phpinfo(); ?>

@@ -23,9 +23,29 @@ class LeCacheFactory implements LeCacheInterface
             case 'memcached':
                 $this->cacheEngine = new LeMemcached($params['host'], (int)$params['port']);
                 break;
-            case '':
+            case 'apc':
+                $this->cacheEngine = new LeApcCache();
+                break;
+            default:
                 break;
         }
+    }
+
+    /**
+     * @param array $params
+     * @return LeCacheFactory
+     */
+    public function initMemcached(array $params = ['host' => '127.0.0.1', 'port' => 11211])
+    {
+        return new LeCacheFactory('memcached', $params);
+    }
+
+    /**
+     * @return LeCacheFactory
+     */
+    public function initApcCache()
+    {
+        return new LeCacheFactory('apc');
     }
 
     /**
