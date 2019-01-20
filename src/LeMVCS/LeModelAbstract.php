@@ -220,6 +220,17 @@ abstract class LeModelAbstract
             'exception' => $this->dbResult->getException()->getMessage()
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getErrorString()
+    {
+        $output = "error: {$this->dbResult->getErrorInfo()}, " .
+            "code: {$this->dbResult->getErrorCode()} " .
+            "exception: {$this->dbResult->getException()->getMessage()}";
+        return $output;
+    }
     //</editor-fold>
 
     //<editor-fold desc="Core DB Functions">
