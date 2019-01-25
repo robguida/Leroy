@@ -234,7 +234,7 @@ abstract class LeModelAbstract
         if ($this->dbResult->getErrorCode()) {
             $error[] = "code: {$this->dbResult->getErrorCode()}";
         }
-        if ($this->dbResult->getException()->getMessage()()) {
+        if ($this->dbResult->getException()) {
             $error[] = "exception: {$this->dbResult->getException()->getMessage()()}";
         }
         if ($error) {
