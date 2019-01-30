@@ -22,25 +22,50 @@ require_once dirname(__FILE__, 2) . '/src/bootstrap.php';
 </head>
 <body>
 <h1>Leroy</h1>
-<div id="leTextAjaxForm" class="leTextAjaxForm">
-    <label for="text_id">Text Id</label>
-    <input type="text" id="text_id" name="text_id" value="<?php echo $_GET['text_id']; ?>" />
-    <div id="leTextAjaxFormCommand">
-        <img src="lib/resource/edit.jpg" id="leTextAjaxFormCommandEdit" />
-        <img src="lib/resource/delete.jpg" id="leTextAjaxFormCommandDelete" />
-    </div>
-    <script>
-        $(function() {
-            // code that will always need to be created
-            var callback = function() {
-                alert("deleting");
-            }
-            $('#leTextAjaxFormCommandDelete').on('click', callback());
 
-            // code that will be moved to a leTextAjaxForm.js file
-        });
-    </script>
-</div>
+<!-- dynamic code... will be within the function -->
+<?php
+function leTextAjaxForm($value)
+{
+    $textAjaxForm_id = uniqid();
+    $output = "<div id=\"leTextAjaxForm_{$textAjaxForm_id}\" class=\"leTextAjaxForm\">
+                <label for=\"text_id_{$textAjaxForm_id}\">Text Id</label>
+                <input type=\"text\" id=\"text_id_{$textAjaxForm_id}\"
+                       name=\"text_id_{$textAjaxForm_id}\" value=\"{$value}\" />
+                <div id=\"leTextAjaxFormCommand_{$textAjaxForm_id}\">
+                    <img src=\"lib/resource/delete.jpg\" id=\"leTextAjaxFormCommandDelete_{$textAjaxForm_id}\"
+                         onclick=\"callbackDelete();\" />
+                    <img src=\"lib/resource/edit.jpg\" id=\"leTextAjaxFormCommandEdit_{$textAjaxForm_id}\" />
+                </div>
+            </div>
+            <script>
+                $('#leTextAjaxFormCommandEdit_{$textAjaxForm_id}').on('click', function () {
+                    leTextAjaxForm.edit();
+                });
+            </script>
+            ";
+    return $output;
+}
+echo leTextAjaxForm('This is the text to change');
+?>
+
+<!-- code that the programmer will put on the page -->
+<script>
+    // code that will always need to be created
+    function callbackDelete() {
+        alert('I am deleting this');
+    }
+</script>
+
+<!-- code that will go into a .js file -->
+<script>
+    var leTextAjaxForm = {
+        edit: function () {
+            alert('test');
+        }
+    }
+</script>
+
 <?php phpinfo(); ?>
 </body>
 </html>
