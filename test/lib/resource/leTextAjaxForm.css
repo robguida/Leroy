@@ -1,0 +1,10 @@
+.leTextAjaxForm {
+    width: 300px;
+}
+.leTextAjaxForm div {
+    display: inline-block;
+}
+.leTextAjaxForm img {
+    width: 20px;
+    height: 20px;
+}

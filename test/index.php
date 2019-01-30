@@ -14,5 +14,30 @@ require_once dirname(__FILE__, 2) . '/src/bootstrap.php';
 //echo 'token: ' . $leSecure->getToken() . '<br />';
 
 ?>
-<h1>Leroy!!!</h1>
+<html>
+<head>
+    <script src="lib/jquery-3.3.1.min.js"></script>
+    <script src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="lib/resource/leTextAjaxForm.css" />
+</head>
+<body>
+<h1>Leroy</h1>
+<div id="leTextAjaxForm" class="leTextAjaxForm">
+    <label for="text_id">Text Id</label>
+    <input type="text" id="text_id" name="text_id" value="<?php echo $_GET['text_id']; ?>" />
+    <div id="leTextApiFormCommand">
+        <img src="lib/resource/edit.jpg" id="leTextAjaxFormCommandEdit" />
+        <img src="lib/resource/delete.jpg" id="leTextAjaxFormCommandDelete" />
+    </div>
+    <script>
+        $(function() {
+            var callback = function() {
+                alert("deleting");
+            }
+            $('#leTextAjaxFormCommandDelete').on('click', callback());
+        });
+    </script>
+</div>
 <?php phpinfo(); ?>
+</body>
+</html>
