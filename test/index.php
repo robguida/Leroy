@@ -25,16 +25,19 @@ require_once dirname(__FILE__, 2) . '/src/bootstrap.php';
 <div id="leTextAjaxForm" class="leTextAjaxForm">
     <label for="text_id">Text Id</label>
     <input type="text" id="text_id" name="text_id" value="<?php echo $_GET['text_id']; ?>" />
-    <div id="leTextApiFormCommand">
+    <div id="leTextAjaxFormCommand">
         <img src="lib/resource/edit.jpg" id="leTextAjaxFormCommandEdit" />
         <img src="lib/resource/delete.jpg" id="leTextAjaxFormCommandDelete" />
     </div>
     <script>
         $(function() {
+            // code that will always need to be created
             var callback = function() {
                 alert("deleting");
             }
             $('#leTextAjaxFormCommandDelete').on('click', callback());
+
+            // code that will be moved to a leTextAjaxForm.js file
         });
     </script>
 </div>
