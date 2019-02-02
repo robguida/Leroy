@@ -38,8 +38,8 @@ class LeApiResponseModel
     public function __construct()
     {
         $this->result = null;
-        $this->data = [];
-        $this->error_msg = '';
+        $this->data = null;
+        $this->error_msg = null;
         $this->exception = null;
         $this->http_response_code = null;
     }
@@ -125,7 +125,7 @@ class LeApiResponseModel
      */
     public function isSuccessful()
     {
-        return !empty($this->data);
+        return !is_null($this->data);
     }
 
     /**
@@ -133,7 +133,7 @@ class LeApiResponseModel
      */
     public function isError()
     {
-        return !empty($this->error_msg);
+        return !is_null($this->error_msg);
     }
 
     /**
