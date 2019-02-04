@@ -141,7 +141,7 @@ class LeApiResponseModel
      */
     public function isException()
     {
-        return $this->exception instanceof Exception;
+        return !is_null($this->exception);
     }
 
     /**
