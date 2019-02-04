@@ -213,11 +213,11 @@ class LeApiResponseModel
             $this->exception = $this->exception->getMessage();
         }
         if ($return_response_object) {
-            $output = $this;
+            $output = json_encode(['response' => serialize($this)]);
         } else {
-            $output = $this->getResponse();
+            $output = json_encode($this->getResponse());
         }
-        return json_encode(['response' => serialize($output)]);
+        return $output;
     }
     //</editor-fold>
 }
