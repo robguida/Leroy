@@ -260,9 +260,11 @@ abstract class LeModelAbstract
         }
 
         if (is_null($this->getId())) {
+            error_log(__FILE__ . ' ' . __LINE__ . ' "INSERTING": ' . print_r("INSERTING", true));
             $output = $this->insert($on_duplicate_key_clause);
         } else {
-            $output = $this->update($on_duplicate_key_clause);
+            error_log(__FILE__ . ' ' . __LINE__ . ' "UPDATING": ' . print_r("UPDATING", true));
+           $output = $this->update($on_duplicate_key_clause);
         }
         return $output;
     }
@@ -286,6 +288,7 @@ abstract class LeModelAbstract
             implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ? " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
+        error_log(__FILE__ . ' ' . __LINE__ . ' $sql: ' . print_r($sql, true));
         if ($this->dbResult->success()) {
             $output = $this->dbResult->getRowsAffected();
         } else {
