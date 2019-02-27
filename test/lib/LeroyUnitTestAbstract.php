@@ -11,8 +11,6 @@ namespace LeroyTestLib;
 use Leroy\LeDb\LeDbService;
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__FILE__, 3) . '/src/bootstrap.php';
-
 abstract class LeroyUnitTestAbstract extends TestCase
 {
     protected $db;

@@ -8,6 +8,8 @@
 
 namespace LeroyTest\LeDb\LeDbServiceTests;
 
+require_once dirname(__FILE__, 5) . '/src/bootstrap.php';
+
 use DateTime;
 use Exception;
 use Leroy\LeDb\LeDbService;

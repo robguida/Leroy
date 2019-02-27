@@ -8,6 +8,8 @@
 
 namespace LeroyTest\LeDb\LeDbServiceTests;
 
+require_once dirname(__FILE__, 5) . '/src/bootstrap.php';
+
 use DateTime;
 use Exception;
 use Leroy\LeDb\LeDbService;
@@ -264,6 +266,19 @@ class LeDbServiceDbConnArrayTest extends LeroyUnitTestAbstract
     }
 
     public function testGetRowsAffectedWhenValuesChange()
+    {
+        $db = LeDbService::init('leroy', $this->getDbConnArray());
+        $db->execute('TRUNCATE TABLE contact');
+        foreach ($this->getDataForContactNotAssociated() as $bindings) {
+            $sql = 'INSERT INTO contact (last_name, first_name) VALUES (?, ?);';
+            $db->execute($sql, $bindings);
+        }
+        $sql = "UPDATE contact SET last_name = CONCAT('estare', contact_id) WHERE first_name = 'jane';";
+        $result = $db->execute($sql);
+        $this->assertEquals(4, $result->getRowsAffected());
+    }
+
+    public function testDuplicateErrorWithNoDupeErrorFlagSet()
     {
         $db = LeDbService::init('leroy', $this->getDbConnArray());
         $db->execute('TRUNCATE TABLE contact');

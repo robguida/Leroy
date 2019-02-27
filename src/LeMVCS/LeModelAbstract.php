@@ -252,18 +252,14 @@ abstract class LeModelAbstract
      */
     public function save($on_duplicate_update = false)
     {
-
         /* Create the on duplicate key clause? */
         $on_duplicate_key_clause = '';
         if ($on_duplicate_update) {
             $on_duplicate_key_clause = $this->getDuplicateKeyClause();
         }
-
         if (is_null($this->getId())) {
-            error_log(__FILE__ . ' ' . __LINE__ . ' "INSERTING": ' . print_r("INSERTING", true));
             $output = $this->insert($on_duplicate_key_clause);
         } else {
-            error_log(__FILE__ . ' ' . __LINE__ . ' "UPDATING": ' . print_r("UPDATING", true));
            $output = $this->update($on_duplicate_key_clause);
         }
         return $output;
