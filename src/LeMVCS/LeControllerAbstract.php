@@ -15,7 +15,7 @@ use Leroy\LeMVCS\ViewObjects\LeViewTools;
  * Class LeControllerAbstract
  * @package Leroy\LeMVCS
  */
-class LeControllerAbstract
+abstract class LeControllerAbstract
 {
     /** @var string */
     private $template_url;

@@ -22,7 +22,6 @@ interface LeCrudControllerInterface
      */
     public function read($id);
 
-
     /**
      * @param LeHttpRequest $request
      * @return mixed
