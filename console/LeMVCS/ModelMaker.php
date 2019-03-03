@@ -313,6 +313,8 @@ class ModelMaker extends LePrompterAbstract
             }
             $output = file_put_contents($file_name, $model_template);
             if ($output) {
+                /* set the permissions so it can be edited by anyone */
+                exec("chmod 666 {$file_name}");
                 $output = $file_name;
             }
         } else {
