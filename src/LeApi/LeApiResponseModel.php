@@ -161,11 +161,20 @@ class LeApiResponseModel
     }
 
     /**
+     * @param string $use_key_val_as_key
      * @return array
      */
-    public function getData()
+    public function getData($use_key_val_as_key = '')
     {
-        return $this->data;
+        if ($use_key_val_as_key && array_key_exists($use_key_val_as_key, current($output))) {
+            $output = [];
+            foreach ($this->data as $data) {
+                $output[$data[$use_key_val_as_key]] = $data;
+            }
+        } else {
+            $output = $this->data;
+        }
+        return $output;
     }
 
     /**
