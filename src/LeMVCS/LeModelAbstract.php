@@ -389,9 +389,10 @@ abstract class LeModelAbstract
         $bindings = [];
         if ($this->doesSchemaUseCallBacks()) {
             foreach ($this->data as $column => $value) {
+                error_log(__FILE__ . ' ' . __LINE__ . ' $this->data: ' . print_r($this->data, true));
                 $attrs = $this->schema[$column];
                 if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
-                    $value = $this->$call_back($value);
+                    $value = $this->$call_back();
                 }
                 $bindings[] = $value;
             }
