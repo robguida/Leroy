@@ -102,7 +102,11 @@ abstract class LeModelAbstract
     protected function getData($key)
     {
         if (!array_key_exists($key, $this->data)) {
-            throw new InvalidArgumentException("{$key} is not define in LeModelAbstract::data");
+            if (array_key_exists($key, $this->schema)) {
+                $this->setData($key, null);
+            } else {
+                throw new InvalidArgumentException("{$key} is not define in LeModelAbstract::schema");
+            }
         }
         $output = null;
         $data = $this->getAllData();
