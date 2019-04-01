@@ -32,7 +32,6 @@ abstract class LeModelAbstract
     /** @var LeDbResultInterface */
     protected $dbResult;
 
-
     //<editor-fold desc="Getters/Setters">
     /**
      * @return int|string
@@ -76,13 +75,14 @@ abstract class LeModelAbstract
      */
     public function getAllData()
     {
-        if ($this->dbResult instanceof LeDbResultInterface
+        if (is_null($this->data)
+            && $this->dbResult instanceof LeDbResultInterface
             && LeDbService::SQL_TYPE_READ == $this->dbResult->getSqlType()
         ) {
             /* Using getFirstRow() since this is a model, and there is only one row, which will be
                 in position 0 (zero) of the LeDbResult::output. Using getOutput() will provide the
                 entire record set, and in this case there is only 1 record. */
-            $this->data = $this->dbResult->getFirstRow();
+            $this->loadData($this->dbResult->getFirstRow());
         }
         return $this->data;
     }
@@ -176,7 +176,6 @@ abstract class LeModelAbstract
     abstract protected function setTableName();
 
     //<editor-fold desc="Initializing Functions">
-
     /**
      * @param int|string $id
      * @param LeDbService|null $db
@@ -344,6 +343,8 @@ abstract class LeModelAbstract
     protected function loadData(array $input)
     {
         foreach ($this->schema as $column => $attrs) {
+            $callback_set = null;
+            $value = null;
             if (isset($input[$column])) {
                 $value = $input[$column];
                 if (!empty($attrs['length']) && 'string' == $attrs['type']) {
