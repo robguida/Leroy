@@ -88,6 +88,20 @@ abstract class LeModelAbstract
     }
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    public function removeKeyFromData($key)
+    {
+        $output = false;
+        if (isset($this->data[$key])) {
+            unset($this->data[$key]);
+            $output = true;
+        }
+        return $output;
+    }
+
+    /**
      * @param LeDbService $db
      */
     public function setDb(LeDbService $db)
