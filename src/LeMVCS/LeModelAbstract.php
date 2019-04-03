@@ -301,7 +301,6 @@ abstract class LeModelAbstract
             implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ? " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
-        error_log(__FILE__ . ' ' . __LINE__ . ' $sql: ' . print_r($sql, true));
         if ($this->dbResult->success()) {
             $output = $this->dbResult->getRowsAffected();
         } else {
