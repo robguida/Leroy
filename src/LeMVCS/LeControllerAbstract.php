@@ -45,15 +45,19 @@ abstract class LeControllerAbstract
     {
         $full_path = "{$this->getTemplateUrl()}{$file}";
         ob_start();
-        /** @var ViewElementAbstract $LeElements This will be available in the view file */
-        $leFormElements = new LeFormElement();
-        /** @var LeViewTools $LeTools This will be available in the view file */
-        $leViewTools = new LeViewTools();
         if ($params) {
             foreach ($params as $variable => $param) {
                 $$variable = $param; // create the new variable using the class name
             }
             unset($params);// no longer needed
+        }
+        /** @var LeFormElement $LeElements This will be available in the view file */
+        if (!isset($leFormElements)) {
+            $leFormElements = new LeFormElement();
+        }
+        /** @var LeViewTools $LeTools This will be available in the view file */
+        if (!isset($leViewTools)) {
+            $leViewTools = new LeViewTools();
         }
         require($full_path);
         $output = ob_get_contents();
