@@ -25,6 +25,8 @@ abstract class LeModelAbstract
     protected $schema = [];
     /** @var boolean */
     private $schema_has_callbacks = false;
+    /** @var array Stores data from the dbase and is NEVER modified. It is used to determine what was changed. */
+    private $original = [];
     /** @var array Stores data to save or use for getters - the data for the model. Key => value pair */
     private $data = [];
     /** @var LeDbService */
@@ -85,6 +87,29 @@ abstract class LeModelAbstract
             $this->loadData($this->dbResult->getFirstRow());
         }
         return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOriginalData()
+    {
+        return $this->original;
+    }
+
+    /**
+     * @return array
+     */
+    public function getModifiedData()
+    {
+        $output = [];
+        foreach ($this->original as $key => $original_val) {
+            $new_val = $this->getData($key);
+            if (0 === strcmp($original_val, $new_val)) {
+                $output[$key] = ['new' => $new_val, 'original' =>  $original_val];
+            }
+        }
+        return $output;
     }
 
     /**
@@ -355,30 +380,33 @@ abstract class LeModelAbstract
      */
     protected function loadData(array $input)
     {
-        foreach ($this->schema as $column => $attrs) {
-            $callback_set = null;
-            $value = null;
-            if (isset($input[$column])) {
-                $value = $input[$column];
-                if (!empty($attrs['length']) && 'string' == $attrs['type']) {
-                    $value = substr($value, 0, $attrs['length']);
-                } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
-                    throw new Exception("'{$value}' is not a valid enum value for `{$column}`;");
-                }
-            } else {
+        if (empty($this->data)) {
+            $this->original = $input;
+            foreach ($this->schema as $column => $attrs) {
+                $callback_set = null;
                 $value = null;
+                if (isset($input[$column])) {
+                    $value = $input[$column];
+                    if (!empty($attrs['length']) && 'string' == $attrs['type']) {
+                        $value = substr($value, 0, $attrs['length']);
+                    } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
+                        throw new Exception("'{$value}' is not a valid enum value for `{$column}`;");
+                    }
+                } else {
+                    $value = null;
+                }
+                if (isset($attrs['callback_set']) && $callback_set = $attrs['callback_set']) {
+                    $this->$callback_set($value);
+                } else {
+                    $this->data[$column] = $value;
+                }
             }
-            if (isset($attrs['callback_set']) && $callback_set = $attrs['callback_set']) {
-                $this->$callback_set($value);
-            } else {
-                $this->data[$column] = $value;
+            if (array_key_exists($this->getPrimaryKey(), $input)) {
+                /* include the primary key in the data */
+                $primary_key = $this->getPrimaryKey();
+                $this->data[$primary_key] = $input[$primary_key];
+                $this->setId($input[$primary_key]);
             }
-        }
-        if (array_key_exists($this->getPrimaryKey(), $input)) {
-            /* include the primary key in the data */
-            $primary_key = $this->getPrimaryKey();
-            $this->data[$primary_key] = $input[$primary_key];
-            $this->setId($input[$primary_key]);
         }
     }
 
