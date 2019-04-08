@@ -438,6 +438,8 @@ abstract class LeModelAbstract
                 $attrs = $this->schema[$column];
                 if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
                     $value = $this->$call_back();
+                } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
+                    throw new InvalidArgumentException("\"{$value}\" is not a valid enum values for `{$column}`.");
                 }
                 $bindings[] = $value;
             }
