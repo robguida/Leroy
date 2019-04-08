@@ -100,12 +100,12 @@ abstract class LeModelAbstract
     /**
      * @return array
      */
-    public function getModifiedData()
+    public function getChanges()
     {
         $output = [];
         foreach ($this->original as $key => $original_val) {
             $new_val = $this->getData($key);
-            if (0 === strcmp($original_val, $new_val)) {
+            if (0 !== strcmp($original_val, $new_val)) {
                 $output[$key] = ['new' => $new_val, 'original' =>  $original_val];
             }
         }
