@@ -380,7 +380,7 @@ abstract class LeModelAbstract
      */
     protected function loadData(array $input)
     {
-        if (empty($this->data)) {
+        //if (empty($this->data)) {
             $this->original = $input;
             foreach ($this->schema as $column => $attrs) {
                 $callback_set = null;
@@ -407,7 +407,7 @@ abstract class LeModelAbstract
                 $this->data[$primary_key] = $input[$primary_key];
                 $this->setId($input[$primary_key]);
             }
-        }
+       // }
     }
 
     /**
