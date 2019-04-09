@@ -435,6 +435,8 @@ abstract class LeModelAbstract
         $bindings = [];
         if ($this->doesSchemaUseCallBacks()) {
             foreach ($this->data as $column => $value) {
+                $attrs = [];
+                $call_back = '';
                 /* primary keys will not be in the schema, so we skip this part */
                 if (isset($this->schema[$column]) && $attrs = $this->schema[$column]) {
                     if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
