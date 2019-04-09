@@ -104,9 +104,14 @@ abstract class LeModelAbstract
     {
         $output = [];
         foreach ($this->original as $key => $original_val) {
-            $new_val = $this->getData($key);
-            if (0 !== strcmp($original_val, $new_val)) {
-                $output[$key] = ['new' => $new_val, 'original' =>  $original_val];
+            /* Some keys can be removed from data, for instance when a column
+                uses CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP. So, the
+                original data may still have the value, but since it is not
+                being altered - it is not in the data array - we just ignore it. */
+            if (isset($this->data[$key]) && $new_val = $this->data[$key]) {
+                if (0 !== strcmp($original_val, $new_val)) {
+                    $output[$key] = ['new' => $new_val, 'original' => $original_val];
+                }
             }
         }
         return $output;
