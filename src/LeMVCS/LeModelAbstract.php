@@ -435,11 +435,13 @@ abstract class LeModelAbstract
         $bindings = [];
         if ($this->doesSchemaUseCallBacks()) {
             foreach ($this->data as $column => $value) {
-                $attrs = $this->schema[$column];
-                if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
-                    $value = $this->$call_back();
-                } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
-                    throw new InvalidArgumentException("\"{$value}\" is not a valid enum values for `{$column}`.");
+                /* primary keys will not be in the schema, so we skip this part */
+                if (isset($this->schema[$column]) && $attrs = $this->schema[$column]) {
+                    if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
+                        $value = $this->$call_back();
+                    } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
+                        throw new InvalidArgumentException("\"{$value}\" is not a valid enum values for `{$column}`.");
+                    }
                 }
                 $bindings[] = $value;
             }
