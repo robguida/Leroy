@@ -319,12 +319,11 @@ abstract class LeModelAbstract
     protected function update($on_duplicate_key_clause)
     {
         /* create the columns and build the on_dupes array while we are at it. */
-        $cols = [];
-        foreach (array_keys($this->data) as $col) {
-            $cols[] = "`{$col}` = ?";
+        list($cols, $bindings) = array_values($this->getColsAndBindings());
+        $i = 0;
+        foreach ($cols as $col) {
+            $cols[$i++] = "`{$col}` = ?";
         }
-        /* populate the bindings */
-        $bindings = $this->populateBindings();
         $bindings[] = $this->getId();
          /* create and run the sql */
         $sql = "UPDATE `{$this->getTableName()}` SET " .
@@ -346,9 +345,8 @@ abstract class LeModelAbstract
      */
     protected function insert($on_duplicate_key_clause)
     {
-        $cols = array_keys($this->data);
+        list($cols, $bindings) = array_values($this->getColsAndBindings());
         $needles = array_fill(0, count($cols), '?');
-        $bindings = $this->populateBindings();
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
             "VALUES (" . implode(', ', $needles) . ") " .
             "{$on_duplicate_key_clause};";
@@ -435,27 +433,27 @@ abstract class LeModelAbstract
      * @return array
      * @todo loadData() and populateBindings() needs to use a common validation function that uses the types
      */
-    private function populateBindings()
+    private function getColsAndBindings()
     {
-        $bindings = [];
-        if ($this->doesSchemaUseCallBacks()) {
-            foreach ($this->data as $column => $value) {
-                $attrs = [];
-                $call_back = '';
-                /* primary keys will not be in the schema, so we skip this part */
-                if (isset($this->schema[$column]) && $attrs = $this->schema[$column]) {
-                    if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
-                        $value = $this->$call_back();
-                    } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
-                        throw new InvalidArgumentException("\"{$value}\" is not a valid enum values for `{$column}`.");
-                    }
+        $output = ['cols' => [], 'bindings' => []];
+        foreach ($this->data as $column => $value) {
+            /* primary keys will not be in the schema, so we skip this part */
+            if (isset($this->schema[$column]) && $attrs = $this->schema[$column]) {
+                if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
+                    $value = $this->$call_back();
+                } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
+                    throw new InvalidArgumentException("\"{$value}\" is not a valid enum values for `{$column}`.");
+                } elseif ((isset($attrs['default']) && false !== strpos($attrs['default'], 'CURRENT_TIMESTAMP')) ||
+                    (isset($attrs['extended']) && false !== strpos($attrs['extended'], 'CURRENT_TIMESTAMP'))
+                ) {
+                    /* if the table has a default for the current timestamp, then let the table set the value */
+                    continue;
                 }
-                $bindings[] = $value;
             }
-        } else {
-            $bindings = array_values($this->data);
+            $output['cols'][] = $column;
+            $output['bindings'][] = $value;
         }
-        return $bindings;
+        return $output;
     }
     //</editor-fold>
 }

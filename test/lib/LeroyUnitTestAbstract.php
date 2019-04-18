@@ -8,18 +8,60 @@
 
 namespace LeroyTestLib;
 
+use Exception;
 use Leroy\LeDb\LeDbService;
+use LeroyTestResource\LeModelAbstractTestObject;
 use PHPUnit\Framework\TestCase;
 
 abstract class LeroyUnitTestAbstract extends TestCase
 {
+    /** @var LeDbService */
     protected $db;
 
     protected function setUp()
     {
-        $this->db = LeDbService::init('leroy', DBCONFIGFILE1);
+        $this->getDbService();
+        $this->truncateTables();
+    }
+
+    protected function truncateTables()
+    {
+        $this->getDbService();
+        $this->db->execute('SET FOREIGN_KEY_CHECKS = 0;');
         $this->db->execute('TRUNCATE TABLE address;');
         $this->db->execute('TRUNCATE TABLE contact;');
+        $this->db->execute('SET FOREIGN_KEY_CHECKS = 1;');
+    }
+
+    /**
+     * @return LeDbService
+     */
+    protected function getDbService()
+    {
+        if (is_null($this->db)) {
+            try {
+                $this->db = LeDbService::init('leroy', DBCONFIGFILE1);
+            } catch (Exception $e) {
+                $this->db = false;
+                echo $e->getMessage();
+            }
+        }
+        return $this->db;
+    }
+
+    /**
+     * @return bool|int
+     */
+    protected function addAddress()
+    {
+        $this->getDbService();
+        $model = new LeModelAbstractTestObject($this->db);
+        $model->setAddress1('3 Fleet St.');
+        $model->setCity('Annapolis');
+        $model->setState('MD');
+        $id = $model->save();
+        echo __FILE__ . ' ' . __LINE__ . ' $model:<pre style="text-align: left;">' . print_r($model, true) . '</pre>';
+        return $id;
     }
     
     protected function getDbConnArray()

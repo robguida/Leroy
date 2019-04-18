@@ -1,7 +1,7 @@
 {
   "leroy": {
     "master": {
-      "host": "dbmaster.development.com",
+      "host": "localhost",
       "userName": "dev",
       "password": "123456",
       "dbName": "leroy",
@@ -9,14 +9,14 @@
     },
     "slave": {
       "0": {
-        "host": "dbslave1.development.com",
+        "host": "localhost",
         "userName": "dev",
         "password": "123456",
         "dbName": "leroy",
         "port": "3306"
       },
       "1": {
-        "host": "dbslave2.development.com",
+        "host": "localhost",
         "userName": "dev",
         "password": "123456",
         "dbName": "leroy",
@@ -26,7 +26,7 @@
   },
   "leroy2": {
     "master": {
-      "host": "dbmaster2.development.com",
+      "host": "localhost",
       "userName": "dev",
       "password": "123456",
       "dbName": "leroy",
@@ -34,14 +34,14 @@
     },
     "slave": {
       "0": {
-        "host": "dbslave3.development.com",
+        "host": "localhost",
         "userName": "dev",
         "password": "123456",
         "dbName": "leroy",
         "port": "3306"
       },
       "1": {
-        "host": "dbslave4.development.com",
+        "host": "localhost",
         "userName": "dev",
         "password": "123456",
         "dbName": "leroy",
