@@ -299,6 +299,8 @@ class ModelMaker extends LePrompterAbstract
                     $schema = str_replace('${type}', $type_for_schema, $schema);
                     $schema = str_replace('${signed}', $signed, $schema);
                     $schema = str_replace('${length}', $length, $schema);
+                    $schema = str_replace('${default}', "'{$row['Default']}'", $schema);
+                    $schema = str_replace('${extended}', "'{$row['Extra']}'", $schema);
                     $schemas .= $schema;
                 }
             }
@@ -401,8 +403,13 @@ class ModelMaker extends LePrompterAbstract
             case 'char':
             case 'varchar':
             case 'binary':
+            case 'varbinary':
+            case 'blob':
+            case 'tinytext':
             case 'text':
-                 $type = 'string';
+            case 'mediumtext':
+            case 'longtext':
+                $type = 'string';
                 break;
             case 'bigint':
             case 'medint':

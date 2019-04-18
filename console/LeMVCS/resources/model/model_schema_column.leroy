@@ -2,6 +2,8 @@
     'type' => '${type}',
     'length' => ${length},
     'signed' => ${signed},
+    'default' => ${default},
+    'extended' => ${extended},
     'callback_get' => null,
     'callback_set' => null,
 ],
