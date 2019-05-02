@@ -10,12 +10,13 @@ namespace Leroy\LeMVCS\ViewObjects;
 
 use LeroyTestLib\LeroyUnitTestAbstract;
 
-require_once '../../../../src/bootstrap.php';
+require_once '/var/www/Leroy/src/bootstrap.php';
 
 class LeViewToolsTest extends LeroyUnitTestAbstract
 {
     public function testGetScriptTag()
     {
+        $this->markTestIncomplete('Not fleshed out yet');
         $file = '/tmp/testGetScriptTag.csv';
         $oF = fopen($file, 'w+');
         fclose($oF);

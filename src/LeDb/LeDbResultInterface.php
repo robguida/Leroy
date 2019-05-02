@@ -21,7 +21,7 @@ interface LeDbResultInterface
     /**
      * @param Exception $exception
      */
-    public function setException($exception);
+    public function setException(Exception $exception);
 
     /**
      * @return bool

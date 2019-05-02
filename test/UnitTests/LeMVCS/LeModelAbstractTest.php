@@ -15,7 +15,6 @@ use Exception;
 use LeroyTestLib\LeroyUnitTestAbstract;
 use LeroyTestResource\AddressModel;
 use LeroyTestResource\LeModelAbstractTestObject;
-use LeroyTestResource\LeModelWithCallBacksTestObject;
 
 class LeModelAbstractTest extends LeroyUnitTestAbstract
 {
@@ -91,6 +90,24 @@ class LeModelAbstractTest extends LeroyUnitTestAbstract
         $this->assertNotEquals($dateCreated->format('Y-m-d'), $bad_date_created);
         $this->assertNotEquals($dateModified->format('Y-m-d'), $bad_date_created);
         $this->assertionsForFunctionsUsed($model);
+    }
+
+    public function testDuplicateKeyResult()
+    {
+        $model = new AddressModel();
+        $model->setAddress1($this->address);
+        $model->setCity($this->city);
+        $model->setState($this->state);
+        $model->save();
+        $model2 = new AddressModel();
+        $model2->setAddress1($this->address);
+        $model2->setCity($this->city);
+        $model2->setState($this->state);
+        $model2->save();
+        $exception = $model2->getException();
+        $this->assertInstanceOf('PDOException', $exception);
+        $this->assertTrue(is_string($exception->getMessage()));
+        $this->assertTrue(is_string($model2->getErrorString()));
     }
 
     /**

@@ -71,9 +71,11 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @param Exception $exception
      */
-    public function setException($exception)
+    public function setException(Exception $exception)
     {
         $this->exception = $exception;
+        $this->setErrorCode($exception->getCode());
+        $this->setErrorInfo($exception->getMessage());
     }
 
     /**

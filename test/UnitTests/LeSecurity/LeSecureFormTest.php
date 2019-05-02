@@ -25,6 +25,7 @@ class LeSecureFormTest extends LeroyUnitTestAbstract
 
     public function testGetToken()
     {
+        $this->markTestIncomplete('Not fleshed out yet');
         $secureForm = new LeSecureForm();
         $secureForm->getToken(600);
     }

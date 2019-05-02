@@ -264,7 +264,6 @@ abstract class LeModelAbstract
         return [
             'error' => $this->dbResult->getErrorInfo(),
             'code' => $this->dbResult->getErrorCode(),
-            'exception' => $this->dbResult->getException()->getMessage()
         ];
     }
 
@@ -274,20 +273,22 @@ abstract class LeModelAbstract
     public function getErrorString()
     {
         $output = '';
-        $error = [];
-        if ($this->dbResult->getErrorInfo()) {
-            $error[] = "error: {$this->dbResult->getErrorInfo()}";
-        }
-        if ($this->dbResult->getErrorCode()) {
-            $error[] = "code: {$this->dbResult->getErrorCode()}";
-        }
-        if ($this->dbResult->getException()) {
-            $error[] = "exception: {$this->dbResult->getException()->getMessage()()}";
-        }
-        if ($error) {
-            $output = implode('; ', $error);
+        if ($errors = $this->getErrors()) {
+            $errors_formatted = [];
+            foreach ($errors as $key => $val) {
+                $errors_formatted[] = "{$key}: {$val}";
+            }
+            $output = implode('; ', $errors_formatted);
         }
         return $output;
+    }
+
+    /**
+     * @return Exception
+     */
+    public function getException()
+    {
+        return $this->dbResult->getException();
     }
     //</editor-fold>
 

@@ -31,7 +31,7 @@ class LeSecureForm
     public function __construct(array $allowable_servers = [], LeCacheInterface $cacheEngine = null)
     {
         $this->allowable_servers = $allowable_servers;
-        $this->server = $_SERVER['SERVER_ADDR'];
+        $this->server = $_SERVER['SERVER_ADDR'];// what about command line?
         $this->setCacheEngine($cacheEngine);
     }
 

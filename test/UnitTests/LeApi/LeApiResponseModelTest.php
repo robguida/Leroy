@@ -8,7 +8,7 @@
  */
 
 namespace LeroyTest\LeApi;
-
+require_once '/var/www/Leroy/src/bootstrap.php';
 use Exception;
 use Leroy\LeApi\LeApiResponseModel;
 use LeroyTestLib\LeroyUnitTestAbstract;
@@ -103,22 +103,19 @@ class LeApiResponseModelTest extends LeroyUnitTestAbstract
 
     /**
      * @param LeApiResponseModel $r
-     * @param int $code
      */
-    private function assertHttpTransportResponseNoObject(LeApiResponseModel $r, $code)
+    private function assertHttpTransportResponseNoObject(LeApiResponseModel $r)
     {
         $response = $r->getHttpTransportResponse(false);
-        $this->assertIsString($response);
+        $this->assertTrue(is_string($response));
         $responseStdClass = json_decode($response);
         $this->assertInstanceOf('stdClass', $responseStdClass);
-        $responseArray = unserialize($responseStdClass->response);
-        $this->assertIsArray($responseArray);
-        /* makes sure no value is an object */
-        foreach ($responseArray as $key => $val) {
-            $this->assertTrue(in_array($key, ['result', 'data', 'msg', 'exception', 'response_code']));
-            $this->assertIsNotObject($val);
-            if ('response_code' == $key) {
-                $this->assertEquals($code, $val);
+        if ($responseStdClass->data) {
+            $this->assertInstanceOf('stdClass', $responseStdClass->data);
+            /* makes sure no value is an object */
+            foreach ($responseStdClass->data as $key => $val) {
+                $this->assertTrue(in_array($key, ['result', 'data', 'msg', 'exception', 'response_code']));
+                $this->assertFalse(is_object($val));
             }
         }
     }
