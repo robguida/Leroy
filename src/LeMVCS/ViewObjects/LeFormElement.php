@@ -145,6 +145,19 @@ class LeFormElement
     }
 
     /**
+     * @param $for
+     * @param $display
+     * @param array $attr
+     * @param array $style
+     * @param string|null $id
+     * @return Label
+     */
+    public function label($for, $display, $id = null, $attr = [], $style = [])
+    {
+        return new Label($for, $display, $id, $attr, $style);
+    }
+
+    /**
      * @param string $name
      * @param string|null $value
      * @param array $attr
@@ -237,6 +250,20 @@ class LeFormElement
 
     /**
      * @param string $name
+     * @param string $selected
+     * @param array $options
+     * @param array $attr
+     * @param array $style
+     * @param string|null $id
+     * @return Select
+     */
+    public function select($name, $selected = '', array $options = [], $attr = [], $style = [], $id = null)
+    {
+        return new Select($name, $selected, $options, $attr, $style, $id);
+    }
+
+    /**
+     * @param string $name
      * @param string|null $value
      * @param array $attr
      * @param array $style
@@ -280,6 +307,19 @@ class LeFormElement
      * @param array $attr
      * @param array $style
      * @param string|null $id
+     * @return TextArea
+     */
+    public function textArea($name, $value = null, $attr = [], $style = [], $id = null)
+    {
+        return new TextArea($name, $value, $attr, $style, $id);
+    }
+
+    /**
+     * @param string $name
+     * @param string|null $value
+     * @param array $attr
+     * @param array $style
+     * @param string|null $id
      * @return Input
      */
     public function time($name, $value = null, $attr = [], $style = [], $id = null)
@@ -311,45 +351,5 @@ class LeFormElement
     public function week($name, $value = null, $attr = [], $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
-    }
-
-    /**
-     * @param $for
-     * @param $display
-     * @param array $attr
-     * @param array $style
-     * @param string|null $id
-     * @return Label
-     */
-    public function label($for, $display, $id = null, $attr = [], $style = [])
-    {
-        return new Label($for, $display, $id, $attr, $style);
-    }
-
-    /**
-     * @param string $name
-     * @param string|null $value
-     * @param array $attr
-     * @param array $style
-     * @param string|null $id
-     * @return TextArea
-     */
-    public function textArea($name, $value = null, $attr = [], $style = [], $id = null)
-    {
-        return new TextArea($name, $value, $attr, $style, $id);
-    }
-
-    /**
-     * @param string $name
-     * @param string $selected
-     * @param array $options
-     * @param array $attr
-     * @param array $style
-     * @param string|null $id
-     * @return Select
-     */
-    public function select($name, $selected = '', array $options = [], $attr = [], $style = [], $id = null)
-    {
-        return new Select($name, $selected, $options, $attr, $style, $id);
     }
 }
