@@ -1,36 +1,36 @@
 /**
  * Created by robert on 5/2/2019.
  */
-var LeFormElements = {
+var LeFormElement = {
     button: function (name, value, attr, style, id) {
-        return LeFormElements.Input('button', name, value, attr, style, id);
+        return LeFormElement.Input('button', name, value, attr, style, id);
     },
     checkbox: function (name, value, attr, style, id) {
-        return LeFormElements.Input('checkbox', name, value, attr, style, id);
+        return LeFormElement.Input('checkbox', name, value, attr, style, id);
     },
     color: function (name, value, attr, style, id) {
-        return LeFormElements.Input('color', name, value, attr, style, id);
+        return LeFormElement.Input('color', name, value, attr, style, id);
     },
     date: function (name, value, attr, style, id) {
-        return LeFormElements.Input('date', name, value, attr, style, id);
+        return LeFormElement.Input('date', name, value, attr, style, id);
     },
     dateTime: function (name, value, attr, style, id) {
-        return LeFormElements.Input('dateTime', name, value, attr, style, id);
+        return LeFormElement.Input('dateTime', name, value, attr, style, id);
     },
     dateTimeLocal: function (name, value, attr, style, id) {
-        return LeFormElements.Input('dateTimeLocal', name, value, attr, style, id);
+        return LeFormElement.Input('dateTimeLocal', name, value, attr, style, id);
     },
     email: function (name, value, attr, style, id) {
-        return LeFormElements.Input('email', name, value, attr, style, id);
+        return LeFormElement.Input('email', name, value, attr, style, id);
     },
     file: function (name, value, attr, style, id) {
-        return LeFormElements.Input('file', name, value, attr, style, id);
+        return LeFormElement.Input('file', name, value, attr, style, id);
     },
     hidden: function (name, value, attr, style, id) {
-        return LeFormElements.Input('hidden', name, value, attr, style, id);
+        return LeFormElement.Input('hidden', name, value, attr, style, id);
     },
     image: function (name, value, attr, style, id) {
-        return LeFormElements.Input('image', name, value, attr, style, id);
+        return LeFormElement.Input('image', name, value, attr, style, id);
     },
     label: function (for_, display, id, attr, style) {
         var elemObj = $('<label />').attr('for', for_).text(display);
@@ -40,25 +40,25 @@ var LeFormElements = {
         return elemObj;
     },
     month: function (name, value, attr, style, id) {
-        return LeFormElements.Input('month', name, value, attr, style, id);
+        return LeFormElement.Input('month', name, value, attr, style, id);
     },
     number: function (name, value, attr, style, id) {
-        return LeFormElements.Input('number', name, value, attr, style, id);
+        return LeFormElement.Input('number', name, value, attr, style, id);
     },
     password: function (name, value, attr, style, id) {
-        return LeFormElements.Input('password', name, value, attr, style, id);
+        return LeFormElement.Input('password', name, value, attr, style, id);
     },
     radio: function (name, value, attr, style, id) {
-        return LeFormElements.Input('radio', name, value, attr, style, id);
+        return LeFormElement.Input('radio', name, value, attr, style, id);
     },
     range: function (name, value, attr, style, id) {
-        return LeFormElements.Input('range', name, value, attr, style, id);
+        return LeFormElement.Input('range', name, value, attr, style, id);
     },
     reset: function (name, value, attr, style, id) {
-        return LeFormElements.Input('reset', name, value, attr, style, id);
+        return LeFormElement.Input('reset', name, value, attr, style, id);
     },
     search: function (name, value, attr, style, id) {
-        return LeFormElements.Input('search', name, value, attr, style, id);
+        return LeFormElement.Input('search', name, value, attr, style, id);
     },
     select: function (name, selected, options, attr, style, id) {
         if (!id) { id = name.toLowerCase(); }
@@ -74,13 +74,13 @@ var LeFormElements = {
         return elemObj;
     },
     submit: function (name, value, attr, style, id) {
-        return LeFormElements.Input('submit', name, value, attr, style, id);
+        return LeFormElement.Input('submit', name, value, attr, style, id);
     },
     tel: function (name, value, attr, style, id) {
-        return LeFormElements.Input('tel', name, value, attr, style, id);
+        return LeFormElement.Input('tel', name, value, attr, style, id);
     },
     text: function (name, value, attr, style, id) {
-        return LeFormElements.Input('text', name, value, attr, style, id);
+        return LeFormElement.Input('text', name, value, attr, style, id);
     },
     textArea: function (name, value, attr, style, id) {
         if (!id) { id = name.toLowerCase(); }
@@ -91,13 +91,13 @@ var LeFormElements = {
         return elemObj;
     },
     time: function (name, value, attr, style, id) {
-        return LeFormElements.Input('time', name, value, attr, style, id);
+        return LeFormElement.Input('time', name, value, attr, style, id);
     },
     url: function (name, value, attr, style, id) {
-        return LeFormElements.Input('url', name, value, attr, style, id);
+        return LeFormElement.Input('url', name, value, attr, style, id);
     },
     week: function (name, value, attr, style, id) {
-        return LeFormElements.Input('week', name, value, attr, style, id);
+        return LeFormElement.Input('week', name, value, attr, style, id);
     },
     Input: function (type, name, value, attr, style, id) {
         if (!id) { id = name.toLowerCase(); }
