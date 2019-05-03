@@ -65,7 +65,7 @@ var LeFormElement = {
         var elemObj = $('<select />').attr('name', name).attr('id', id);
         this.addAttributes(elemObj, attr);
         this.addStyles(elemObj, style);
-        $.each(options, function(v, t) {
+        $.each(options, function(t, v) {
             elemObj.append($('<option>').val(v).text(t) );
         });
         if (selected) {
