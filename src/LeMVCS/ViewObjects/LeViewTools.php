@@ -42,7 +42,11 @@ class LeViewTools
      */
     public function getVersionedUrl($relative_file_path, $full_file_path, $key = 'r')
     {
-        $mod_time = filemtime($full_file_path);
+        $value_for_time = $full_file_path;
+        if (false !== strpos($full_file_path, '?')) {
+            $value_for_time = current(explode('?', $full_file_path));
+        }
+        $mod_time = filemtime($value_for_time);
         $qs_joiner = (false === strpos($relative_file_path, '?')) ? '?' : '&';
         $output = "{$relative_file_path}{$qs_joiner}{$key}={$mod_time}";
         return $output;
