@@ -257,14 +257,17 @@ abstract class LeModelAbstract
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getErrors()
     {
-        return [
-            'error' => $this->dbResult->getErrorInfo(),
-            'code' => $this->dbResult->getErrorCode(),
-        ];
+        $output = null;
+        $error_info = $this->dbResult->getErrorInfo();
+        $error_code = $this->dbResult->getErrorCode();
+        if ($error_info || $error_code) {
+            $output = ['error' => $error_info, 'code' => $error_code,];
+        }
+        return $output;
     }
 
     /**
