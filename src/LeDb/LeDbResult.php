@@ -213,25 +213,27 @@ class LeDbResult implements LeDbResultInterface
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
      */
     public function getFirstValue()
     {
         $output = $this->getFirstRow();
-        if (0 < count($output)) {
+        if (!is_null($output) && 0 < count($output)) {
             $output = current($output);
         }
         return $output;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getFirstRow()
     {
         $output = $this->getOutput();
         if (0 < count($output)) {
             $output = current($output);
+        } else {
+            $output = null;
         }
         return $output;
     }

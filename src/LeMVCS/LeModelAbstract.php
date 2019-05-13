@@ -384,34 +384,32 @@ abstract class LeModelAbstract
      */
     protected function loadData(array $input)
     {
-        //if (empty($this->data)) {
-            $this->original = $input;
-            foreach ($this->schema as $column => $attrs) {
-                $callback_set = null;
+        $this->original = $input;
+        foreach ($this->schema as $column => $attrs) {
+            $callback_set = null;
+            $value = null;
+            if (isset($input[$column])) {
+                $value = $input[$column];
+                if (!empty($attrs['length']) && 'string' == $attrs['type']) {
+                    $value = substr($value, 0, $attrs['length']);
+                } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
+                    throw new Exception("'{$value}' is not a valid enum value for `{$column}`;");
+                }
+            } else {
                 $value = null;
-                if (isset($input[$column])) {
-                    $value = $input[$column];
-                    if (!empty($attrs['length']) && 'string' == $attrs['type']) {
-                        $value = substr($value, 0, $attrs['length']);
-                    } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
-                        throw new Exception("'{$value}' is not a valid enum value for `{$column}`;");
-                    }
-                } else {
-                    $value = null;
-                }
-                if (isset($attrs['callback_set']) && $callback_set = $attrs['callback_set']) {
-                    $this->$callback_set($value);
-                } else {
-                    $this->data[$column] = $value;
-                }
             }
-            if (array_key_exists($this->getPrimaryKey(), $input)) {
-                /* include the primary key in the data */
-                $primary_key = $this->getPrimaryKey();
-                $this->data[$primary_key] = $input[$primary_key];
-                $this->setId($input[$primary_key]);
+            if (isset($attrs['callback_set']) && $callback_set = $attrs['callback_set']) {
+                $this->$callback_set($value);
+            } else {
+                $this->data[$column] = $value;
             }
-       // }
+        }
+        if (array_key_exists($this->getPrimaryKey(), $input)) {
+            /* include the primary key in the data */
+            $primary_key = $this->getPrimaryKey();
+            $this->data[$primary_key] = $input[$primary_key];
+            $this->setId($input[$primary_key]);
+        }
     }
 
     /**
