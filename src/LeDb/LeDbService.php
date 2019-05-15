@@ -276,7 +276,8 @@ class LeDbService
      */
     private function getSqlType($sql)
     {
-        $parts = explode(' ', trim($sql));
+        /* Remove all line returns and trim the beginning and end of the sql string */
+        $parts = explode(' ', trim(preg_replace('/\s\s+/', ' ', $sql)));
         $first_word = strtolower(current($parts));
         if ($first_word === 'select') {
             $output = self::SQL_TYPE_READ;
