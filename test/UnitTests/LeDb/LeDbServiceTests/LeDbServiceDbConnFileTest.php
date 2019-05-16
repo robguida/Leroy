@@ -100,7 +100,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
 
             $this->assertEquals($queries['select'], $result3->getSql());
             $this->assertEquals(1, $result3->getFirstValue());
-            $this->assertEquals(1, $result3->getRowCount());
+            $this->assertEquals(1, $result3->getRecordCount());
         }
         foreach ($this->connectionsAndQueries2() as $dsn => $queries) {
             $db = LeDbService::init($dsn, DBCONFIGFILE2);
@@ -116,7 +116,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
 
             $this->assertEquals($queries['select'], $result3->getSql());
             $this->assertEquals(1, $result3->getFirstValue());
-            $this->assertEquals(1, $result3->getRowCount());
+            $this->assertEquals(1, $result3->getRecordCount());
         }
     }
 
@@ -136,7 +136,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
                 $result2 = $db->execute($queries['select'], ['jane', 'doe']);
                 $rs = $result2->getFirstRow();
                 $dateAdded = new DateTime($rs['date_created']);
-                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals(1, $result2->getRecordCount());
                 $this->assertEquals($queries['select'], $result2->getSql());
                 $this->assertEquals($result->getLastInsertId(), $rs['contact_id']);
                 $this->assertEquals('jane', $rs['first_name']);
@@ -155,7 +155,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
                 $this->assertEquals($queries['select'], $result2->getSql());
                 $rs = $result2->getFirstRow();
                 $dateAdded = new DateTime($rs['date_created']);
-                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals(1, $result2->getRecordCount());
                 $this->assertEquals($result->getLastInsertId(), $rs['address_id']);
                 $this->assertEquals('1 Abby Road', $rs['address_1']);
                 $this->assertEquals('London', $rs['city']);
@@ -184,7 +184,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
                 $result2 = $db->execute($queries['select'], ['last_name' => 'jane', 'first_name' => 'doe'], true);
                 $rs = $result2->getFirstRow();
                 $dateAdded = new DateTime($rs['date_created']);
-                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals(1, $result2->getRecordCount());
                 $this->assertEquals($queries['select'], $result2->getSql());
                 $this->assertEquals($result->getLastInsertId(), $rs['contact_id']);
                 $this->assertEquals('jane', $rs['last_name']);
@@ -208,7 +208,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
                 );
                 $rs = $result2->getFirstRow();
                 $dateAdded = new DateTime($rs['date_created']);
-                $this->assertEquals(1, $result2->getRowCount());
+                $this->assertEquals(1, $result2->getRecordCount());
                 $this->assertEquals($queries['select'], $result2->getSql());
                 $this->assertEquals($result->getLastInsertId(), $rs['address_id']);
                 $this->assertEquals('1 Abby Road', $rs['address_1']);
@@ -228,21 +228,21 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
         $result = $db->execute($sql);
         $this->assertEquals(1, $result->getRowsAffected());
         $this->assertEquals(1, $result->getLastInsertId());
-        $this->assertEquals(0, $result->getRowCount());
+        $this->assertEquals(0, $result->getRecordCount());
 
         $sql = 'SELECT * FROM contact;';
         $result2 = $db->execute($sql);
-        $this->assertEquals(1, $result2->getRowCount());
+        $this->assertEquals(1, $result2->getRecordCount());
 
         $sql = 'INSERT INTO contact (last_name, first_name) VALUES (\'doe\', \'jane\');';
         $result = $db->execute($sql);
         $this->assertEquals(1, $result->getRowsAffected());
         $this->assertEquals(2, $result->getLastInsertId());
-        $this->assertEquals(0, $result->getRowCount());
+        $this->assertEquals(0, $result->getRecordCount());
 
         $sql = 'SELECT * FROM contact;';
         $result2 = $db->execute($sql);
-        $this->assertEquals(2, $result2->getRowCount());
+        $this->assertEquals(2, $result2->getRecordCount());
     }
 
     public function testRowsFound()
@@ -259,7 +259,7 @@ class LeDbServiceDbConnFileTest extends LeroyUnitTestAbstract
         $sql = 'SELECT SQL_CALC_FOUND_ROWS first_name, last_name FROM contact LIMIT 2';
         $result = $db->execute($sql);
         $this->assertEquals(9, $result->getRowsFound());
-        $this->assertEquals(2, $result->getRowCount());
+        $this->assertEquals(2, $result->getRecordCount());
     }
 
     public function testGetRowsAffectedWhenNoValueChanges()

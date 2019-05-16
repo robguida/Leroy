@@ -169,9 +169,13 @@ class LeDbResult implements LeDbResultInterface
      * @Note gets the number of records in from the select statement. Do not use with SQL_CALC_FOUND_ROWS
      * @return int
      */
-    public function getRowCount()
+    public function getRecordCount()
     {
-        return count($this->getOutput());
+        $output = 0;
+        if (!is_null($this->output)) {
+            $output = count($this->output);
+        }
+        return $output;
     }
 
     /**

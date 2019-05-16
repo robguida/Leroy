@@ -98,7 +98,7 @@ interface LeDbResultInterface
      * @Note gets the number of records in from the select statement. Do not use with SQL_CALC_FOUND_ROWS
      * @return int
      */
-    public function getRowCount();
+    public function getRecordCount();
 
     /**
      * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
