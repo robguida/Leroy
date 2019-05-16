@@ -439,7 +439,7 @@ abstract class LeModelAbstract
     {
         $output = ['cols' => [], 'bindings' => []];
         foreach ($this->data as $column => $value) {
-            /* primary keys will not be in the schema, so we skip this part */
+            /* Primary keys will not be in the schema, so we skip this part. */
             if (isset($this->schema[$column]) && $attrs = $this->schema[$column]) {
                 if (isset($attrs['callback_get']) && $call_back = $attrs['callback_get']) {
                     $value = $this->$call_back();
