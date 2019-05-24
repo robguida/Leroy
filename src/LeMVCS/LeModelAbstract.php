@@ -355,6 +355,10 @@ abstract class LeModelAbstract
             "VALUES (" . implode(', ', $needles) . ") " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
+        error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
+        error_log(__FILE__ . ' ' . __LINE__ . ' $sql: ' . print_r($sql, true));
+        error_log(__FILE__ . ' ' . __LINE__ . ' $this->dbResult: ' . print_r($this->dbResult, true));
+
         if ($this->dbResult->success()) {
             /* $this->dbLoadResult will be overwritten when loading the object */
             $output = $this->dbResult->getLastInsertId();
@@ -375,6 +379,9 @@ abstract class LeModelAbstract
     {
         $sql = "SELECT * FROM {$this->table_name} WHERE {$this->primary_key} = ?";
         $this->dbResult = $this->db->execute($sql, [$id], false, $use_prime);
+        error_log(__FILE__ . ' ' . __LINE__ . ' $id: ' . print_r($id, true));
+        error_log(__FILE__ . ' ' . __LINE__ . ' $sql: ' . print_r($sql, true));
+
         if ($this->dbResult->success()) {
             $this->loadData($this->dbResult->getFirstRow());
         }
