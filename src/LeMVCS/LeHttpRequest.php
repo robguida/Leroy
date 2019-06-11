@@ -64,6 +64,30 @@ class LeHttpRequest
     //</editor-fold>
 
     /**
+     * @return bool
+     */
+    public function isPost()
+    {
+        return self::METHOD_POST == $this->getMethod();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGet()
+    {
+        return self::METHOD_GET == $this->getMethod();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCli()
+    {
+        return self::METHOD_CLI == $this->getMethod();
+    }
+
+    /**
      * @return bool|string
      */
     public function getMethod()
