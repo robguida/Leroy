@@ -220,10 +220,11 @@ abstract class LeModelAbstract
     abstract protected function setTableName();
 
     //<editor-fold desc="Initializing Functions">
+
     /**
      * @param int|string $id
      * @param LeDbService|null $db
-     * @return LeModelAbstract|null
+     * @return bool|LeModelAbstract
      * @throws Exception
      */
     public static function initWithId($id, LeDbService $db = null)
@@ -231,10 +232,13 @@ abstract class LeModelAbstract
         /**
          * @var LeModelAbstract $model
          */
+        $output = false;
         $class = get_called_class();
         $model = new $class($db);
-        $model->loadFromId($id);
-        return $model;
+        if ($model->loadFromId($id)) {
+            $output = $model;
+        }
+        return $output;
     }
 
     /**
@@ -369,15 +373,19 @@ abstract class LeModelAbstract
     /**
      * @param $id
      * @param bool $use_prime
+     * @return bool
      * @throws Exception
      */
     protected function loadFromId($id, $use_prime = false)
     {
+        $output = false;
         $sql = "SELECT * FROM {$this->table_name} WHERE {$this->primary_key} = ?";
         $this->dbResult = $this->db->execute($sql, [$id], false, $use_prime);
         if ($this->dbResult->success() && $data = $this->dbResult->getFirstRow()) {
+            $output = true;
             $this->loadData($data);
         }
+        return $output;
     }
 
     /**

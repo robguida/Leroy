@@ -140,26 +140,6 @@ class AddressModel extends LeModelAbstract
         $this->setModifiedById(rand(10000, 999999));
     }
 
-    /**
-     * @param int|string $id
-     * @param LeDbService $db
-     * @return AddressModel|LeModelAbstract|null
-     */
-    public static function initWithId($id, LeDbService $db = null)
-    {
-        return parent::initWithId($id, $db);
-    }
-
-    /**
-     * @param array $input
-     * @param LeDbService $db
-     * @return AddressModel|LeModelAbstract|null
-     */
-    public static function initWithArray(array $input, LeDbService $db = null)
-    {
-        return parent::initWithArray($input, $db);
-    }
-
     //<editor-fold desc="AddressModel Config Functions">
     protected function setPrimaryKey()
     {
