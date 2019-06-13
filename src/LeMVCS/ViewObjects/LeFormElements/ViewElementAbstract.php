@@ -61,6 +61,30 @@ abstract class ViewElementAbstract
     }
 
     /**
+     * @param $val
+     */
+    public function setValue($val)
+    {
+        $this->setAttribute('value', $val);
+    }
+
+    /**
+     * @param $val
+     */
+    public function setId($val)
+    {
+        $this->setAttribute('id', $val);
+    }
+
+    /**
+     * @param $val
+     */
+    public function setName($val)
+    {
+        $this->setAttribute('name', $val);
+    }
+
+    /**
      * @param array $input
      * @return ViewElementAbstract
      */

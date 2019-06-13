@@ -37,6 +37,14 @@ class Select extends ViewElementAbstract
     }
 
     /**
+     * @param mixed $input
+     */
+    public function setValue($input)
+    {
+        $this->setSelected($input);
+    }
+
+    /**
      * @return string
      */
     public function toString()
