@@ -31,7 +31,7 @@ class Select extends ViewElementAbstract
     /**
      * @param mixed $input
      */
-    public function selectThis($input)
+    public function setSelected($input)
     {
         $this->selected = $input;
     }
