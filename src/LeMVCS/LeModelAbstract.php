@@ -401,7 +401,7 @@ abstract class LeModelAbstract
             $value = null;
             if (isset($input[$column])) {
                 $value = $input[$column];
-                if (!empty($attrs['length']) && 'string' == $attrs['type']) {
+                if ('string' == $attrs['type'] && !empty($attrs['length']) && is_int($attrs['length'])) {
                     $value = substr($value, 0, $attrs['length']);
                 } elseif ('enum' == $attrs['type'] && !in_array($value, $attrs['length'])) {
                     throw new Exception("'{$value}' is not a valid enum value for `{$column}`;");
