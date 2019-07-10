@@ -353,16 +353,30 @@ abstract class LeModelAbstract
      */
     protected function insert($on_duplicate_key_clause)
     {
+        $db = $this->getDb();
         list($cols, $bindings) = array_values($this->getColsAndBindings());
         $needles = array_fill(0, count($cols), '?');
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
             "VALUES (" . implode(', ', $needles) . ") " .
             "{$on_duplicate_key_clause};";
-        $this->dbResult = $this->getDb()->execute($sql, $bindings);
+        $this->dbResult = $db->execute($sql, $bindings);
         if ($this->dbResult->success()) {
-            /* $this->dbLoadResult will be overwritten when loading the object */
-            $output = $this->dbResult->getLastInsertId();
-            $this->loadFromId($output, true);
+            if (!$on_duplicate_key_clause) {
+                /* When this is a strict insert, we can load the record */
+                $output = $this->dbResult->getLastInsertId();
+                $this->loadFromId($output, true);
+            } else {
+                /* When on duplicate key update is used there is no last insert id. We
+                    select on the values used in the insert and then get the pkey and return that */
+                $sql = "SELECT * FROM `{$this->getTableName()}` WHERE " . implode(' = ? AND ', $cols) . ' = ?;';
+                $result = $db->execute($sql, $bindings);
+                if ($result->success()) {
+                    $this->loadData($result->getFirstRow());
+                    $output = $this->getId();
+                } else {
+                    $output = false;
+                }
+            }
         } else {
             /* $this->dbLoadResult will be available to the calling class to get errors */
             $output = false;
@@ -421,6 +435,11 @@ abstract class LeModelAbstract
             $this->data[$primary_key] = $input[$primary_key];
             $this->setId($input[$primary_key]);
         }
+    }
+
+    private function getSelectForDuplicateKey($cols)
+    {
+
     }
 
     /**
