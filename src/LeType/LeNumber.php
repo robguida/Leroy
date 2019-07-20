@@ -113,7 +113,7 @@ class LeNumber implements LeTypeInterface
      * @param LeUnIntSmall|null $max
      * @param bool|null $signed
      * @param LeUnIntSmall|null $precision
-     * @return LeTypeInterface
+     * @return LeTypeInterface|LeNumber
      */
     public static function init($value, $min = null, $max = null, $signed = null, $precision = null)
     {
@@ -175,6 +175,33 @@ class LeNumber implements LeTypeInterface
     public function getPrecision()
     {
         return $this->precision;
+    }
+
+    /**
+     * @param integer|float|null $number
+     * @param array $output
+     * @return array
+     */
+    public function getBitmask($number = null, array & $output = [])
+    {
+        if (is_null($number)) {
+            $number = $this->value;
+        }
+        $bits = [];
+        for($i = 1; $i < $number; $i *= 2) {
+            $bits[] = $i;
+        }
+        echo __FILE__ . ' ' . __LINE__ . ' $bits:<pre style="text-align: left;">' . print_r($bits, true) . '</pre>';
+        $max = max($bits);
+        $output[] = $max;
+        echo __FILE__ . ' ' . __LINE__ . ' $max:<pre style="text-align: left;">' . print_r($max, true) . '</pre>';
+        $remainder = $number - $max;
+        echo __FILE__ . ' ' . __LINE__ . ' $remainder:<pre style="text-align: left;">' . print_r($remainder, true) . '</pre>';
+        if (1 < $remainder) {
+            $this->getBitmaps($remainder, $output);
+        }
+        echo __FILE__ . ' ' . __LINE__ . ' $output:<pre style="text-align: left;">' . print_r($output, true) . '</pre>';
+        return $output;
     }
 
     /**
