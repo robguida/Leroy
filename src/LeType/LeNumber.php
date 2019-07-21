@@ -198,7 +198,7 @@ class LeNumber implements LeTypeInterface
         $remainder = $number - $max;
         echo __FILE__ . ' ' . __LINE__ . ' $remainder:<pre style="text-align: left;">' . print_r($remainder, true) . '</pre>';
         if (1 < $remainder) {
-            $this->getBitmaps($remainder, $output);
+            $this->getBitmask($remainder, $output);
         }
         echo __FILE__ . ' ' . __LINE__ . ' $output:<pre style="text-align: left;">' . print_r($output, true) . '</pre>';
         return $output;
