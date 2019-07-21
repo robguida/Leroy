@@ -10,11 +10,19 @@ namespace LeroyTest\LeType;
 
 use Exception;
 use InvalidArgumentException;
+use Leroy\LeType\LeInt;
 use Leroy\LeType\LeNumber;
 use LeroyTestLib\LeroyUnitTestAbstract;
 
 class LeNumberTest extends LeroyUnitTestAbstract
 {
+    public function testGetBitmask()
+    {
+        $number = LeInt::init(44);
+        $result = $number->getBitmask();
+        $this->assertEquals([36, 8, 2, 1], $result);
+    }
+
     public function testNumericType()
     {
         $values = ['test', LeNumber::getMin(), LeNumber::getMax(), 'string'];
