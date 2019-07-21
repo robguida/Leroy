@@ -191,16 +191,12 @@ class LeNumber implements LeTypeInterface
         for($i = 1; $i < $number; $i *= 2) {
             $bits[] = $i;
         }
-        echo __FILE__ . ' ' . __LINE__ . ' $bits:<pre style="text-align: left;">' . print_r($bits, true) . '</pre>';
         $max = max($bits);
         $output[] = $max;
-        echo __FILE__ . ' ' . __LINE__ . ' $max:<pre style="text-align: left;">' . print_r($max, true) . '</pre>';
         $remainder = $number - $max;
-        echo __FILE__ . ' ' . __LINE__ . ' $remainder:<pre style="text-align: left;">' . print_r($remainder, true) . '</pre>';
         if (1 < $remainder) {
             $this->getBitmask($remainder, $output);
         }
-        echo __FILE__ . ' ' . __LINE__ . ' $output:<pre style="text-align: left;">' . print_r($output, true) . '</pre>';
         return $output;
     }
 
