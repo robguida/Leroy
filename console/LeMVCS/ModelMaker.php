@@ -424,8 +424,6 @@ class ModelMaker extends LePrompterAbstract
                 $type = 'float';
                 break;
             case 'date':
-                $type = 'Date|string';
-                break;
             case 'datetime':
             case 'timestamp':
                 $type = 'DateTime|string';
