@@ -166,7 +166,10 @@ class LeApiResponseModel
      */
     public function getData($use_key_val_as_key = '')
     {
-        if (!empty($use_key_val_as_key) && array_key_exists($use_key_val_as_key, current($this->data))) {
+        if (!empty($use_key_val_as_key) &&
+            !empty($this->data) &&
+            array_key_exists($use_key_val_as_key, current($this->data))
+        ) {
             $output = [];
             foreach ($this->data as $data) {
                 $output[$data[$use_key_val_as_key]] = $data;
