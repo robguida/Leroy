@@ -437,11 +437,6 @@ abstract class LeModelAbstract
         }
     }
 
-    private function getSelectForDuplicateKey($cols)
-    {
-
-    }
-
     /**
      * @return string
      */

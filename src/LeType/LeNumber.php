@@ -181,23 +181,35 @@ class LeNumber implements LeTypeInterface
      * @param integer|float|null $number
      * @param array $output
      * @return array
+     * @note I have tried 3 different versions to avoid the recursive loop and rebuilding the $bits array,
+     *          however, they are not any faster, they use up the same amount of memory, they
+     *          were not as easy to follow, and required more lines of code. The first time it runs
+     *          it take 128 ms then subsequent runs are 108 ms, and 10MB of memory in PHPUnit
      */
-    public function getBitmask($number = null, array & $output = [])
+    public function getBinaries($number = null, array & $output = [])
     {
         if (is_null($number)) {
             $number = $this->value;
         }
         $bits = [];
-        for($i = 1; $i < $number; $i *= 2) {
+        for($i = 1; $i <= $number; $i *= 2) {
             $bits[] = $i;
         }
         $max = max($bits);
         $output[] = $max;
         $remainder = $number - $max;
         if (1 < $remainder) {
-            $this->getBitmask($remainder, $output);
+            $this->getBinaries($remainder, $output);
+        } elseif (1 == $remainder) {
+            $output[] = 1;
         }
         return $output;
+    }
+
+    public static function getBinaryFromNumber($number)
+    {
+        $number = LeNumber::init($number);
+        return $number->getBinaries();
     }
 
     /**
