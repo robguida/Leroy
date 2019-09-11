@@ -161,6 +161,19 @@ abstract class LeModelAbstract
     }
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    public function hasData($key)
+    {
+        $output = false;
+        if (array_key_exists($key, $this->data)) {
+            $output = !empty($this->data[$key]);
+        }
+        return $output;
+    }
+
+    /**
      * @return string
      */
     protected function getTableName()
