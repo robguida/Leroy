@@ -172,7 +172,8 @@ class LeDbResult implements LeDbResultInterface
     public function getRecordCount()
     {
         $output = 0;
-        if (!is_null($this->output)) {
+        /* If there is data in LeDbResult::output, then we can get the count. Otherwise, return 0. */
+        if ($this->getOutput()) {
             $output = count($this->output);
         }
         return $output;
@@ -186,6 +187,7 @@ class LeDbResult implements LeDbResultInterface
         if (is_null($this->output)) {
             $this->output = [];
         }
+        /* The key starts with LeDbResultRowSet_0, and increments with each data set */
         $key = 'LeDbResultRowSet_' . count($this->output);
         if ($this->pdoStatement instanceof PDOStatement) {
             $this->output[$key] = $this->getPdoStatement()->nextRowset();
