@@ -469,6 +469,7 @@ abstract class LeModelAbstract
     /**
      * @return array
      * @todo loadData() and populateBindings() needs to use a common validation function that uses the types
+     * @todo update all model schemas so default is always a key in the array, and remove the isset() functions
      */
     private function getColsAndBindings()
     {
@@ -485,6 +486,9 @@ abstract class LeModelAbstract
                 ) {
                     /* if the table has a default for the current timestamp, then let the table set the value */
                     continue;
+                } elseif (empty($value) && isset($attrs['default'])) {
+                    /* When there is no value, then set the value to the default value */
+                    $value = $attrs['default'];
                 }
             }
             $output['cols'][] = $column;
