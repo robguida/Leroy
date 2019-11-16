@@ -108,6 +108,15 @@ class LeDbService
     //</editor-fold>
 
     /**
+     * @param string $file
+     */
+    public function executeFile($file)
+    {
+        $cred = $this->domain_credentials->master;
+        exec("mysql -h localhost -u {$cred->userName} -p{$cred->password} {$cred->dbName} < \"{$file}\"");
+    }
+
+    /**
      * @param string $sql
      * @param array $bindings
      * @param bool $associate
