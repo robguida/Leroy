@@ -114,8 +114,12 @@ class LeDbService
     public function executeFile($file)
     {
         $cred = $this->domain_credentials->master;
-        $result = exec("mysql -h localhost -u {$cred->userName} -p{$cred->password} {$cred->dbName} < \"{$file}\"");
-        return $result;
+        exec(
+            "mysql -h localhost -u {$cred->userName} -p{$cred->password} {$cred->dbName} < \"{$file}\" 2>&1",
+            $output,
+            $return_var
+        );
+        return [$output, $return_var];
     }
 
     /**
