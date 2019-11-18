@@ -113,9 +113,9 @@ class LeDbService
     public function executeFile($file)
     {
         $cred = $this->domain_credentials->master;
-        error_log(__FILE__ . ' ' . __LINE__ . ' $cred: ' . print_r($cred, true));
+        echo(__FILE__ . ' ' . __LINE__ . ' $cred: ' . print_r($cred, true));
         $result = exec("mysql -h localhost -u {$cred->userName} -p{$cred->password} {$cred->dbName} < \"{$file}\"");
-        error_log( __FILE__ . ' ' . __LINE__ . ' $result: ' . $result);
+        echo( __FILE__ . ' ' . __LINE__ . ' $result: ' . $result);
     }
 
     /**
