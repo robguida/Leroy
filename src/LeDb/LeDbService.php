@@ -109,13 +109,13 @@ class LeDbService
 
     /**
      * @param string $file
+     * @return string
      */
     public function executeFile($file)
     {
         $cred = $this->domain_credentials->master;
-        echo(__FILE__ . ' ' . __LINE__ . ' $cred: ' . print_r($cred, true));
         $result = exec("mysql -h localhost -u {$cred->userName} -p{$cred->password} {$cred->dbName} < \"{$file}\"");
-        echo( __FILE__ . ' ' . __LINE__ . ' $result: ' . $result);
+        return $result;
     }
 
     /**
