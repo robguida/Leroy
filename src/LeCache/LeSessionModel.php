@@ -29,7 +29,7 @@ use InvalidArgumentException;
  * Class SessionModel
  * @package PharmPay
  */
-class SessionModel
+class LeSessionModel
 {
     /* Session key names */
     const AUTH = 'auth';
@@ -41,11 +41,11 @@ class SessionModel
     const GUEST_SKINID = 'skin_id';
 
     /**
-     * @return SessionModel
+     * @return LeSessionModel
      */
     public static function init()
     {
-        return new SessionModel();
+        return new LeSessionModel();
     }
 
     //<editor-fold desc="Data Functions">
@@ -372,11 +372,11 @@ class SessionModel
 
     /**
      * @param int $value
-     * @return SessionModel Returning the object in case there are more items to set;
+     * @return LeSessionModel Returning the object in case there are more items to set;
      */
     public function setSkinId($value)
     {
-        $session = new SessionModel();
+        $session = new LeSessionModel();
         $session->initGuest();
         $_SESSION[self::GUEST][self::GUEST_SKINID] = $value;
     }
