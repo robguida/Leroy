@@ -25,8 +25,14 @@ interface LeDbResultInterface
 
     /**
      * @return bool
+     * @deprecated
      */
     public function success();
+
+    /**
+     * @return bool
+     */
+    public function isSuccess();
 
     /**
      * @param null|PDOStatement $pdoStatement

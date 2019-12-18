@@ -80,8 +80,17 @@ class LeDbResult implements LeDbResultInterface
 
     /**
      * @return bool
+     * @deprecated
      */
     public function success()
+    {
+        return $this->isSuccess();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccess()
     {
         return ($this->getPdoStatement() instanceof PDOStatement);
     }
