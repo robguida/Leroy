@@ -118,9 +118,10 @@ interface LeDbResultInterface
     public function nextSet();
 
     /**
+     * @param null $col indicates using a column's value to create an associated array output
      * @return array
      */
-    public function getOutput();
+    public function getOutput($col = null);
 
     /**
      * @return string
