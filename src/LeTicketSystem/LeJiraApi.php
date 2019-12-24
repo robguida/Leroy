@@ -34,7 +34,7 @@ class LeJiraApi implements LetTicketSystemInterface
             $issueField->setPriorityName("High");
             $issueField->setIssueType("Bug");
             $issueService = new IssueService(null, null, '/var/www/PharmPay/UI/src/lib/bootstrap/');
-            $ret = 'success'; // $issueService->create($issueField);
+            $ret = implode("\n", $description); // $issueService->create($issueField);
         } catch (JiraException $e) {
             $ret = $e->getMessage();
         }
@@ -48,16 +48,20 @@ class LeJiraApi implements LetTicketSystemInterface
      */
     private function cycle(array $arr, array & $description, $level = 1) {
         foreach ($arr as $key => $val) {
-            $symbol = 'h2';
-            if (1 <= $level) {
-                $symbol = '';
-                for ($i = 1; $i <= $level; $i++) {
+            $symbol = '*';
+            if (2 < $level) {
+                for ($i = 1; $i < $level; $i++) {
                     $symbol .= '*';
                 }
+            } else {
+                if (!empty($description)) {
+                    $description[] = '';
+                }
+                $description[] = "*{$key}*";
             }
             if (is_array($val)) {
                 if (!empty($val)) {
-                    $this->cycle($val, $description, ++$level);
+                    $this->cycle($val, $description, $level + 1);
                 } else {
                     $description[] = "{$symbol} {$key} = 'EMPTY'";
                 }
