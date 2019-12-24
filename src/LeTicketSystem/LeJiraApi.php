@@ -53,7 +53,7 @@ class LeJiraApi implements LetTicketSystemInterface
                 for ($i = 1; $i < $level; $i++) {
                     $symbol .= '*';
                 }
-            } else {
+            } elseif (1 == $level) {
                 if (!empty($description)) {
                     $description[] = '';
                 }
