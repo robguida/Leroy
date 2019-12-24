@@ -13,7 +13,8 @@
     "require": {
         "php": ">=7.2.13",
         "ext-pdo": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "lesstif/php-jira-rest-client": "^1.42.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7",
