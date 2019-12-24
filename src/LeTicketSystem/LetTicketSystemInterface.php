@@ -6,7 +6,7 @@
  * Time: 8:02 PM
  */
 
-namespace LeTicketSystem;
+namespace Leroy\LeTicketSystem;
 
 
 interface LetTicketSystemInterface

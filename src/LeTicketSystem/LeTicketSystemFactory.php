@@ -6,7 +6,7 @@
  * Time: 8:01 PM
  */
 
-namespace LeTicketSystem;
+namespace Leroy\LeTicketSystem;
 
 
 class LeTicketSystemFactory

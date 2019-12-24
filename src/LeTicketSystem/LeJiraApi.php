@@ -6,11 +6,11 @@
  * Time: 8:02 PM
  */
 
-namespace LeTicketSystem;
-
+namespace Leroy\LeTicketSystem;
 
 use JiraRestApi\Issue\IssueField;
 use JiraRestApi\Issue\IssueService;
+use JiraRestApi\JiraException;
 
 class LeJiraApi implements LetTicketSystemInterface
 {
@@ -24,19 +24,20 @@ class LeJiraApi implements LetTicketSystemInterface
      */
     public function create(array $errors, $project, $summary, $priority, $ticket_type)
     {
-        $description = [];
-        $this->cycle($errors, $description);
-        $issueField = new IssueField();
-        $issueField->setProjectKey($project);
-        $issueField->setSummary($summary);
-        $issueField->setDescription(implode("\n", $description));
-        $issueField->setPriorityName("High");
-        $issueField->setIssueType("Bug");
-        $issueService = new IssueService(null, null, '/var/www/PharmPay/UI/src/lib/bootstrap/');
-        $ret = $issueService->create($issueField);
-
-        //If success, Returns a link to the created issue.
-        var_dump($ret);
+        try {
+            $description = [];
+            $this->cycle($errors, $description);
+            $issueField = new IssueField();
+            $issueField->setProjectKey($project);
+            $issueField->setSummary($summary);
+            $issueField->setDescription(implode("\n", $description));
+            $issueField->setPriorityName("High");
+            $issueField->setIssueType("Bug");
+            $issueService = new IssueService(null, null, '/var/www/PharmPay/UI/src/lib/bootstrap/');
+            $ret = 'success'; // $issueService->create($issueField);
+        } catch (JiraException $e) {
+            $ret = $e->getMessage();
+        }
         return $ret;
     }
 
