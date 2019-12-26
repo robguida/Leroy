@@ -18,7 +18,7 @@ class LeTicketSystemFactory
      */
     public static function init($ticket_system = self::TS_JIRA)
     {
-        $class = "Leroy\\LeTicketSystem\\{$ticket_system}Api";
+        $class = "Leroy\\LeTicketSystem\\Vendor\\{$ticket_system}Api";
         return new $class;
     }
 }
