@@ -46,8 +46,8 @@ interface LeTicketSystemInterface
     public function addComment($id, $comment);
 
     /**
-     * @param string $criteria
+     * @param LeTicketSystemRequestModel $model
      * @return LeApiResponseModel
      */
-    public function find($criteria);
+    public function find(LeTicketSystemRequestModel $model);
 }
