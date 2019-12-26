@@ -8,8 +8,6 @@
 
 namespace Leroy\LeTicketSystem;
 
-use Prophecy\Doubler\ClassPatch\ReflectionClassNewInstancePatch;
-
 class LeTicketSystemFactory
 {
     const TS_JIRA = 'Jira';
