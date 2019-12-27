@@ -5,6 +5,7 @@
  * Date: 12/27/2019
  * Time: 2:38 PM
  */
+namespace LeroyTest\LeTicketSystem;
 
 require_once '/var/www/Leroy/src/bootstrap.php';
 

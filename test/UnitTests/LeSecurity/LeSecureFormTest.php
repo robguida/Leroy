@@ -7,7 +7,9 @@
  *
  */
 
-namespace LeroyTest\LeApi;
+namespace LeroyTest\LeSecurity;
+
+require_once '/var/www/Leroy/src/bootstrap.php';
 
 use Leroy\LeSecurity\LeSecureForm;
 use LeroyTestLib\LeroyUnitTestAbstract;

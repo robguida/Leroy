@@ -8,7 +8,10 @@
 
 namespace Leroy\LeTicketSystem;
 
-
+/**
+ * Class LeTicketSystemApiAbstract
+ * @package Leroy\LeTicketSystem
+ */
 abstract class LeTicketSystemApiAbstract
 {
     /**
