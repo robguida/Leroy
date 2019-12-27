@@ -15,6 +15,8 @@ class JiraApiRequestModel extends LeTicketSystemRequestModel
 {
     /** @var string */
     private $project;
+    /** @var string */
+    private $path_to_credentials;
 
     /**
      * @return string
@@ -30,5 +32,21 @@ class JiraApiRequestModel extends LeTicketSystemRequestModel
     public function setProject(string $project)
     {
         $this->project = $project;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPathToCredentials()
+    {
+        return $this->path_to_credentials;
+    }
+
+    /**
+     * @param mixed $path_to_credentials
+     */
+    public function setPathToCredentials($path_to_credentials)
+    {
+        $this->path_to_credentials = $path_to_credentials;
     }
 }

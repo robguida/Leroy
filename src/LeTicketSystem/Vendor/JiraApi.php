@@ -20,6 +20,11 @@ use Leroy\LeTicketSystem\LeTicketSystemApiAbstract;
 
 class JiraApi extends LeTicketSystemApiAbstract implements LeTicketSystemInterface
 {
+    public function __construct()
+    {
+        $this->prefix_values = ['h1.', '*'];
+    }
+
     /**
      * @param LeTicketSystemRequestModel $model
      * @return LeApiResponseModel
@@ -32,9 +37,17 @@ class JiraApi extends LeTicketSystemApiAbstract implements LeTicketSystemInterfa
             if (!$model instanceof JiraApiRequestModel) {
                 throw new InvalidArgumentException('JiraApiRequestModel required to create a ticket');
             }
-            $body = $this->convertArrayIntoTicketBody($model->getDescription());
+            $issueField = new IssueField();
+            $issueField->setProjectKey($model->getProject());
+            $issueField->setSummary($model->getTitle());
+            $issueField->setDescription($this->convertDescriptionIntoTicketBody($model->getDescription()));
+            $issueField->setPriorityName($model->getPriority());
+            $issueField->setIssueType($model->getTicketType());
+            $issueService = new IssueService(null, null, $model->getPathToCredentials());
+            $ret = $issueService->create($issueField);
+            $output->setData($ret->key);
 
-        } catch (Exception $e) {
+        } catch (JiraException $e) {
             $output->setException($e);
         }
         return $output;
