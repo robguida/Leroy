@@ -14,8 +14,20 @@ namespace Leroy\LeTicketSystem;
  */
 abstract class LeTicketSystemApiAbstract
 {
+    /** @var string */
+    protected $vendor = '';
+
     /** @var array */
     protected $prefix_values = [];
+
+    /**
+     * @return LeTicketSystemRequestModel
+     */
+    protected function getTicketSystemRequestModel()
+    {
+        $class = "Leroy\\LeTicketSystem\\Vendor\\{$this->vendor}ApiRequestModel";
+        return new $class;
+    }
 
     /**
      * @param array $arr

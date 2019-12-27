@@ -23,6 +23,7 @@ class JiraApi extends LeTicketSystemApiAbstract implements LeTicketSystemInterfa
     public function __construct()
     {
         $this->prefix_values = ['h1.', '*'];
+        $this->vendor = 'Jira';
     }
 
     /**
