@@ -8,7 +8,6 @@
 
 namespace Leroy\LeTicketSystem\Vendor;
 
-
 use Leroy\LeTicketSystem\LeTicketSystemRequestModel;
 
 class JiraApiRequestModel extends LeTicketSystemRequestModel

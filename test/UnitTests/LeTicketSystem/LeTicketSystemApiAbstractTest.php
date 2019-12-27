@@ -21,6 +21,13 @@ use PHPUnit\Framework\TestCase;
  */
 class LeTicketSystemApiAbstractTest extends TestCase
 {
+    public function testGetApiRequestModelWhenNotSet()
+    {
+        $testApi = new LeTicketSystemApi();
+        $model = $testApi->getTicketSystemRequestModel();
+        $this->assertInstanceOf('Leroy\LeTicketSystem\LeTicketSystemRequestModel', $model);
+    }
+
     public function testConvertArrayIntoTicketBody()
     {
         $model = new LeTicketSystemRequestModel();
@@ -127,6 +134,7 @@ class LeTicketSystemApi extends LeTicketSystemApiAbstract
     public function __construct()
     {
         $this->prefix_values = ['h1.', '*'];
+        $this->vendor = 'UNIT-TEST';
     }
 
     /**

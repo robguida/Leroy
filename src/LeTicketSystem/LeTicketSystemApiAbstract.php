@@ -8,6 +8,8 @@
 
 namespace Leroy\LeTicketSystem;
 
+use Exception;
+
 /**
  * Class LeTicketSystemApiAbstract
  * @package Leroy\LeTicketSystem
@@ -23,10 +25,15 @@ abstract class LeTicketSystemApiAbstract
     /**
      * @return LeTicketSystemRequestModel
      */
-    protected function getTicketSystemRequestModel()
+    public function getTicketSystemRequestModel()
     {
         $class = "Leroy\\LeTicketSystem\\Vendor\\{$this->vendor}ApiRequestModel";
-        return new $class;
+        if (class_exists($class)) {
+            $output = new $class;
+        } else {
+            $output = new LeTicketSystemRequestModel();
+        }
+        return $output;
     }
 
     /**

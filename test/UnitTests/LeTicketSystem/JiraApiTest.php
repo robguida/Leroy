@@ -9,12 +9,21 @@ namespace LeroyTest\LeTicketSystem;
 
 require_once '/var/www/Leroy/src/bootstrap.php';
 
+use Leroy\LeTicketSystem\LeTicketSystemFactory;
 use Leroy\LeTicketSystem\Vendor\JiraApi;
 use Leroy\LeTicketSystem\Vendor\JiraApiRequestModel;
 use LeroyTestLib\LeroyUnitTestAbstract;
 
 class JiraApiTest extends LeroyUnitTestAbstract
 {
+    public function testGetApiRequestModelWhenNotSet()
+    {
+        /** @var JiraApi $testApi */
+        $testApi = LeTicketSystemFactory::init(LeTicketSystemFactory::TS_JIRA);
+        $model = $testApi->getTicketSystemRequestModel();
+        $this->assertInstanceOf('Leroy\LeTicketSystem\Vendor\JiraApiRequestModel', $model);
+    }
+
     public function testCreateTicketReturnsLeApiResponseModelWithStdClass()
     {
         $model = new JiraApiRequestModel();
