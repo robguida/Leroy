@@ -38,10 +38,14 @@ class JiraApi extends LeTicketSystemApiAbstract implements LeTicketSystemInterfa
             if (!$model instanceof JiraApiRequestModel) {
                 throw new InvalidArgumentException('JiraApiRequestModel required to create a ticket');
             }
+            $description = $model->getDescription();
+            if (!is_string($description)) {
+                $description = $this->convertDescriptionIntoTicketBody($description);
+            }
             $issueField = new IssueField();
             $issueField->setProjectKey($model->getProject());
             $issueField->setSummary($model->getTitle());
-            $issueField->setDescription($this->convertDescriptionIntoTicketBody($model->getDescription()));
+            $issueField->setDescription($description);
             $issueField->setPriorityName($model->getPriority());
             $issueField->setIssueType($model->getTicketType());
             $issueService = new IssueService(null, null, $model->getPathToCredentials());
