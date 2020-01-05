@@ -86,7 +86,7 @@ class Select extends ViewElementAbstract
         $output = "";
         $template = self::OPTION_HTML;
         foreach ($ops as $display => $value) {
-            $selected = ($value == $sVal) ? "selected" : "";
+            $selected = ($value == $sVal) ? " selected=\"selected\"" : "";
             $output .= str_replace(
                 array("~display~", "~val~", "~selected~"),
                 array($display, $value, $selected),
