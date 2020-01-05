@@ -51,7 +51,7 @@ class LeSessionModel
         return new LeSessionModel();
     }
 
-    protected function __construct()
+    public function __construct()
     {
         $this->required_keys = [self::AUTH_TOKEN, self::AUTH_SESSIONLENGTH];
     }
