@@ -40,12 +40,25 @@ class LeSessionModel
     const AUTH_SESSIONLENGTH = 'session_timeout';
     const GUEST_SKINID = 'skin_id';
 
+    /** @var array */
+    private $required_keys;
+
     /**
      * @return LeSessionModel
      */
     public static function init()
     {
         return new LeSessionModel();
+    }
+
+    protected function __construct()
+    {
+        $this->required_keys = [self::AUTH_TOKEN, self::AUTH_SESSIONLENGTH];
+    }
+
+    public function addRequiredKey($key)
+    {
+        $this->required_keys[] = $key;
     }
 
     //<editor-fold desc="Data Functions">
@@ -259,15 +272,14 @@ class LeSessionModel
     public function setAuthValues(array $input)
     {
         /* First verify that all the keys are passed in */
-        $required_keys = [self::AUTH_TOKEN, self::AUTH_SESSIONLENGTH,];
-        foreach ($required_keys as $key) {
+        foreach ($this->required_keys as $key) {
             if (!isset($input[$key])) {
                 throw new InvalidArgumentException("{$key} is not set or empty");
             }
         }
         /* Then init the auth portion of the session. This will set the session expire to the default 30 minutes. */
         $this->initAuth();
-        foreach ($required_keys as $key) {
+        foreach ($this->required_keys as $key) {
             $_SESSION[self::AUTH][$key] = $input[$key];
         }
         /* Once the session length value is set, we can advance the expiration... Yes, this would happen
