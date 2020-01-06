@@ -12,6 +12,10 @@ use Leroy\LeApi\LeApiResponseModel;
 use Leroy\LeTicketSystem\Vendor\JiraApi;
 use Leroy\LeTicketSystem\Vendor\JiraApiRequestModel;
 
+/**
+ * Class LeTicketSystemFactory
+ * @package Leroy\LeTicketSystem
+ */
 class LeTicketSystemFactory
 {
     const TS_JIRA = 'Jira';
