@@ -8,8 +8,6 @@
 
 namespace Leroy\LeTicketSystem;
 
-use Exception;
-
 /**
  * Class LeTicketSystemApiAbstract
  * @package Leroy\LeTicketSystem

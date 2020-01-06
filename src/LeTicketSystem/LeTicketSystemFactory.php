@@ -27,13 +27,14 @@ class LeTicketSystemFactory
     }
 
     /**
+     * @param string $credentials
      * @param string $project
      * @param string $summary
      * @param string $description
      * @param string $priority
      * @return LeApiResponseModel
      */
-    public static function createJiraBug($project, $summary, $description, $priority = null)
+    public static function createJiraBug($credentials, $project, $summary, $description, $priority = null)
     {
         $api = new JiraApi();
         $requestModel = new JiraApiRequestModel();
@@ -45,6 +46,7 @@ class LeTicketSystemFactory
         $requestModel->setDescription($description);
         $requestModel->setPriority($priority);
         $requestModel->setTicketType($requestModel::ISSUE_TYPE_BUG);
+        $requestModel->setPathToCredentials($credentials);
         return $api->create($requestModel);
     }
 }
