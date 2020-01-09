@@ -109,7 +109,7 @@ class LeDbService
 
     /**
      * @param string $file
-     * @return array
+     * @return array|string
      */
     public function executeFile($file)
     {
