@@ -372,8 +372,8 @@ abstract class LeModelAbstract
         $sql = "INSERT INTO `{$this->getTableName()}` (`" . implode('`, `', $cols) . "`) " .
             "VALUES (" . implode(', ', $needles) . ") " .
             "{$on_duplicate_key_clause};";
-        error_log( __FILE__ . ' ' . __LINE__ . ' $sql: ' . $sql);
-        error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
+        error_log( __FILE__ . ' ' . __LINE__ . ' DEBUG $sql: ' . $sql);
+        error_log(__FILE__ . ' ' . __LINE__ . ' DEBUG $bindings: ' . print_r($bindings, true));
         $this->dbResult = $db->execute($sql, $bindings);
         if ($this->dbResult->isSuccess()) {
             if (!$on_duplicate_key_clause) {
@@ -384,8 +384,8 @@ abstract class LeModelAbstract
                 /* When on duplicate key update is used there is no last insert id. We
                     select on the values used in the insert and then get the pkey and return that */
                 $sql = "SELECT * FROM `{$this->getTableName()}` WHERE " . implode(' = ? AND ', $cols) . ' = ?;';
-                error_log( __FILE__ . ' ' . __LINE__ . ' $sql: ' . $sql);
-                error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
+                error_log( __FILE__ . ' ' . __LINE__ . ' DEBUG $sql: ' . $sql);
+                error_log(__FILE__ . ' ' . __LINE__ . ' DEBUG $bindings: ' . print_r($bindings, true));
                 $result = $db->execute($sql, $bindings);
                 if ($result->isSuccess()) {
                     $this->loadData($result->getFirstRow());
