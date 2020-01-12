@@ -379,6 +379,8 @@ abstract class LeModelAbstract
                 $output = $this->dbResult->getLastInsertId();
                 $this->loadFromId($output, true);
             } else {
+                error_log( __FILE__ . ' ' . __LINE__ . ' $sql: ' . $sql);
+                error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
                 /* When on duplicate key update is used there is no last insert id. We
                     select on the values used in the insert and then get the pkey and return that */
                 $sql = "SELECT * FROM `{$this->getTableName()}` WHERE " . implode(' = ? AND ', $cols) . ' = ?;';
