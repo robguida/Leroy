@@ -324,6 +324,7 @@ abstract class LeModelAbstract
         $on_duplicate_key_clause = '';
         if ($on_duplicate_update) {
             $on_duplicate_key_clause = $this->getDuplicateKeyClause();
+            error_log(__FILE__ . ' ' . __LINE__ . ' DEBUG $on_duplicate_key_clause: ' . print_r($on_duplicate_key_clause, true));
         }
         if (is_null($this->getId())) {
             $output = $this->insert($on_duplicate_key_clause);
