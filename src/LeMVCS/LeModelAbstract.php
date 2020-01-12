@@ -351,7 +351,7 @@ abstract class LeModelAbstract
             implode(', ', $cols) . " WHERE `{$this->getPrimaryKey()}` = ? " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $this->getDb()->execute($sql, $bindings);
-        if ($this->dbResult->success()) {
+        if ($this->dbResult->isSuccess()) {
             $output = $this->dbResult->getRowsAffected();
         } else {
             $output = false;
@@ -373,7 +373,7 @@ abstract class LeModelAbstract
             "VALUES (" . implode(', ', $needles) . ") " .
             "{$on_duplicate_key_clause};";
         $this->dbResult = $db->execute($sql, $bindings);
-        if ($this->dbResult->success()) {
+        if ($this->dbResult->isSuccess()) {
             if (!$on_duplicate_key_clause) {
                 /* When this is a strict insert, we can load the record */
                 $output = $this->dbResult->getLastInsertId();
@@ -383,7 +383,7 @@ abstract class LeModelAbstract
                     select on the values used in the insert and then get the pkey and return that */
                 $sql = "SELECT * FROM `{$this->getTableName()}` WHERE " . implode(' = ? AND ', $cols) . ' = ?;';
                 $result = $db->execute($sql, $bindings);
-                if ($result->success()) {
+                if ($result->isSuccess()) {
                     $this->loadData($result->getFirstRow());
                     $output = $this->getId();
                 } else {
@@ -408,7 +408,7 @@ abstract class LeModelAbstract
         $output = false;
         $sql = "SELECT * FROM {$this->table_name} WHERE {$this->primary_key} = ?";
         $this->dbResult = $this->db->execute($sql, [$id], false, $use_prime);
-        if ($this->dbResult->success() && $data = $this->dbResult->getFirstRow()) {
+        if ($this->dbResult->isSuccess() && $data = $this->dbResult->getFirstRow()) {
             $output = true;
             $this->loadData($data);
         }
