@@ -59,7 +59,7 @@ abstract class LeTicketSystemApiAbstract
             $prefix = implode('', array_fill(0, $index, $this->prefix_values[1]));
         }
         foreach ($arr as $key => $val) {
-            if (is_array($val)) {
+            if (is_array($val) || is_object($val)) {
                 if (!empty($val)) {
                     $description[] = "{$prefix} {$key}";
                     $new_index = $index + 1;
