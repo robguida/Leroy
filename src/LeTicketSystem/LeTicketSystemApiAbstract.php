@@ -47,11 +47,11 @@ abstract class LeTicketSystemApiAbstract
     }
 
     /**
-     * @param array $arr
+     * @param array|object $arr
      * @param array $description
      * @param int $index
      */
-    protected function flattenDescriptionToSingleDimensionArray(array $arr, array & $description, $index = 0)
+    protected function flattenDescriptionToSingleDimensionArray($arr, array & $description, $index = 0)
     {
         if (0 == $index) {
             $prefix = $this->prefix_values[0];
