@@ -110,7 +110,7 @@ class LeApiResponseModel
     {
         $output = false;
         if (is_null($this->result)) {
-            $this->exception = $e;
+            $this->exception = LeApiExceptionModel::init($e);
             $this->result = self::RESULT_EXCEPTION;
             $this->http_response_code = self::HTTP_SERVER_ERROR;
             $output = true;
