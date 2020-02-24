@@ -162,39 +162,41 @@ class LeApiResponseModel
 
     /**
      * @param string $use_key_val_as_key
+     * @param bool $sub_arrays - forces values to be returned in sub arrays
      * @return array
      *
-     * @example $output = [
+     * @example default
+     *          $output = [
      *              'key1' => [one record set],
-     *              'key2' => [ This will be the format when a key is found more than once in a record set
+     *              'key2' => [one record set],
+     *              'key3' => [one record set],
+     *              ];
+     * @example $sub_arrays = true
+     *          $output = [
+     *              'key1' => [
+     *                  [one record set],
+     *                  [one record set],
+     *                  ...
+     *               ],
+     *              'key2' => [
      *                  [one record set],
      *                  [one record set],
      *                  ...
      *               ]
      *           ];
      */
-    public function getData($use_key_val_as_key = '')
+    public function getData($use_key_val_as_key = '', $sub_arrays = false)
     {
         if (!empty($use_key_val_as_key) &&
             !empty($this->data) &&
             array_key_exists($use_key_val_as_key, current($this->data))
         ) {
             $output = [];
-            /** @var array $reformatted track which keys has had it's value reset to that the recordsets are in an subarray. */
-            $reformatted = [];
             foreach ($this->data as $data) {
                 $key = $data[$use_key_val_as_key];
                 /* If the key exists in $output, then it is a one-to-many relationship to the record sets, and
                     we need to set up $output to link all the records for this $key value into a subarray. */
-                if (array_key_exists($key, $output)) {
-                    /* If the key already has a record set, then we need to find out if it has been reformatted.
-                        If it has, then we can just set the record set to a new row. Otherwise, we need to
-                        reformat the $key's value so that it is a one-to-many relationship as seen in @example key2. */
-                    if (!in_array($key, $reformatted)) {
-                        $reformatted[] = $key;
-                        /* resetting $key to be an array with one record set */
-                        $output[$key] = [$output[$key]];
-                    }
+                if ($sub_arrays) {
                     /* Add the new record */
                     $output[$key][] = $data;
                 } else {
