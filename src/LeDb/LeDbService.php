@@ -133,6 +133,7 @@ class LeDbService
     {
         /** @var LeDbResultInterface $output */
         $output = $this->getDbResult();
+        $output->setBindings($bindings);
         try {
             $sql_type = $this->getSqlType($sql);
             $server_type = $this->getServerType($use_prime, $sql_type);
