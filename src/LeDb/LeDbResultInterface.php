@@ -40,6 +40,16 @@ interface LeDbResultInterface
     public function setPdoStatement(PDOStatement $pdoStatement);
 
     /**
+     * @param array $bindings
+     */
+    public function setBindings(array $bindings);
+
+    /**
+     * @return array
+     */
+    public function getBindings();
+
+    /**
      * @return null|PDOStatement
      */
     public function getPdoStatement();
@@ -133,4 +143,9 @@ interface LeDbResultInterface
      * @return string
      */
     public function getSql();
+
+    /**
+     * @return string|string[]
+     */
+    public function getSqlPopulated();
 }
