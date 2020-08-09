@@ -44,6 +44,9 @@ class LeDbResult implements LeDbResultInterface
     /** @var string */
     private $sql_type;
 
+    /** @var array */
+    private $bindings;
+
     /**
      * @param null|PDOStatement $pdoStatement
      */
@@ -76,6 +79,16 @@ class LeDbResult implements LeDbResultInterface
         $this->exception = $exception;
         $this->setErrorCode($exception->getCode());
         $this->setErrorInfo($exception->getMessage());
+    }
+
+    public function setBindings(array $bindings)
+    {
+        $this->bindings = $bindings;
+    }
+
+    public function getBindings()
+    {
+        return $this->bindings;
     }
 
     /**
@@ -258,8 +271,19 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getSql()
     {
-        $output = $this->getPdoStatement()->queryString;
-        return $output;
+        return $this->getPdoStatement()->queryString;
+    }
+
+    public function getSqlPopulated()
+    {
+        $sql = $this->getSql();
+        foreach ($this->bindings as $k => $v) {
+            if (is_string($v)) {
+                $v = "'{$v}'";
+            }
+            $sql = str_replace($k, $v, $sql);
+        }
+        return $sql;
     }
 
     /**
