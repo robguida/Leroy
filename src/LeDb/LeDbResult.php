@@ -274,6 +274,9 @@ class LeDbResult implements LeDbResultInterface
         return $this->getPdoStatement()->queryString;
     }
 
+    /**
+     * @return string|string[]
+     */
     public function getSqlPopulated()
     {
         $sql = $this->getSql();
