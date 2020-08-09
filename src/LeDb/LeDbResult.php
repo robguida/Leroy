@@ -281,7 +281,7 @@ class LeDbResult implements LeDbResultInterface
     {
         $sql = $this->getSql();
         foreach ($this->bindings as $k => $v) {
-            if (is_string($v)) {
+            if (!is_numeric($v)) {
                 $v = "'{$v}'";
             }
             $sql = str_replace($k, $v, $sql);
