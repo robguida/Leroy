@@ -63,7 +63,7 @@ abstract class LeModelAbstract
      * @param string $key
      * @param mixed $val
      */
-    protected function setData($key, $val)
+    protected function setData(string $key, $val)
     {
         if (!array_key_exists($key, $this->schema)) {
             throw new InvalidArgumentException("{$key} is not define in LeModelAbstract:schema");
@@ -121,7 +121,7 @@ abstract class LeModelAbstract
      * @param string $key
      * @return bool
      */
-    public function removeKeyFromData($key)
+    public function removeKeyFromData(string $key)
     {
         $output = false;
         if (isset($this->data[$key])) {
@@ -143,7 +143,7 @@ abstract class LeModelAbstract
      * @param string $key
      * @return mixed
      */
-    protected function getData($key)
+    protected function getData(string $key)
     {
         if (!array_key_exists($key, $this->data)) {
             if (array_key_exists($key, $this->schema)) {
@@ -164,7 +164,7 @@ abstract class LeModelAbstract
      * @param string $key
      * @return bool
      */
-    public function hasData($key)
+    public function hasData(string $key)
     {
         $output = false;
         if (array_key_exists($key, $this->data)) {
@@ -318,7 +318,7 @@ abstract class LeModelAbstract
      * @return bool|int
      * @throws Exception
      */
-    public function save($on_duplicate_update = false)
+    public function save(bool $on_duplicate_update = false)
     {
         /* Create the on duplicate key clause? */
         $on_duplicate_key_clause = '';
@@ -337,7 +337,7 @@ abstract class LeModelAbstract
      * @param string $on_duplicate_key_clause
      * @return int|false
      */
-    protected function update($on_duplicate_key_clause)
+    protected function update(string $on_duplicate_key_clause)
     {
         /* create the columns and build the on_dupes array while we are at it. */
         list($cols, $bindings) = array_values($this->getColsAndBindings());
@@ -364,7 +364,7 @@ abstract class LeModelAbstract
      * @return int|false
      * @throws Exception
      */
-    protected function insert($on_duplicate_key_clause)
+    protected function insert(string $on_duplicate_key_clause)
     {
         $db = $this->getDb();
         list($cols, $bindings) = array_values($this->getColsAndBindings());
@@ -384,8 +384,17 @@ abstract class LeModelAbstract
                 $sql = "SELECT * FROM `{$this->getTableName()}` WHERE " . implode(' = ? AND ', $cols) . ' = ?;';
                 $result = $db->execute($sql, $bindings);
                 if ($result->isSuccess()) {
-                    $this->loadData($result->getFirstRow());
-                    $output = $this->getId();
+                    if (1 <= $result->getRecordCount()) {
+                        $this->loadData($result->getFirstRow());
+                        $output = $this->getId();
+                    } else {
+                        error_log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> On duplicate key cannot find record.');
+                        error_log( __FILE__ . ' ' . __LINE__ . ' $this->primary_key: ' . $this->primary_key);
+                        error_log( __FILE__ . ' ' . __LINE__ . ' $this->id: ' . $this->id);
+                        error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
+                        error_log( __FILE__ . ' ' . __LINE__ . ' $sql: ' . $sql);
+                        error_log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> On duplicate key cannot find record.');
+                    }
                 } else {
                     $output = false;
                 }
@@ -398,12 +407,12 @@ abstract class LeModelAbstract
     }
 
     /**
-     * @param $id
+     * @param stirng|int $id
      * @param bool $use_prime
      * @return bool
      * @throws Exception
      */
-    protected function loadFromId($id, $use_prime = false)
+    protected function loadFromId($id, bool $use_prime = false)
     {
         $output = false;
         $sql = "SELECT * FROM {$this->table_name} WHERE {$this->primary_key} = ?";

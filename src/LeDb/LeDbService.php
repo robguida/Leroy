@@ -35,10 +35,10 @@ class LeDbService
      * LeDbService constructor.
      * @param string $data_source_name
      * @param string|array|stdClass $db_configuration
-     * @param $pdo_parameters
+     * @param array $pdo_parameters
      * @throws Exception
      */
-    private function __construct($data_source_name, $db_configuration, $pdo_parameters)
+    private function __construct(string $data_source_name, $db_configuration, array $pdo_parameters)
     {
         $this->statement_cache = [];
         $this->pdo_cache = [];
@@ -54,8 +54,8 @@ class LeDbService
      * @throws Exception
      */
     public static function init(
-        $data_source_name,
-        $db_configuration = null,
+        string $data_source_name,
+        string $db_configuration = null,
         array $pdo_parameters = [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
     ) {
         /** @var array $LeDbServiceSingleton caches the LeDbService objects */
@@ -109,9 +109,9 @@ class LeDbService
 
     /**
      * @param string $file
-     * @return array|string
+     * @return array
      */
-    public function executeFile($file)
+    public function executeFile(string $file)
     {
         $cred = $this->domain_credentials->master;
         exec(
@@ -129,7 +129,7 @@ class LeDbService
      * @param bool $use_prime
      * @return LeDbResultInterface
      */
-    public function execute($sql, array $bindings = [], $associate = false, $use_prime = false)
+    public function execute(string $sql, array $bindings = [], bool $associate = false, bool $use_prime = false)
     {
         /** @var LeDbResultInterface $output */
         $output = $this->getDbResult();
@@ -200,7 +200,7 @@ class LeDbService
      * @param bool $prepare
      * @return PDOStatement
      */
-    private function getStatement($sql, PDO $pdo, $prepare = false)
+    private function getStatement(string $sql, PDO $pdo, $prepare = false)
     {
         $output = null;
         if ($prepare) {
@@ -221,7 +221,7 @@ class LeDbService
      * @return string
      * @throws Exception
      */
-    private function getDomainCredentials($db_configuration, $dsn)
+    private function getDomainCredentials($db_configuration, string $dsn)
     {
         $stdClass = null;
         if (is_array($db_configuration)) {
@@ -247,10 +247,10 @@ class LeDbService
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return PDO
      */
-    private function initPdo($type)
+    private function initPdo(string $type)
     {
         if (self::SERVER_TYPE_PRIME == $type) {
             $cred = $this->domain_credentials->master;
@@ -281,7 +281,7 @@ class LeDbService
      * @param string|null $sql_type
      * @return string
      */
-    private function getServerType($use_prime, $sql_type = null)
+    private function getServerType(bool $use_prime, string $sql_type = null)
     {
         return ($use_prime || self::SQL_TYPE_WRITE == $sql_type) ? self::SERVER_TYPE_PRIME : self::SERVER_TYPE_REPLICA;
     }
@@ -290,7 +290,7 @@ class LeDbService
      * @param string $sql
      * @return string
      */
-    private function getSqlType($sql)
+    private function getSqlType(string $sql)
     {
         /* Remove all line returns and trim the beginning and end of the sql string */
         $parts = explode(' ', trim(preg_replace('/\s\s+/', ' ', $sql)));

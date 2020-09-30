@@ -155,7 +155,7 @@ class LeModelWithCallBacksTestObject extends LeModelAbstract
         return parent::getAllData();
     }
 
-    public function getData($key)
+    public function getData(string $key)
     {
         return parent::getData($key);
     }
