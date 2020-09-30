@@ -379,25 +379,27 @@ abstract class LeModelAbstract
                 $output = $this->dbResult->getLastInsertId();
                 $this->loadFromId($output, true);
             } else {
+                error_log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> On duplicate key cannot find record');
                 /* When on duplicate key update is used there is no last insert id. We
                     select on the values used in the insert and then get the pkey and return that */
                 $sql = "SELECT * FROM `{$this->getTableName()}` WHERE " . implode(' = ? AND ', $cols) . ' = ?;';
                 $result = $db->execute($sql, $bindings);
                 if ($result->isSuccess()) {
+                    error_log( __FILE__ . ' ' . __LINE__ . ' $result->getRecordCount(): ' . $result->getRecordCount());
+                    error_log(__FILE__ . ' ' . __LINE__ . ' $result->getFirstRow(): ' . print_r($result->getFirstRow(), true));
+                    error_log( __FILE__ . ' ' . __LINE__ . ' $this->primary_key: ' . $this->primary_key);
+                    error_log( __FILE__ . ' ' . __LINE__ . ' $this->id: ' . $this->id);
+                    error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
+                    error_log( __FILE__ . ' ' . __LINE__ . ' $sql: ' . $sql);
                     if (1 <= $result->getRecordCount()) {
                         $this->loadData($result->getFirstRow());
                         $output = $this->getId();
                     } else {
-                        error_log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> On duplicate key cannot find record.');
-                        error_log( __FILE__ . ' ' . __LINE__ . ' $this->primary_key: ' . $this->primary_key);
-                        error_log( __FILE__ . ' ' . __LINE__ . ' $this->id: ' . $this->id);
-                        error_log(__FILE__ . ' ' . __LINE__ . ' $bindings: ' . print_r($bindings, true));
-                        error_log( __FILE__ . ' ' . __LINE__ . ' $sql: ' . $sql);
-                        error_log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> On duplicate key cannot find record.');
                     }
                 } else {
                     $output = false;
                 }
+                error_log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> On duplicate key cannot find record - EOF');
             }
         } else {
             /* $this->dbLoadResult will be available to the calling class to get errors */
