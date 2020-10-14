@@ -138,6 +138,7 @@ class LeDbService
             $sql_type = $this->getSqlType($sql);
             $server_type = $this->getServerType($use_prime, $sql_type);
             $pdo = $this->initPdo($server_type);
+            /* If $bindings are empty, then the sql is run. */
             $stmt = $this->getStatement($sql, $pdo, !empty($bindings));
             if (!empty($bindings)) {
                 if ($associate) {
