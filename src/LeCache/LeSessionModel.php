@@ -87,7 +87,7 @@ class LeSessionModel
     /**
      * @param string $message
      */
-    public function setMessage($message)
+    public function setMessage(string $message)
     {
         $this->initData();
         $_SESSION[self::DATA]['message'] = $message;
@@ -111,7 +111,7 @@ class LeSessionModel
      * @param mixed $value
      * @param bool $class_specific
      */
-    public function add($key, $value, $class_specific = true)
+    public function add(string $key, $value, $class_specific = true)
     {
         $this->initData();
         if ($class_specific) {
@@ -141,7 +141,7 @@ class LeSessionModel
      * @param mixed $value
      * @param bool $class_specific
      */
-    public function replace($key, $value, $class_specific = true)
+    public function replace(string $key, $value, $class_specific = true)
     {
         if ($class_specific) {
             $data_key = $this->getKeyForClassStorage();
@@ -384,9 +384,9 @@ class LeSessionModel
 
     /**
      * @param int $value
-     * @return LeSessionModel Returning the object in case there are more items to set;
+     * @return void Returning the object in case there are more items to set;
      */
-    public function setSkinId($value)
+    public function setSkinId(int $value)
     {
         $session = new LeSessionModel();
         $session->initGuest();
