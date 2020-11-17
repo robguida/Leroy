@@ -22,7 +22,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public static function button(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public static function button(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -35,7 +35,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public static function checkbox(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public static function checkbox(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -48,7 +48,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function color(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function color(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -61,7 +61,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function date(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function date(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -74,7 +74,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function dateTime(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function dateTime(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -87,7 +87,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function dateTimeLocal(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function dateTimeLocal(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -100,7 +100,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function email(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function email(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -113,7 +113,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function file(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function file(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -126,20 +126,20 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function hidden(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function hidden(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
 
     /**
      * @param string $name
-     * @param string|null $source
+     * @param string $source
      * @param array $attr
      * @param array $style
      * @param string|null $id
      * @return Input
      */
-    public function image(string $name, $source, $attr = [], $style = [], $id = null)
+    public function image(string $name, string $source, array $attr = [], array $style = [], $id = null)
     {
         $attr['src'] = $source;
         return new Input(__FUNCTION__, $name, '', $attr, $style, $id);
@@ -166,7 +166,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function month(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function month(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -179,7 +179,7 @@ class LeFormElement
      * @param string|null $id
      * @return Multi
      */
-    public function multi(string $name, $value = [], $attr = [], $style = [], $id = null)
+    public function multi(string $name, array $value = [], array $attr = [], array $style = [], $id = null)
     {
         return new Multi($name, $value, $attr, $style, $id);
     }
@@ -192,7 +192,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function number(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function number(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -205,7 +205,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function password(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function password(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -218,7 +218,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function radio(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function radio(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -231,7 +231,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function range(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function range(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -244,7 +244,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function reset(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function reset(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -257,7 +257,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function search(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function search(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -271,7 +271,7 @@ class LeFormElement
      * @param string|null $id
      * @return Select
      */
-    public function select(string $name, $selected = '', array $options = [], $attr = [], $style = [], $id = null)
+    public function select(string $name, $selected = '', array $options = [], array $attr = [], array $style = [], $id = null)
     {
         return new Select($name, $selected, $options, $attr, $style, $id);
     }
@@ -284,7 +284,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function submit(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function submit(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -297,7 +297,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function tel(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function tel(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -310,7 +310,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function text(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function text(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -323,7 +323,7 @@ class LeFormElement
      * @param string|null $id
      * @return TextArea
      */
-    public function textArea(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function textArea(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new TextArea($name, $value, $attr, $style, $id);
     }
@@ -336,7 +336,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function time(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function time(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -349,7 +349,7 @@ class LeFormElement
      * @param string|null $id
      * @return Input
      */
-    public function url(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function url(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }
@@ -362,7 +362,7 @@ class LeFormElement
      * @param string $id
      * @return Input
      */
-    public function week(string $name, $value = null, $attr = [], $style = [], $id = null)
+    public function week(string $name, $value = null, array $attr = [], array $style = [], $id = null)
     {
         return new Input(__FUNCTION__, $name, $value, $attr, $style, $id);
     }

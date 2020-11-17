@@ -16,7 +16,7 @@ class Input extends ViewElementAbstract
      * @param array $style
      * @param string|null $id
      */
-    public function __construct($type, $name = null, $value = null, $attr = [], $style = [], $id = null)
+    public function __construct(string $type, string $name = null, string $value = null, array $attr = [], array $style = [], string $id = null)
     {
         $this->type = $type;
         // set up the attributes
@@ -34,7 +34,7 @@ class Input extends ViewElementAbstract
      */
     public function toString()
     {
-        $output = str_replace(
+        return str_replace(
             ["~type~", "~attr~", "~style~"],
             [
                 $this->type,
@@ -43,6 +43,5 @@ class Input extends ViewElementAbstract
             ],
             self::INPUT_HTML
         );
-        return $output;
     }
 } 

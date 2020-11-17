@@ -26,6 +26,9 @@ class Multi extends ViewElementAbstract
         $this->style = $style;
         $this->attr["id"] = (!is_null($id)) ? $id : $name;
         $this->attr["name"] = $name;
+        if (!array_key_exists('multiple', $this->attr)) {
+            $this->setAttribute('multiple', 'multiple');
+        }
     }
 
     /**
