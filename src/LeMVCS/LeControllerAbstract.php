@@ -31,7 +31,7 @@ abstract class LeControllerAbstract
     /**
      * @param string $template_url
      */
-    public function setTemplateUrl($template_url)
+    public function setTemplateUrl(string $template_url)
     {
         $this->template_url = $template_url;
     }
@@ -40,8 +40,9 @@ abstract class LeControllerAbstract
      * @param string $file
      * @param array|null $params
      * @return string
+     * @noinspection PhpIncludeInspection
      */
-    protected function loadTemplate($file, array $params = null)
+    protected function loadTemplate(string $file, array $params = null)
     {
         $full_path = "{$this->getTemplateUrl()}{$file}";
         ob_start();
@@ -59,7 +60,7 @@ abstract class LeControllerAbstract
         if (!isset($leViewTools)) {
             $leViewTools = new LeViewTools();
         }
-        require($full_path);
+        require $full_path;
         $output = ob_get_contents();
         ob_clean();
         return $output;
