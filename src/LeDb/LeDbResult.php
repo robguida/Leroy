@@ -219,9 +219,10 @@ class LeDbResult implements LeDbResultInterface
 
     /**
      * @param null $col indicates using a column's value to create an associated array output
+     * @param bool $sub_arrays
      * @return array
      */
-    public function getOutput($col = null)
+    public function getOutput($col = null, $sub_arrays = false)
     {
         if (is_null($this->output)) {
             $output = $this->output = [];
