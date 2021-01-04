@@ -192,14 +192,14 @@ class LeApiResponseModel
             array_key_exists($use_key_val_as_key, current($this->data))
         ) {
             $output = [];
-            foreach ($this->data as $data) {
-                $key = $data[$use_key_val_as_key];
-                /* If the key exists in $output, then it is a one-to-many relationship to the record sets, and
-                    we need to set up $output to link all the records for this $key value into a subarray. */
-                if ($sub_arrays) {
-                    /* Add the new record */
+            if ($sub_arrays) {
+                foreach ($this->data as $data) {
+                    $key = $data[$use_key_val_as_key];
                     $output[$key][] = $data;
-                } else {
+                }
+            } else {
+                foreach ($this->data as $data) {
+                    $key = $data[$use_key_val_as_key];
                     $output[$key] = $data;
                 }
             }

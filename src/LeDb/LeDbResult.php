@@ -231,8 +231,14 @@ class LeDbResult implements LeDbResultInterface
                 $output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
             }
             if (!is_null($col) && !empty($output)) {
-                foreach ($output as $row) {
-                    $this->output[$row[$col]] = $row;
+                if ($sub_arrays) {
+                    foreach ($output as $row) {
+                        $this->output[$row[$col]][] = $row;
+                    }
+                } else {
+                    foreach ($output as $row) {
+                        $this->output[$row[$col]] = $row;
+                    }
                 }
             } else {
                 $this->output = $output;
