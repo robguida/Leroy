@@ -143,6 +143,8 @@ class LeDbService
             if (!empty($bindings)) {
                 if ($associate) {
                     foreach ($bindings as $key => $val) {
+                        /* There is no type for floats, because there is no PDO
+                            constant for floats, so they are treated like strings. */
                         if (is_int($val)) {
                             $var_type = PDO::PARAM_INT;
                         } elseif (is_bool($val)) {
@@ -150,7 +152,7 @@ class LeDbService
                         } elseif (is_null($val)) {
                             $var_type = PDO::PARAM_NULL;
                         } else {
-                            $var_type = (65535 < strlen($val)) ? PDO::PARAM_STR : PDO::PARAM_LOB;
+                            $var_type = (65535 >= strlen($val)) ? PDO::PARAM_STR : PDO::PARAM_LOB;
                         }
                         $stmt->bindValue(":{$key}", $val, $var_type);
                     }
