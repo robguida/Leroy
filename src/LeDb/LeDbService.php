@@ -109,13 +109,17 @@ class LeDbService
 
     /**
      * @param string $file
+     * @param bool $create_db_in_file
      * @return array
+     *
+     * @todo provide parameter to choose master or slave
      */
-    public function executeFile(string $file)
+    public function executeFile(string $file,  bool $create_db_in_file = false)
     {
         $cred = $this->domain_credentials->master;
+        $dbName = ($create_db_in_file) ? '' : " {$cred->dbName}";
         exec(
-            "mysql -h localhost -u {$cred->userName} -p{$cred->password} {$cred->dbName} < \"{$file}\" 2>&1",
+            "mysql -h localhost -u {$cred->userName} -p{$cred->password}{$dbName} < \"{$file}\" 2>&1",
             $output,
             $return_var
         );
