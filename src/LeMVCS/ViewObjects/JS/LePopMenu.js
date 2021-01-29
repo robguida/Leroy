@@ -1,6 +1,10 @@
-function LePopMenuModel (menuClass, menuItems) {
+function LePopMenuModel (menuClass, menuItems, menuOffset) {
+    if (!menuOffset) {
+        menuOffset = 0;
+    }
     this.menuClass = menuClass;
     this.menuItems = menuItems;
+    this.menuOffset = menuOffset
 }
 
 function LePopMenuItemModel (text, callBack, attrs) {
@@ -15,13 +19,16 @@ function LePopMenuItemModel (text, callBack, attrs) {
  */
 $.fn.LePopMenu = function (options) {
     /** @var LePopMenuModel options */
+
+    let elemObj = $(this);
     let off = false;
 
     function build() {
         let pos = elemObj.position();
         let menu = $('<ul></ul>')
+            .attr('id', 'btn_add_budget')
             .addClass(options.menuClass)
-            .css('margin-left', pos.left)
+            .css('margin-left', pos.left + options.menuOffset)
             .mouseenter(function () {
                 off = false;
             })
@@ -38,31 +45,31 @@ $.fn.LePopMenu = function (options) {
                     .click(mi.callBack)
             );
         });
-        elemObj.append(menu);
+        elemObj.parent().append(menu);
     }
 
     function remove() {
         /* When the mouse leaves the elemMenu, we want to make sure it did not re-enter the action button. */
         setTimeout(function () {
-            console.log('LePopMenu.remove.off = ' + off);
             if (off) {
-                elemObj.find('ul').remove();
+                elemObj.parent().find('ul').hide();
             }
         }, 50);
     }
-
-    let elemObj = $(this);
     elemObj
         .mouseenter(function () {
-            console.log('LePopMenu.elemObj.mouseenter');
             off = false;
-            build();
+            let menu = elemObj.parent().find('ul');
+            if (menu.length) {
+                menu.show();
+            } else {
+                build();
+            }
         })
         .mouseleave(function () {
-            console.log('LePopMenu.elemObj.mouseleave');
             off = true;
             remove();
         })
     ;
-    return elemObj;
+    // return elemObj;
 }
