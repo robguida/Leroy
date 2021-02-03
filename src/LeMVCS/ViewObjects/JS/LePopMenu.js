@@ -41,8 +41,12 @@ function LePopMenuItemModel (text, callBack, attrs) {
  */
 $.fn.LePopMenu = function (options) {
     /** @var LePopMenuModel options */
+    console.log('LePopMenu.options');
+    console.log(options);
 
     let elemObj = $(this);
+    console.log('LePopMenu.elemObj');
+    console.log(elemObj);
     let off = false;
 
     function build() {
@@ -67,6 +71,8 @@ $.fn.LePopMenu = function (options) {
                     .click(mi.callBack)
             );
         });
+        console.log('LePopMenu.menu');
+        console.log(menu);
         elemObj.parent().append(menu);
     }
 
