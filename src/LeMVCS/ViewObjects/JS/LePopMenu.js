@@ -1,3 +1,12 @@
+/**
+ * @note This method is passed into LePopMenu See HOW-TO EXAMPLE at bottom of the page
+ *
+ * @param menuClass - string for css class
+ * @param menuItems - array LePopMenuItemModel's
+ * @param menuOffset - integer to offset the menu from the parent element or the clicked element
+ *              so the button would be the clicked element and the parent would be the containing TD
+ * @constructor
+ */
 function LePopMenuModel (menuClass, menuItems, menuOffset) {
     if (!menuOffset) {
         menuOffset = 0;
@@ -7,6 +16,17 @@ function LePopMenuModel (menuClass, menuItems, menuOffset) {
     this.menuOffset = menuOffset
 }
 
+/**
+ * @note For each menu item in the Pop Menu, there is one LePopMenuItemModel. These are created and
+ *      injected into the LePopMenuModel that is then injected into LePopMenu.
+ *
+ *       See HOW-TO EXAMPLE at bottom of the page
+ *
+ * @param text
+ * @param callBack
+ * @param attrs
+ * @constructor
+ */
 function LePopMenuItemModel (text, callBack, attrs) {
     this.text = text;
     this.callBack = callBack;
@@ -73,3 +93,19 @@ $.fn.LePopMenu = function (options) {
     ;
     // return elemObj;
 }
+
+/**
+ HOW-TO EXAMPLE
+
+ let LePopMenuItem = new LePopMenuItemModel(
+    'Menu Item 1',
+     function () { // call back logic here; }
+ )
+ ;
+ let LePopMenuItem2 = new LePopMenuItemModel(
+     'Menu Item 2',
+     function () { // call back logic here; }
+ )
+ ;
+ let LePopMenu = new LePopMenuModel('Menu Name Here', [LePopMenuItem, LePopMenuItem2], 25);
+*/
