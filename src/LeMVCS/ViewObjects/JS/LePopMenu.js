@@ -99,7 +99,7 @@ $.fn.LePopMenu = function (options) {
             remove();
         })
     ;
-    // return elemObj;
+    return elemObj;
 }
 
 /**
