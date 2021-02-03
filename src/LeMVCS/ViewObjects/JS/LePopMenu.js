@@ -1,5 +1,7 @@
 /**
- * @note This method is passed into LePopMenu See HOW-TO EXAMPLE at bottom of the page
+ * @note This method is passed into LePopMenu
+ *
+ *      See HOW-TO EXAMPLE at bottom of the page
  *
  * @param menuClass - string for css class
  * @param menuItems - array LePopMenuItemModel's
