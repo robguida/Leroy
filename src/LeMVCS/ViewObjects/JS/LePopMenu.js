@@ -73,7 +73,11 @@ $.fn.LePopMenu = function (options) {
         });
         console.log('LePopMenu.menu');
         console.log(menu);
-        elemObj.parent().append(menu);
+        elemObj
+            .css('cursor', 'pointer')
+            .parent()
+            .append(menu)
+        ;
     }
 
     function remove() {
@@ -105,15 +109,16 @@ $.fn.LePopMenu = function (options) {
 /**
  HOW-TO EXAMPLE
 
- let LePopMenuItem = new LePopMenuItemModel(
+ let menuItemModel1 = new LePopMenuItemModel(
     'Menu Item 1',
      function () { // call back logic here; }
  )
  ;
- let LePopMenuItem2 = new LePopMenuItemModel(
+ let menuItemModel2 = new LePopMenuItemModel(
      'Menu Item 2',
      function () { // call back logic here; }
  )
  ;
- let LePopMenu = new LePopMenuModel('Menu Name Here', [LePopMenuItem, LePopMenuItem2], 25);
+ let menuModel = new LePopMenuModel('Menu Name Here', [menuItemModel1, menuItemModel2], 25);
+ $(DOMObj).LePopMenu(menuModel)
 */
