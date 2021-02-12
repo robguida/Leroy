@@ -35,18 +35,19 @@ function LePopMenuItemModel (text, callBack, attrs) {
     this.attr = attrs;
 }
 
+function LePopMenu(){
+    this.clearCache = function() {
+
+    }
+}
+
 /**
- * @param options
+ * @param options {LePopMenuModel}
  * @constructor
  */
 $.fn.LePopMenu = function (options) {
     /** @var LePopMenuModel options */
-    console.log('LePopMenu.options');
-    console.log(options);
-
     let elemObj = $(this);
-    console.log('LePopMenu.elemObj');
-    console.log(elemObj);
     let off = false;
 
     function build() {
@@ -60,7 +61,7 @@ $.fn.LePopMenu = function (options) {
             })
             .mouseleave(function () {
                 off = true;
-                remove();
+                hide();
             });
         ;
         /** @var LePopMenuItemModel mi */
@@ -71,8 +72,6 @@ $.fn.LePopMenu = function (options) {
                     .click(mi.callBack)
             );
         });
-        console.log('LePopMenu.menu');
-        console.log(menu);
         elemObj
             .css('cursor', 'pointer')
             .parent()
@@ -80,7 +79,7 @@ $.fn.LePopMenu = function (options) {
         ;
     }
 
-    function remove() {
+    function hide() {
         /* When the mouse leaves the elemMenu, we want to make sure it did not re-enter the action button. */
         setTimeout(function () {
             if (off) {
@@ -88,21 +87,26 @@ $.fn.LePopMenu = function (options) {
             }
         }, 50);
     }
-    elemObj
-        .mouseenter(function () {
-            off = false;
-            let menu = elemObj.parent().find('ul');
-            if (menu.length) {
-                menu.show();
-            } else {
-                build();
-            }
-        })
-        .mouseleave(function () {
-            off = true;
-            remove();
-        })
-    ;
+
+    if (options.hasOwnProperty('clear') && true === options.clear) {
+        elemObj.parent().find('ul').remove();
+    } else {
+        elemObj
+            .mouseenter(function () {
+                off = false;
+                let menu = elemObj.parent().find('ul');
+                if (menu.length) {
+                    menu.show();
+                } else {
+                    build();
+                }
+            })
+            .mouseleave(function () {
+                off = true;
+                hide();
+            })
+        ;
+    }
     return elemObj;
 }
 
