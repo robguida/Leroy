@@ -11,11 +11,12 @@
  */
 function LePopMenuModel (menuClass, menuItems, menuOffset) {
     if (!menuOffset) {
-        menuOffset = 0;
+        menuOffset = 30;
     }
     this.menuClass = menuClass;
     this.menuItems = menuItems;
-    this.menuOffset = menuOffset
+    this.menuOffset = menuOffset;
+    this.clear = false;
 }
 
 /**
@@ -33,12 +34,6 @@ function LePopMenuItemModel (text, callBack, attrs) {
     this.text = text;
     this.callBack = callBack;
     this.attr = attrs;
-}
-
-function LePopMenu(){
-    this.clearCache = function() {
-
-    }
 }
 
 /**
@@ -87,7 +82,7 @@ $.fn.LePopMenu = function (options) {
             }
         }, 50);
     }
-
+    console.log('LePopMenu.options.clear = ' + options.clear);
     if (options.hasOwnProperty('clear') && true === options.clear) {
         elemObj.parent().find('ul').remove();
     } else {
