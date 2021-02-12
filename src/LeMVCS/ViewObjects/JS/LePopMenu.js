@@ -46,6 +46,7 @@ $.fn.LePopMenu = function (options) {
     let off = false;
 
     function build() {
+        console.log('LePopMenu.build()');
         let pos = elemObj.position();
         let menu = $('<ul></ul>')
             .attr('id', 'btn_add_budget')
@@ -85,23 +86,22 @@ $.fn.LePopMenu = function (options) {
     console.log('LePopMenu.options.clear = ' + options.clear);
     if (options.hasOwnProperty('clear') && true === options.clear) {
         elemObj.parent().find('ul').remove();
-    } else {
-        elemObj
-            .mouseenter(function () {
-                off = false;
-                let menu = elemObj.parent().find('ul');
-                if (menu.length) {
-                    menu.show();
-                } else {
-                    build();
-                }
-            })
-            .mouseleave(function () {
-                off = true;
-                hide();
-            })
-        ;
     }
+    elemObj
+        .mouseenter(function () {
+            off = false;
+            let menu = elemObj.parent().find('ul');
+            if (menu.length) {
+                menu.show();
+            } else {
+                build();
+            }
+        })
+        .mouseleave(function () {
+            off = true;
+            hide();
+        })
+    ;
     return elemObj;
 }
 
