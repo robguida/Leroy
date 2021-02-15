@@ -73,6 +73,8 @@ $.fn.LePopMenu = function (options) {
             });
         ;
         /* add attributes if they exist */
+        console.log('build().options.attr');
+        console.log(options.attr);
         if (0 < options.attr.length) {
             $.each(options.attr,function (a, v) {
                 menu.attr(a, v);
@@ -87,6 +89,9 @@ $.fn.LePopMenu = function (options) {
                 .html(mi.text)
                 .click(mi.callBack)
             ;
+
+            console.log('build().mi.attr');
+            console.log(mi.attr);
             if (0 < mi.attr.length) {
                 $.each(mi.attr,function (a, v) {
                     menuItem.attr(a, v);
@@ -100,7 +105,6 @@ $.fn.LePopMenu = function (options) {
         console.log(menu);
         elemObj
             .css('cursor', 'pointer')
-            .parent()
             .append(menu)
         ;
     }
@@ -109,20 +113,20 @@ $.fn.LePopMenu = function (options) {
         /* When the mouse leaves the elemMenu, we want to make sure it did not re-enter the action button. */
         setTimeout(function () {
             if (off) {
-                elemObj.parent().find('ul').hide();
+                elemObj.find('ul').hide();
             }
         }, 50);
     }
 
     /* If the clear flag is passed in, remove the existing menu */
     if (options.hasOwnProperty('clear') && true === options.clear) {
-        elemObj.parent().find('ul').remove();
+        elemObj.find('ul').remove();
     }
 
     elemObj
         .mouseenter(function () {
             off = false;
-            let menu = elemObj.parent().find('ul');
+            let menu = elemObj.find('ul');
             if (menu.length) {
                 menu.show();
             } else {
