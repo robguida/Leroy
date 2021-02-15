@@ -74,8 +74,9 @@ $.fn.LePopMenu = function (options) {
             });
         ;
         /* add attributes if they exist */
-        console.log('LePopMenu.build().options.attr = ' + options.attr);
-        if (options.attr.length) {
+        console.log('LePopMenu.build().options.attr');
+        console.log(options.attr);
+        if (options.attr) {
             $.each(options.attr,function (a, v) {
                 console.log('LePopMenu.build.options.attr.a = ' + a);
                 console.log('LePopMenu.build.options.attr.v = ' + v);
@@ -92,8 +93,9 @@ $.fn.LePopMenu = function (options) {
                 .click(mi.callBack)
             ;
 
-            console.log('LePopMenu.build().mi.attr = ' + mi.attr);
-            if (mi.attr.length) {
+            console.log('LePopMenu.build().mi.attr');
+            console.log(mi.attr);
+            if (mi.attr) {
                 $.each(mi.attr,function (a, v) {
                     console.log('LePopMenu.build.mi.attr.a = ' + a);
                     console.log('LePopMenu.build.mi.attr.v = ' + v);
