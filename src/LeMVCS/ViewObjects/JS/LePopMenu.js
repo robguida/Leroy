@@ -40,8 +40,6 @@ function LePopMenuModel (
     attr = {},
     clear = false
 ) {
-    console.log('LePopMenuModel.menuItems');
-    console.log(menuItems);
     this.elemTarget = elemTarget;
     this.menuClass = menuClass;
     this.menuItems = menuItems;
@@ -76,10 +74,10 @@ $.fn.LePopMenu = function (options) {
             });
         ;
         /* add attributes if they exist */
-        console.log('build().options.attr');
-        console.log(options.attr);
         if (0 < options.attr.length) {
             $.each(options.attr,function (a, v) {
+                console.log('LePopMenu.build.options.attr.a = ' + a);
+                console.log('LePopMenu.build.options.attr.v = ' + v);
                 menu.attr(a, v);
             });
         }
@@ -93,10 +91,10 @@ $.fn.LePopMenu = function (options) {
                 .click(mi.callBack)
             ;
 
-            console.log('build().mi.attr');
-            console.log(mi.attr);
             if (0 < mi.attr.length) {
                 $.each(mi.attr,function (a, v) {
+                    console.log('LePopMenu.build.mi.attr.a = ' + a);
+                    console.log('LePopMenu.build.mi.attr.v = ' + v);
                     menuItem.attr(a, v);
                 });
             }
@@ -104,6 +102,8 @@ $.fn.LePopMenu = function (options) {
         });
         //</editor-fold>
 
+        console.log('LePopMenu.build().options.elemTarget');
+        console.log(options.elemTarget);
         console.log('LePopMenu.build().menu');
         console.log(menu);
         elemObj.css('cursor', 'pointer');
