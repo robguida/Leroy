@@ -74,7 +74,8 @@ $.fn.LePopMenu = function (options) {
             });
         ;
         /* add attributes if they exist */
-        if (0 < options.attr.length) {
+        console.log('LePopMenu.build().options.attr = ' + options.attr);
+        if (options.attr.length) {
             $.each(options.attr,function (a, v) {
                 console.log('LePopMenu.build.options.attr.a = ' + a);
                 console.log('LePopMenu.build.options.attr.v = ' + v);
@@ -91,7 +92,8 @@ $.fn.LePopMenu = function (options) {
                 .click(mi.callBack)
             ;
 
-            if (0 < mi.attr.length) {
+            console.log('LePopMenu.build().mi.attr = ' + mi.attr);
+            if (mi.attr.length) {
                 $.each(mi.attr,function (a, v) {
                     console.log('LePopMenu.build.mi.attr.a = ' + a);
                     console.log('LePopMenu.build.mi.attr.v = ' + v);
@@ -102,10 +104,10 @@ $.fn.LePopMenu = function (options) {
         });
         //</editor-fold>
 
-        console.log('LePopMenu.build().options.elemTarget');
-        console.log(options.elemTarget);
-        console.log('LePopMenu.build().menu');
-        console.log(menu);
+        // console.log('LePopMenu.build().options.elemTarget');
+        // console.log(options.elemTarget);
+        // console.log('LePopMenu.build().menu');
+        // console.log(menu);
         elemObj.css('cursor', 'pointer');
         options.elemTarget.append(menu);
     }
