@@ -82,13 +82,9 @@ $.fn.LePopMenu = function (options) {
             });
         ;
         /* add attributes if they exist */
-        console.log('LePopMenu.build().options.attr');
-        console.log(options.attr);
         if (options.attr) {
             $.each(options.attr,function (a, v) {
-                console.log('LePopMenu.build.options.attr.a = ' + a);
-                console.log('LePopMenu.build.options.attr.v = ' + v);
-                menu.attr(a, v);
+                 menu.attr(a, v);
             });
         }
         //</editor-fold>
@@ -100,13 +96,8 @@ $.fn.LePopMenu = function (options) {
                 .html(mi.text)
                 .click(mi.callBack)
             ;
-
-            console.log('LePopMenu.build().mi.attr');
-            console.log(mi.attr);
             if (mi.attr) {
                 $.each(mi.attr,function (a, v) {
-                    console.log('LePopMenu.build.mi.attr.a = ' + a);
-                    console.log('LePopMenu.build.mi.attr.v = ' + v);
                     menuItem.attr(a, v);
                 });
             }
@@ -114,10 +105,6 @@ $.fn.LePopMenu = function (options) {
         });
         //</editor-fold>
 
-        // console.log('LePopMenu.build().options.elemTarget');
-        // console.log(options.elemTarget);
-        // console.log('LePopMenu.build().menu');
-        // console.log(menu);
         elemObj.css('cursor', 'pointer');
         options.elemTarget.append(menu);
     }
