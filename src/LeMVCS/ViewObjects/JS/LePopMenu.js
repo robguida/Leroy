@@ -1,25 +1,4 @@
 /**
- * @note This method is passed into LePopMenu
- *
- *      See HOW-TO EXAMPLE at bottom of the page
- *
- * @param menuClass - string for css class
- * @param menuItems - array LePopMenuItemModel's
- * @param menuOffset - integer to offset the menu from the parent element or the clicked element
- *              so the button would be the clicked element and the parent would be the containing TD
- * @constructor
- */
-function LePopMenuModel (menuClass, menuItems, menuOffset) {
-    if (!menuOffset) {
-        menuOffset = 30;
-    }
-    this.menuClass = menuClass;
-    this.menuItems = menuItems;
-    this.menuOffset = menuOffset;
-    this.clear = false;
-}
-
-/**
  * @note For each menu item in the Pop Menu, there is one LePopMenuItemModel. These are created and
  *      injected into the LePopMenuModel that is then injected into LePopMenu.
  *
@@ -37,21 +16,47 @@ function LePopMenuItemModel (text, callBack, attrs) {
 }
 
 /**
+ * @note This method is passed into LePopMenu
+ *
+ *      See HOW-TO EXAMPLE at bottom of the page
+ *
+ * @param menuClass - string for css class
+ * @param menuItems - array LePopMenuItemModel's
+ * @param menuHorOffset - integer to offset the menu from the parent element or the clicked element
+ *              so the button would be the clicked element and the parent would be the containing DOM element
+ * @param menuVertOffset - setinteger to offset the menu from the parent element or the clicked element
+ *              so the button would be the clicked element and the parent would be the containing DOM element
+ * @constructor
+ */
+function LePopMenuModel (menuClass, menuItems, menuHorOffset, menuVertOffset) {
+    if (!menuHorOffset) {
+        menuHorOffset = 0;
+    }
+    if (!menuVertOffset) {
+        menuVertOffset = 0;
+    }
+    this.menuClass = menuClass;
+    this.menuItems = menuItems;
+    this.menuHorOffset = menuHorOffset;
+    this.menuVertOffset = menuVertOffset;
+    this.clear = false; // completely remove the existing menu
+}
+
+/**
  * @param options {LePopMenuModel}
  * @constructor
  */
 $.fn.LePopMenu = function (options) {
-    /** @var LePopMenuModel options */
     let elemObj = $(this);
     let off = false;
 
     function build() {
-        console.log('LePopMenu.build()');
         let pos = elemObj.position();
         let menu = $('<ul></ul>')
             .attr('id', 'btn_add_budget')
             .addClass(options.menuClass)
-            .css('margin-left', pos.left + options.menuOffset)
+            .css('margin-left', pos.left + options.menuHorOffset)
+            .css('margin-top', pos.top + options.menuVertOffset)
             .mouseenter(function () {
                 off = false;
             })
@@ -68,6 +73,8 @@ $.fn.LePopMenu = function (options) {
                     .click(mi.callBack)
             );
         });
+        console.log('LePopMenu.build().menu');
+        console.log(menu);
         elemObj
             .css('cursor', 'pointer')
             .parent()
@@ -83,10 +90,12 @@ $.fn.LePopMenu = function (options) {
             }
         }, 50);
     }
-    console.log('LePopMenu.options.clear = ' + options.clear);
+
+    /* If the clear flag is passed in, remove the existing menu */
     if (options.hasOwnProperty('clear') && true === options.clear) {
         elemObj.parent().find('ul').remove();
     }
+
     elemObj
         .mouseenter(function () {
             off = false;
