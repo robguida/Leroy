@@ -6,10 +6,10 @@
  *
  * @param text string
  * @param callBack function
- * @param attrs {[{}]}
+ * @param attrs {{}}
  * @constructor
  */
-function LePopMenuItemModel (text, callBack, attrs = []) {
+function LePopMenuItemModel (text, callBack, attrs = {}) {
     this.text = text;
     this.callBack = callBack;
     this.attr = attrs;
@@ -26,7 +26,7 @@ function LePopMenuItemModel (text, callBack, attrs = []) {
  *              so the button would be the clicked element and the parent would be the containing DOM element
  * @param menuVertOffset - setinteger to offset the menu from the parent element or the clicked element
  *              so the button would be the clicked element and the parent would be the containing DOM element
- * @param attr {[{}]}
+ * @param attr {{}}
  * @param clear {boolean}
  * @constructor
  */
@@ -35,14 +35,14 @@ function LePopMenuModel (
     menuItems,
     menuHorOffset = 0,
     menuVertOffset = 0,
-    attr = [],
+    attr = {},
     clear = false
 ) {
     this.menuClass = menuClass;
     this.menuItems = menuItems;
     this.menuHorOffset = menuHorOffset;
     this.menuVertOffset = menuVertOffset;
-    this.attr = [];
+    this.attr = attr;
     this.clear = clear; // completely remove the existing menu
 }
 
