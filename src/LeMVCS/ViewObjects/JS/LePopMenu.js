@@ -20,6 +20,7 @@ function LePopMenuItemModel (text, callBack, attrs = {}) {
  *
  *      See HOW-TO EXAMPLE at bottom of the page
  *
+ * @param elemTarget $() the element the menu is appended too
  * @param menuClass - string for css class
  * @param menuItems - array LePopMenuItemModel's
  * @param menuHorOffset - integer to offset the menu from the parent element or the clicked element
@@ -31,6 +32,7 @@ function LePopMenuItemModel (text, callBack, attrs = {}) {
  * @constructor
  */
 function LePopMenuModel (
+    elemTarget,
     menuClass,
     menuItems,
     menuHorOffset = 0,
@@ -40,6 +42,7 @@ function LePopMenuModel (
 ) {
     console.log('LePopMenuModel.menuItems');
     console.log(menuItems);
+    this.elemTarget = elemTarget;
     this.menuClass = menuClass;
     this.menuItems = menuItems;
     this.menuHorOffset = menuHorOffset;
@@ -103,30 +106,28 @@ $.fn.LePopMenu = function (options) {
 
         console.log('LePopMenu.build().menu');
         console.log(menu);
-        elemObj
-            .css('cursor', 'pointer')
-            .append(menu)
-        ;
+        elemObj.css('cursor', 'pointer');
+        options.elemTarget.append(menu);
     }
 
     function hide() {
         /* When the mouse leaves the elemMenu, we want to make sure it did not re-enter the action button. */
         setTimeout(function () {
             if (off) {
-                elemObj.find('ul').hide();
+                options.elemTarget.find('ul').hide();
             }
         }, 50);
     }
 
     /* If the clear flag is passed in, remove the existing menu */
     if (options.hasOwnProperty('clear') && true === options.clear) {
-        elemObj.find('ul').remove();
+        options.elemTarget.find('ul').remove();
     }
 
     elemObj
         .mouseenter(function () {
             off = false;
-            let menu = elemObj.find('ul');
+            let menu = options.elemTarget.find('ul');
             if (menu.length) {
                 menu.show();
             } else {
