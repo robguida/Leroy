@@ -38,6 +38,8 @@ function LePopMenuModel (
     attr = {},
     clear = false
 ) {
+    console.log('LePopMenuModel.menuItems');
+    console.log(menuItems);
     this.menuClass = menuClass;
     this.menuItems = menuItems;
     this.menuHorOffset = menuHorOffset;
@@ -55,6 +57,7 @@ $.fn.LePopMenu = function (options) {
     let off = false;
 
     function build() {
+        //<editor-fold desc="Build Menu - UL">
         let pos = elemObj.position();
         let menu = $('<ul></ul>')
             .addClass(options.menuClass)
@@ -75,6 +78,9 @@ $.fn.LePopMenu = function (options) {
                 menu.attr(a, v);
             });
         }
+        //</editor-fold>
+
+        //<editor-fold desc="Build Menu Items - LI's">
         /** @var LePopMenuItemModel mi */
         $.each(options.menuItems, function (i, mi) {
             let menuItem = $('<li></li>')
@@ -88,6 +94,8 @@ $.fn.LePopMenu = function (options) {
             }
             menu.append(menuItem)
         });
+        //</editor-fold>
+
         console.log('LePopMenu.build().menu');
         console.log(menu);
         elemObj
