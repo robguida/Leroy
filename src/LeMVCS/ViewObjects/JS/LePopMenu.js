@@ -71,7 +71,7 @@ $.fn.LePopMenu = function (options) {
         ;
         /* add attributes if they exist */
         if (0 < options.attr.length) {
-            options.attr.each(function (a, v) {
+            $.each(options.attr,function (a, v) {
                 menu.attr(a, v);
             });
         }
@@ -82,7 +82,7 @@ $.fn.LePopMenu = function (options) {
                 .click(mi.callBack)
             ;
             if (0 < mi.attr.length) {
-                mi.attr.each(function (a, v) {
+                $.each(mi.attr,function (a, v) {
                     menuItem.attr(a, v);
                 });
             }
