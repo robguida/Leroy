@@ -4,12 +4,12 @@
  *
  *       See HOW-TO EXAMPLE at bottom of the page
  *
- * @param text
- * @param callBack
- * @param attrs
+ * @param text string
+ * @param callBack function
+ * @param attrs {[{}]}
  * @constructor
  */
-function LePopMenuItemModel (text, callBack, attrs) {
+function LePopMenuItemModel (text, callBack, attrs = []) {
     this.text = text;
     this.callBack = callBack;
     this.attr = attrs;
@@ -26,20 +26,24 @@ function LePopMenuItemModel (text, callBack, attrs) {
  *              so the button would be the clicked element and the parent would be the containing DOM element
  * @param menuVertOffset - setinteger to offset the menu from the parent element or the clicked element
  *              so the button would be the clicked element and the parent would be the containing DOM element
+ * @param attr {[{}]}
+ * @param clear {boolean}
  * @constructor
  */
-function LePopMenuModel (menuClass, menuItems, menuHorOffset, menuVertOffset) {
-    if (!menuHorOffset) {
-        menuHorOffset = 0;
-    }
-    if (!menuVertOffset) {
-        menuVertOffset = 0;
-    }
+function LePopMenuModel (
+    menuClass,
+    menuItems,
+    menuHorOffset = 0,
+    menuVertOffset = 0,
+    attr = [],
+    clear = false
+) {
     this.menuClass = menuClass;
     this.menuItems = menuItems;
     this.menuHorOffset = menuHorOffset;
     this.menuVertOffset = menuVertOffset;
-    this.clear = false; // completely remove the existing menu
+    this.attr = [];
+    this.clear = clear; // completely remove the existing menu
 }
 
 /**
@@ -53,8 +57,8 @@ $.fn.LePopMenu = function (options) {
     function build() {
         let pos = elemObj.position();
         let menu = $('<ul></ul>')
-            .attr('id', 'btn_add_budget')
             .addClass(options.menuClass)
+            .attr('id', 'btn_add_budget')
             .css('margin-left', pos.left + options.menuHorOffset)
             .css('margin-top', pos.top + options.menuVertOffset)
             .mouseenter(function () {
@@ -65,13 +69,24 @@ $.fn.LePopMenu = function (options) {
                 hide();
             });
         ;
+        /* add attributes if they exist */
+        if (0 < options.attr.length) {
+            options.attr.each(function (a, v) {
+                menu.attr(a, v);
+            });
+        }
         /** @var LePopMenuItemModel mi */
         $.each(options.menuItems, function (i, mi) {
-            menu.append(
-                $('<li></li>')
-                    .html(mi.text)
-                    .click(mi.callBack)
-            );
+            let menuItem = $('<li></li>')
+                .html(mi.text)
+                .click(mi.callBack)
+            ;
+            if (0 < mi.attr.length) {
+                mi.attr.each(function (a, v) {
+                    menuItem.attr(a, v);
+                });
+            }
+            menu.append(menuItem)
         });
         console.log('LePopMenu.build().menu');
         console.log(menu);
