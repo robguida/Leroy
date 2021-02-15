@@ -13,6 +13,10 @@ function LePopMenuItemModel (text, callBack, attrs = {}) {
     this.text = text;
     this.callBack = callBack;
     this.attr = attrs;
+
+    this.addAttr = function (k, v) {
+        this.attr[k] = v;
+    }
 }
 
 /**
@@ -47,6 +51,10 @@ function LePopMenuModel (
     this.menuVertOffset = menuVertOffset;
     this.attr = attr;
     this.clear = clear; // completely remove the existing menu
+
+    this.addAttr = function (k, v) {
+        this.attr[k] = v;
+    }
 }
 
 /**
