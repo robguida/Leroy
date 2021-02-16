@@ -92,10 +92,10 @@ $.fn.LePopMenu = function (options) {
         //<editor-fold desc="Build Menu Items - LI's">
         /** @var LePopMenuItemModel mi */
         $.each(options.menuItems, function (i, mi) {
-            let menuItem = $('<li></li>')
-                .html(mi.text)
-                .click(mi.callBack)
-            ;
+            let menuItem = $('<li></li>').html(mi.text);
+            if (mi.callBack) {
+                menuItem.click(mi.callBack);
+            }
             if (mi.attr) {
                 $.each(mi.attr,function (a, v) {
                     menuItem.attr(a, v);
