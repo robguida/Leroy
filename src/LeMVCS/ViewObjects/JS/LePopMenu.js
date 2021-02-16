@@ -58,12 +58,35 @@ function LePopMenuModel (
 }
 
 /**
+ * @constructor
+ */
+function LePopMenuService() {
+    /**
+     * @param mi LePopMenuModel
+     * @returns {*|Window.jQuery}
+     */
+    this.getListItem = function (mi) {
+        let menuItem = $('<li></li>').html(mi.text);
+        if (mi.callBack) {
+            menuItem.click(mi.callBack);
+        }
+        if (mi.attr) {
+            $.each(mi.attr,function (a, v) {
+                menuItem.attr(a, v);
+            });
+        }
+        return menuItem;
+    }
+}
+
+/**
  * @param options {LePopMenuModel}
  * @constructor
  */
 $.fn.LePopMenu = function (options) {
     let elemObj = $(this);
     let off = false;
+    let lePopMenuService = new LePopMenuService();
 
     function build() {
         //<editor-fold desc="Build Menu - UL">
@@ -92,16 +115,11 @@ $.fn.LePopMenu = function (options) {
         //<editor-fold desc="Build Menu Items - LI's">
         /** @var LePopMenuItemModel mi */
         $.each(options.menuItems, function (i, mi) {
-            let menuItem = $('<li></li>').html(mi.text);
-            if (mi.callBack) {
-                menuItem.click(mi.callBack);
+            if (mi.hasOwnProperty('elemTarget')) {
+                menu.append(lePopMenuService.getListItem(mi));
+            } else {
+                menu.append(mi);
             }
-            if (mi.attr) {
-                $.each(mi.attr,function (a, v) {
-                    menuItem.attr(a, v);
-                });
-            }
-            menu.append(menuItem)
         });
         //</editor-fold>
 
