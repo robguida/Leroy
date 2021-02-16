@@ -119,7 +119,7 @@ $.fn.LePopMenu = function (options) {
         //<editor-fold desc="Build Menu Items - LI's">
         /** @var LePopMenuItemModel mi */
         $.each(options.menuItems, function (i, mi) {
-            if (mi.hasOwnProperty('elemTarget')) {
+            if (mi.hasOwnProperty('text')) {
                 menu.append(lePopMenuService.getListItem(mi));
             } else {
                 menu.append(mi);
