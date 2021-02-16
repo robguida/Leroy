@@ -66,6 +66,8 @@ function LePopMenuService() {
      * @returns {*|Window.jQuery}
      */
     this.getListItem = function (mi) {
+        console.log('LePopMenuService.getListItem.mi');
+        console.log(mi);
         let menuItem = $('<li></li>').html(mi.text);
         if (mi.callBack) {
             menuItem.click(mi.callBack);
@@ -75,6 +77,8 @@ function LePopMenuService() {
                 menuItem.attr(a, v);
             });
         }
+        console.log('LePopMenuService.getListItem.menuItem');
+        console.log(menuItem);
         return menuItem;
     }
 }
