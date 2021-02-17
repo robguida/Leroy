@@ -137,7 +137,7 @@ $.fn.LePopMenu = function (options) {
             if (off) {
                 options.elemTarget.find('ul').hide();
             }
-        }, 50);
+        }, 1000);
     }
 
     /* If the clear flag is passed in, remove the existing menu */
