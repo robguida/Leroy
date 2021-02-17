@@ -42,7 +42,8 @@ function LePopMenuModel (
     menuHorOffset = 0,
     menuVertOffset = 0,
     attr = {},
-    clear = false
+    clear = false,
+    hideDelay = 50
 ) {
     this.elemTarget = elemTarget;
     this.menuClass = menuClass;
@@ -51,6 +52,7 @@ function LePopMenuModel (
     this.menuVertOffset = menuVertOffset;
     this.attr = attr;
     this.clear = clear; // completely remove the existing menu
+    this.hideDelay = hideDelay;
 
     this.addAttr = function (k, v) {
         this.attr[k] = v;
@@ -137,7 +139,7 @@ $.fn.LePopMenu = function (options) {
             if (off) {
                 options.elemTarget.find('ul').hide();
             }
-        }, 1000);
+        }, options.hideDelay);
     }
 
     /* If the clear flag is passed in, remove the existing menu */
