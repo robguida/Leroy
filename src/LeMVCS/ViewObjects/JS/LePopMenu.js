@@ -33,6 +33,7 @@ function LePopMenuItemModel (text, callBack, attrs = {}) {
  *              so the button would be the clicked element and the parent would be the containing DOM element
  * @param attr {{}}
  * @param clear {boolean}
+ * @param hideDelay
  * @constructor
  */
 function LePopMenuModel (
@@ -68,8 +69,6 @@ function LePopMenuService() {
      * @returns {*|Window.jQuery}
      */
     this.getListItem = function (mi) {
-        console.log('LePopMenuService.getListItem.mi');
-        console.log(mi);
         let menuItem = $('<li></li>').html(mi.text);
         if (mi.callBack) {
             menuItem.click(mi.callBack);
@@ -79,8 +78,6 @@ function LePopMenuService() {
                 menuItem.attr(a, v);
             });
         }
-        console.log('LePopMenuService.getListItem.menuItem');
-        console.log(menuItem);
         return menuItem;
     }
 }
