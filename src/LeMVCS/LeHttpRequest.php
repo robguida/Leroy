@@ -100,6 +100,16 @@ class LeHttpRequest
     }
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    public function hasKey(string $key) : bool
+    {
+        $data = $this->data[$this->getMethod()];
+        return array_key_exists($key, $data);
+    }
+
+    /**
      * @param null $key
      * @return array|bool|mixed|null
      */
