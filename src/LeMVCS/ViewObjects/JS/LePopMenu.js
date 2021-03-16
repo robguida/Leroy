@@ -144,15 +144,22 @@ $.fn.LePopMenu = function (options) {
         options.elemTarget.find('ul').remove();
     }
 
+    function initiateMenu() {
+        off = false;
+        let menu = options.elemTarget.find('ul');
+        if (menu.length) {
+            menu.show();
+        } else {
+            build();
+        }
+    }
+
     elemObj
+        .click(function() {
+            initiateMenu();
+        })
         .mouseenter(function () {
-            off = false;
-            let menu = options.elemTarget.find('ul');
-            if (menu.length) {
-                menu.show();
-            } else {
-                build();
-            }
+            initiateMenu();
         })
         .mouseleave(function () {
             off = true;
