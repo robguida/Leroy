@@ -500,6 +500,8 @@ abstract class LeModelAbstract
                 } elseif (empty($value) && isset($attrs['default'])) {
                     /* When there is no value, then set the value to the default value */
                     $value = $attrs['default'];
+                } elseif ('NULL' == strtoupper($value) && is_null($attrs['default'])) {
+                    $value = null;
                 }
             }
             $output['cols'][] = $column;
