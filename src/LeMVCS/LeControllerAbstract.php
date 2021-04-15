@@ -8,6 +8,7 @@
 
 namespace Leroy\LeMVCS;
 
+use InvalidArgumentException;
 use Leroy\LeMVCS\ViewObjects\LeFormElement;
 use Leroy\LeMVCS\ViewObjects\LeViewTools;
 
@@ -17,13 +18,12 @@ use Leroy\LeMVCS\ViewObjects\LeViewTools;
  */
 abstract class LeControllerAbstract
 {
-    /** @var string */
-    private $template_url;
+    private string $template_url;
 
     /**
      * @return string
      */
-    public function getTemplateUrl()
+    public function getTemplateUrl(): string
     {
         return $this->template_url;
     }
@@ -38,13 +38,28 @@ abstract class LeControllerAbstract
 
     /**
      * @param string $file
+     * @return false|string
+     */
+    protected function getFullFilePath(string $file)
+    {
+        $output = "{$this->getTemplateUrl()}{$file}";
+        if (!file_exists($output)) {
+            $output = false;
+        }
+        return $output;
+    }
+
+    /**
+     * @param string $file
      * @param array|null $params
      * @return string
      * @noinspection PhpIncludeInspection
      */
-    protected function loadTemplate(string $file, array $params = null)
+    protected function loadTemplate(string $file, array $params = null): string
     {
-        $full_path = "{$this->getTemplateUrl()}{$file}";
+        if (!$full_file_path = $this->getFullFilePath($file)) {
+            throw new InvalidArgumentException("The file does not exist: {$full_file_path}.");
+        }
         ob_start();
         if ($params) {
             foreach ($params as $variable => $param) {
@@ -60,7 +75,7 @@ abstract class LeControllerAbstract
         if (!isset($leViewTools)) {
             $leViewTools = new LeViewTools();
         }
-        require $full_path;
+        require $full_file_path;
         $output = ob_get_contents();
         ob_clean();
         return $output;
