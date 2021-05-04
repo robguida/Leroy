@@ -39,12 +39,13 @@ abstract class LeControllerAbstract
     /**
      * @param string $file
      * @return false|string
+     * @throws InvalidArgumentException
      */
-    protected function getFullFilePath(string $file)
+    protected function getFullFilePath(string $file): string
     {
         $output = "{$this->getTemplateUrl()}{$file}";
         if (!file_exists($output)) {
-            $output = false;
+            throw new InvalidArgumentException("The file does not exist: {$output}.");
         }
         return $output;
     }
@@ -57,9 +58,7 @@ abstract class LeControllerAbstract
      */
     protected function loadTemplate(string $file, array $params = null): string
     {
-        if (!$full_file_path = $this->getFullFilePath($file)) {
-            throw new InvalidArgumentException("The file does not exist: {$full_file_path}.");
-        }
+        $full_file_path = $this->getFullFilePath($file);
         ob_start();
         if ($params) {
             foreach ($params as $variable => $param) {
