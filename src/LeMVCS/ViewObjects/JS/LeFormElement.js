@@ -60,6 +60,16 @@ var LeFormElement = {
     search: function (name, value, attr, style, id) {
         return LeFormElement.Input('search', name, value, attr, style, id);
     },
+    /**
+     * @param name {string}
+     * @param selected {string}
+     * @param options {{}}
+     * @param attr {{}}
+     * @param style {{}}
+     * @param id {string}
+     * @param has_groups {boolean}
+     * @returns {*|Window.jQuery}
+     */
     select: function (name, selected, options, attr, style, id, has_groups = false) {
         if (!id) { id = name.toLowerCase(); }
         const elemObj = $('<select />').attr('name', name).attr('id', id);
@@ -69,7 +79,7 @@ var LeFormElement = {
             $.each(options, function (group, group_options) {
                 const elemOptGrp = $('<optgroup>').attr('label', group);
                 $.each(group_options, function (t, v) {
-                    elemOptGrp.append($('<option>').val(v.tcv_id).text(v.text));
+                    elemOptGrp.append($('<option>').val(v).text(t));
                 });
                 elemObj.append(elemOptGrp);
             });

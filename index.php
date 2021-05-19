@@ -22,6 +22,11 @@ $t = [
         '3.007' => ['tcv_id' => 82, 'text' => 'Durability Confirmation'],
     ],
 ];
+$t2 = [
+    '1.001' => ['tcv_id' => 68, 'text' => 'Screening, Day 71 of Core Trial'],
+    '1.002' => ['tcv_id' => 69, 'text' => 'Visit 1'],
+    '1.003' => ['tcv_id' => 70, 'text' => 'Durability Confirmation'],
+];
 ?>
 <html>
 <head>
@@ -31,8 +36,38 @@ $t = [
     <script>
         $(function() {
             const data = <?php echo json_encode($t); ?>;
-            const select = LeFormElement.select('test1', '', data, null, null, 'test1', true);
-           $('#test').append(select);
+            const data2 = <?php echo json_encode($t2); ?>;
+
+            function formatOptions(input) {
+                let output = {};
+                const is_cohort = isCohort(input);
+                if (3 <= is_cohort) {
+                    $.each(input, function (group_name, optGroupOptions) {
+                        output[group_name] = {};
+                        $.each(optGroupOptions, function (i, record) {
+                            output[group_name][record.text] = record.tcv_id;
+                        });
+                    });
+                } else {
+                    $.each(input, function (i, record) {
+                        output[record.text] = record.tcv_id;
+                    });
+                }
+                return output;
+            }
+
+            function isCohort(object) {
+                if (typeof object !== "object" || object === null) {
+                    return 0;
+                }
+                let values = Object.values(object);
+                return (values.length && Math.max(...values.map(value => isCohort(value)))) + 1;
+            }
+
+            const select = LeFormElement.select('test1', '', formatOptions(data), null, null, 'test1', true);
+            const select2 = LeFormElement.select('test2', '', formatOptions(data2), null, null, 'test2', false);
+            $('#test').append(select);
+            $('#test').append(select2);
         });
     </script>
 
