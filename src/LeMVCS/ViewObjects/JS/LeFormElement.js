@@ -60,14 +60,24 @@ var LeFormElement = {
     search: function (name, value, attr, style, id) {
         return LeFormElement.Input('search', name, value, attr, style, id);
     },
-    select: function (name, selected, options, attr, style, id) {
+    select: function (name, selected, options, attr, style, id, has_groups = false) {
         if (!id) { id = name.toLowerCase(); }
-        var elemObj = $('<select />').attr('name', name).attr('id', id);
+        const elemObj = $('<select />').attr('name', name).attr('id', id);
         this.addAttributes(elemObj, attr);
         this.addStyles(elemObj, style);
-        $.each(options, function(t, v) {
-            elemObj.append($('<option>').val(v).text(t) );
-        });
+        if (has_groups) {
+            $.each(options, function (group, options) {
+                const elemOptGrp = $('<optgroup>').text(group);
+                $.each(options, function (t, v) {
+                    elemOptGrp.append($('<option>').val(v).text(t));
+                });
+                elemObj.append(elemOptGrp);
+            });
+        } else {
+            $.each(options, function (t, v) {
+                elemObj.append($('<option>').val(v).text(t));
+            });
+        }
         if (selected) {
             elemObj.val(selected);
         }
