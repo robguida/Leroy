@@ -7,12 +7,6 @@
  */
 require_once dirname(__FILE__, 2) . '/src/bootstrap.php';
 
-//use Leroy\LeCache\LeCacheFactory;
-//$leCache = new LeCacheFactory('memcached');
-//use Leroy\LeSecurity\LeSecureForm;
-//$leSecure = new LeSecureForm();
-//echo 'token: ' . $leSecure->getToken() . '<br />';
-
 ?>
 <html>
 <head>

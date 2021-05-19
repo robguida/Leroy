@@ -66,10 +66,10 @@ var LeFormElement = {
         this.addAttributes(elemObj, attr);
         this.addStyles(elemObj, style);
         if (has_groups) {
-            $.each(options, function (group, options) {
-                const elemOptGrp = $('<optgroup>').text(group);
-                $.each(options, function (t, v) {
-                    elemOptGrp.append($('<option>').val(v).text(t));
+            $.each(options, function (group, group_options) {
+                const elemOptGrp = $('<optgroup>').attr('label', group);
+                $.each(group_options, function (t, v) {
+                    elemOptGrp.append($('<option>').val(v.tcv_id).text(v.text));
                 });
                 elemObj.append(elemOptGrp);
             });
