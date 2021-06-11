@@ -1,65 +1,145 @@
 /**
  * Created by robert on 5/2/2019.
  */
-var LeFormElement = {
-    button: function (name, value, attr, style, id) {
+class LeFormElement {
+    //<editor-fold desc="Wrapper Functions">
+    static button(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('button', name, value, attr, style, id);
-    },
-    checkbox: function (name, value, attr, style, id) {
+    }
+
+    static checkbox(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('checkbox', name, value, attr, style, id);
-    },
-    color: function (name, value, attr, style, id) {
+    }
+
+    static color(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('color', name, value, attr, style, id);
-    },
-    date: function (name, value, attr, style, id) {
+    }
+
+    static date(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('date', name, value, attr, style, id);
-    },
-    dateTime: function (name, value, attr, style, id) {
+    }
+
+    static dateTime(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('dateTime', name, value, attr, style, id);
-    },
-    dateTimeLocal: function (name, value, attr, style, id) {
+    }
+
+    static dateTimeLocal(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('dateTimeLocal', name, value, attr, style, id);
-    },
-    email: function (name, value, attr, style, id) {
+    }
+
+    static email(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('email', name, value, attr, style, id);
-    },
-    file: function (name, value, attr, style, id) {
+    }
+
+    static file(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('file', name, value, attr, style, id);
-    },
-    hidden: function (name, value, attr, style, id) {
+    }
+
+    static hidden(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('hidden', name, value, attr, style, id);
-    },
-    image: function (name, value, attr, style, id) {
+    }
+
+    static image(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('image', name, value, attr, style, id);
-    },
-    label: function (for_, display, id, attr, style) {
-        var elemObj = $('<label />').attr('for', for_).text(display);
-        if (id){ elemObj.attr('id', id); }
-        this.addAttributes(elemObj, attr);
-        this.addStyles(elemObj, style);
-        return elemObj;
-    },
-    month: function (name, value, attr, style, id) {
+    }
+
+    static month(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('month', name, value, attr, style, id);
-    },
-    number: function (name, value, attr, style, id) {
+    }
+
+    static number(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('number', name, value, attr, style, id);
-    },
-    password: function (name, value, attr, style, id) {
+    }
+
+    static password(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('password', name, value, attr, style, id);
-    },
-    radio: function (name, value, attr, style, id) {
+    }
+
+    static radio(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('radio', name, value, attr, style, id);
-    },
-    range: function (name, value, attr, style, id) {
+    }
+
+    static range(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('range', name, value, attr, style, id);
-    },
-    reset: function (name, value, attr, style, id) {
+    }
+
+    static reset(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('reset', name, value, attr, style, id);
-    },
-    search: function (name, value, attr, style, id) {
+    }
+
+    static search(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('search', name, value, attr, style, id);
-    },
+    }
+
+    static submit(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.Input('submit', name, value, attr, style, id);
+    }
+
+    static tel(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.Input('tel', name, value, attr, style, id);
+    }
+
+    static text(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.Input('text', name, value, attr, style, id);
+    }
+
+    static time(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.Input('time', name, value, attr, style, id);
+    }
+
+    static url(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.Input('url', name, value, attr, style, id);
+    }
+
+    static week(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.Input('week', name, value, attr, style, id);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Primary Element Functions & Private Functions">
+    /**
+     * @param type {string}
+     * @param name {string}
+     * @param value {string}
+     * @param attr {{}}
+     * @param style {{}}
+     * @param id {string}
+     * @returns {*|Window.jQuery}
+     * @constructor
+     */
+    static Input(type, name, value = '', attr = {}, style = {}, id = '') {
+        const fe = new LeFormElement();
+        if (!id) {
+            id = name.toLowerCase();
+        }
+        const elemObj = $('<input />').attr('type', type).attr('name', name).attr('id', id);
+        if ('file' !== type) {
+            elemObj.val(value);
+        }
+        fe.#addAttributes(elemObj, attr);
+        fe.#addStyles(elemObj, style);
+        return elemObj;
+    }
+
+    /**
+     * @param for_ {string}
+     * @param display {string}
+     * @param id {string}
+     * @param attr {{}}
+     * @param style {{}}
+     * @returns {*|Window.jQuery}
+     */
+    static Label(for_, display, id, attr, style) {
+        const fe = new LeFormElement();
+        const elemObj = $('<label />').attr('for', for_).text(display);
+        if (id) {
+            elemObj.attr('id', id);
+        }
+        fe.#addAttributes(elemObj, attr);
+        fe.#addStyles(elemObj, style);
+        return elemObj;
+    }
+
     /**
      * @param name {string}
      * @param selected {string}
@@ -70,11 +150,14 @@ var LeFormElement = {
      * @param has_groups {boolean}
      * @returns {*|Window.jQuery}
      */
-    select: function (name, selected, options, attr, style, id, has_groups = false) {
-        if (!id) { id = name.toLowerCase(); }
+    static Select(name, selected, options, attr = {}, style = {}, id = '', has_groups = false) {
+        const fe = new LeFormElement();
+        if (!id) {
+            id = name.toLowerCase();
+        }
         const elemObj = $('<select />').attr('name', name).attr('id', id);
-        this.addAttributes(elemObj, attr);
-        this.addStyles(elemObj, style);
+        fe.#addAttributes(elemObj, attr);
+        fe.#addStyles(elemObj, style);
         if (has_groups) {
             $.each(options, function (group, group_options) {
                 const elemOptGrp = $('<optgroup>').attr('label', group);
@@ -92,53 +175,52 @@ var LeFormElement = {
             elemObj.val(selected);
         }
         return elemObj;
-    },
-    submit: function (name, value, attr, style, id) {
-        return LeFormElement.Input('submit', name, value, attr, style, id);
-    },
-    tel: function (name, value, attr, style, id) {
-        return LeFormElement.Input('tel', name, value, attr, style, id);
-    },
-    text: function (name, value, attr, style, id) {
-        return LeFormElement.Input('text', name, value, attr, style, id);
-    },
-    textArea: function (name, value, attr, style, id) {
-        if (!id) { id = name.toLowerCase(); }
-        var elemObj = $('<textarea></textarea>').attr('name', name).attr('id', id);
-        if (value) { elemObj.text(value); }
-        this.addAttributes(elemObj, attr);
-        this.addStyles(elemObj, style);
+    }
+
+    /**
+     * @param name
+     * @param value
+     * @param attr
+     * @param style
+     * @param id
+     * @returns {*|Window.jQuery}
+     */
+    static TextArea(name, value = '', attr = {}, style = {}, id = '') {
+        const fe = new LeFormElement();
+        if (!id) {
+            id = name.toLowerCase();
+        }
+        const elemObj = $('<textarea></textarea>').attr('name', name).attr('id', id);
+        if (value) {
+            elemObj.text(value);
+        }
+        fe.#addAttributes(elemObj, attr);
+        fe.#addStyles(elemObj, style);
         return elemObj;
-    },
-    time: function (name, value, attr, style, id) {
-        return LeFormElement.Input('time', name, value, attr, style, id);
-    },
-    url: function (name, value, attr, style, id) {
-        return LeFormElement.Input('url', name, value, attr, style, id);
-    },
-    week: function (name, value, attr, style, id) {
-        return LeFormElement.Input('week', name, value, attr, style, id);
-    },
-    Input: function (type, name, value, attr, style, id) {
-        if (!id) { id = name.toLowerCase(); }
-        var elemObj = $('<input />').attr('type', type).attr('name', name).attr('id', id);
-        if ('file' !== type) { elemObj.val(value); }
-        this.addAttributes(elemObj, attr);
-        this.addStyles(elemObj, style);
-        return elemObj;
-    },
-    addAttributes: function (elemObj, attr) {
-        if ('object' === typeof(attr)) {
+    }
+
+    /**
+     * @param elemObj {*|Window.jQuery}
+     * @param attr {{}}
+     */
+    #addAttributes(elemObj, attr) {
+        if ('object' === typeof (attr)) {
             $.each(attr, function (a, v) {
                 elemObj.attr(a, v);
             });
         }
-    },
-    addStyles: function (elemObj, style) {
-        if ('object' === typeof(style)) {
+    }
+
+    /**
+     * @param elemObj {*|Window.jQuery}
+     * @param style {{}}
+     */
+    #addStyles(elemObj, style) {
+        if ('object' === typeof (style)) {
             $.each(style, function (c, v) {
                 elemObj.css(c, v);
             });
         }
     }
- };
+    //</editor-fold>
+}
