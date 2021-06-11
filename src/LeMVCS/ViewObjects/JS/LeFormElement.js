@@ -43,6 +43,11 @@ class LeFormElement {
         return LeFormElement.Input('image', name, value, attr, style, id);
     }
 
+    /** @deprecated use LeFormElement.Label() */
+    static label(for_, display, id, attr, style) {
+        return LeFormElement.Label(for_, display, id, attr, style);
+    }
+
     static month(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('month', name, value, attr, style, id);
     }
@@ -71,6 +76,11 @@ class LeFormElement {
         return LeFormElement.Input('search', name, value, attr, style, id);
     }
 
+    /** @deprecated use LeFormElement.Select() */
+    static select(name, selected, options, attr = {}, style = {}, id = '', has_groups = false) {
+        return LeFormElement.Select(name, selected, options, attr, style, id, has_groups);
+    }
+
     static submit(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('submit', name, value, attr, style, id);
     }
@@ -81,6 +91,11 @@ class LeFormElement {
 
     static text(name, value = '', attr = {}, style = {}, id = '') {
         return LeFormElement.Input('text', name, value, attr, style, id);
+    }
+
+    /** @deprecated use LeFormElement.TextArea() */
+    static textArea(name, value = '', attr = {}, style = {}, id = '') {
+        return LeFormElement.TextArea(name, value, attr, style, id);
     }
 
     static time(name, value = '', attr = {}, style = {}, id = '') {
