@@ -77,12 +77,13 @@ abstract class LeControllerAbstract
     /**
      * @param string $file
      * @param array|null $params
+     * @param bool $bypass_template_path
      * @return string
      * @noinspection PhpIncludeInspection
      */
-    protected function loadTemplate(string $file, array $params = null): string
+    protected function loadTemplate(string $file, array $params = null, bool $bypass_template_path = false): string
     {
-        $full_file_path = $this->getFullFilePath($file);
+        $full_file_path = ($bypass_template_path) ? $file : $this->getFullFilePath($file);
         ob_start();
         if ($params) {
             foreach ($params as $variable => $param) {
