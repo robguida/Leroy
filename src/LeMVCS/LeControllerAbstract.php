@@ -18,23 +18,42 @@ use Leroy\LeMVCS\ViewObjects\LeViewTools;
  */
 abstract class LeControllerAbstract
 {
-    private string $template_url;
+    private string $template_path;
+
+    /**
+     * @return string
+     * @deprecated
+     */
+    public function getTemplateUrl(): string
+    {
+        return $this->template_path;
+    }
+
+    /**
+     * @param string $template_path
+     * @deprecated
+     */
+    public function setTemplateUrl(string $template_path)
+    {
+        $this->template_path = $template_path;
+    }
 
     /**
      * @return string
      */
-    public function getTemplateUrl(): string
+    public function getTemplatePath(): string
     {
-        return $this->template_url;
+        return $this->template_path;
     }
 
     /**
-     * @param string $template_url
+     * @param string $template_path
      */
-    public function setTemplateUrl(string $template_url)
+    public function setTemplatePath(string $template_path)
     {
-        $this->template_url = $template_url;
+        $this->template_path = $template_path;
     }
+
 
     /**
      * @param string $file
@@ -43,7 +62,7 @@ abstract class LeControllerAbstract
      */
     protected function getFullFilePath(string $file): string
     {
-        $output = "{$this->getTemplateUrl()}{$file}";
+        $output = "{$this->getTemplatePath()}{$file}";
         if (!file_exists($output)) {
             throw new InvalidArgumentException("The file does not exist: {$output}.");
         }
