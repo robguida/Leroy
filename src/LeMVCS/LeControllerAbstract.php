@@ -57,14 +57,19 @@ abstract class LeControllerAbstract
 
     /**
      * @param string $file
-     * @return false|string
+     * @param bool $suppress
+     * @return string|false
      * @throws InvalidArgumentException
      */
-    protected function getFullFilePath(string $file): string
+    protected function getFullFilePath(string $file, bool $suppress = false): string
     {
         $output = "{$this->getTemplatePath()}{$file}";
         if (!file_exists($output)) {
-            throw new InvalidArgumentException("The file does not exist: {$output}.");
+            if ($suppress) {
+                $output = false;
+            } else {
+                throw new InvalidArgumentException("The file does not exist: {$output}.");
+            }
         }
         return $output;
     }
