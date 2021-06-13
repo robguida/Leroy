@@ -114,7 +114,7 @@ class LeDbService
      *
      * @todo provide parameter to choose master or slave
      */
-    public function executeFile(string $file,  bool $create_db_in_file = false)
+    public function executeFile(string $file,  bool $create_db_in_file = false): array
     {
         $cred = $this->domain_credentials->master;
         $dbName = ($create_db_in_file) ? '' : " {$cred->dbName}";
@@ -133,7 +133,7 @@ class LeDbService
      * @param bool $use_prime
      * @return LeDbResultInterface
      */
-    public function execute(string $sql, array $bindings = [], bool $associate = false, bool $use_prime = false)
+    public function execute(string $sql, array $bindings = [], bool $associate = false, bool $use_prime = false): LeDbResultInterface
     {
         /** @var LeDbResultInterface $output */
         $output = $this->getDbResult();
