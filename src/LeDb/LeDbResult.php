@@ -281,6 +281,7 @@ class LeDbResult implements LeDbResultInterface
         $data = $this->getData();
         $consolidate = !is_null($col) && !empty($data);
         $key = $consolidate ? "{$col}_" . (int)$sub_arrays : 'default';
+        error_log(__FILE__ . ' ' . __LINE__ . ' $key = ' . $key);
         if (! array_key_exists($key, $this->output)) {
             if ($consolidate) {
                 $this->output[$key] = [];
@@ -297,6 +298,7 @@ class LeDbResult implements LeDbResultInterface
                 $this->output[$key] = $this->data;
             }
         }
+        error_log(__FILE__ . ' ' . __LINE__ . ' $this->output = ' . print_r($this->output, true));
         return $this->output[$key];
     }
 
@@ -317,6 +319,7 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getFirstRow(): array
     {
+        error_log(__FILE__ . ' ' . __LINE__ . ' __METHOD__ = ' . __METHOD__);
         $output = $this->getOutput();
         if (0 < count($output)) {
             $output = current($output);
