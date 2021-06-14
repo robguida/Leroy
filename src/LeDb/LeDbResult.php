@@ -35,11 +35,11 @@ class LeDbResult implements LeDbResultInterface
     /** @var string */
     private string $error_info;
 
-    /** @var array */
-    private array $data;
+    /** @var ?array */
+    private ?array $data;
 
-    /** @var array */
-    private array $output;
+    /** @var ?array */
+    private ?array $output;
 
     /** @var integer */
     private int $rows_found;
@@ -52,8 +52,8 @@ class LeDbResult implements LeDbResultInterface
 
     public function __construct()
     {
-        $this->output = [];
-        $this->data = [];
+        $this->output = null;
+        $this->data = null;
     }
 
     /**
@@ -279,6 +279,7 @@ class LeDbResult implements LeDbResultInterface
     public function getOutput($col = null, bool $sub_arrays = false): array
     {
         $data = $this->getData();
+        error_log(__FILE__ . ' ' . __LINE__ . ' $data = ' . print_r($data, true));
         $consolidate = !is_null($col) && !empty($data);
         $key = $consolidate ? "{$col}_" . (int)$sub_arrays : 'default';
         error_log(__FILE__ . ' ' . __LINE__ . ' $key = ' . $key);
