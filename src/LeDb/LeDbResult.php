@@ -52,7 +52,7 @@ class LeDbResult implements LeDbResultInterface
 
     public function __construct()
     {
-        $this->output = null;
+        $this->output = [];
         $this->data = null;
     }
 
@@ -218,9 +218,6 @@ class LeDbResult implements LeDbResultInterface
      */
     public function nextSet()
     {
-        if (is_null($this->output)) {
-            $this->output = [];
-        }
         /* The key starts with LeDbResultRowSet_0, and increments with each data set */
         $key = 'LeDbResultRowSet_' . count($this->output);
         if ($this->pdoStatement instanceof PDOStatement) {
