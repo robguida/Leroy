@@ -213,49 +213,6 @@ class LeDbResult implements LeDbResultInterface
         return $output;
     }
 
-    /**
-     * @return bool|mixed
-     */
-    public function nextSet()
-    {
-        /* The key starts with LeDbResultRowSet_0, and increments with each data set */
-        $key = 'LeDbResultRowSet_' . count($this->output);
-        if ($this->pdoStatement instanceof PDOStatement) {
-            $this->data[$key] = $this->getPdoStatement()->nextRowset();
-        }
-        return $this->data[$key];
-    }
-
-    /**
-     * @param null $col indicates using a column's value to create an associated array output
-     * @param bool $sub_arrays
-     * @return array
-     */
-    public function getOutputDep($col = null, bool $sub_arrays = false): array
-    {
-        if (is_null($this->output)) {
-            $output = $this->output = [];
-            /* The code can only fetch on a select */
-            if ($this->pdoStatement instanceof PDOStatement && LeDbService::SQL_TYPE_READ == $this->getSqlType()) {
-                $output = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
-            }
-            if (!is_null($col) && !empty($output)) {
-                if ($sub_arrays) {
-                    foreach ($output as $row) {
-                        $this->output[$row[$col]][] = $row;
-                    }
-                } else {
-                    foreach ($output as $row) {
-                        $this->output[$row[$col]] = $row;
-                    }
-                }
-            } else {
-                $this->output = $output;
-            }
-        }
-        return $this->output;
-    }
-
     private function getData(): array
     {
         if (is_null($this->data)) {
