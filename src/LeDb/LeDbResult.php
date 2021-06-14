@@ -21,34 +21,37 @@ use PDOStatement;
 class LeDbResult implements LeDbResultInterface
 {
     /** @var Exception */
-    private $exception;
+    private Exception $exception;
 
     /** @var PDOStatement */
-    private $pdoStatement;
+    private PDOStatement $pdoStatement;
 
     /** @var integer */
-    private $last_insert_id;
+    private int $last_insert_id;
 
     /** @var mixed */
     private $error_code;
 
     /** @var string */
-    private $error_info;
+    private string $error_info;
 
     /** @var array */
-    private $output;
+    private array $data;
+
+    /** @var array */
+    private array $output;
 
     /** @var integer */
-    private $rows_found;
+    private int $rows_found;
 
     /** @var string */
-    private $sql_type;
+    private string $sql_type;
 
     /** @var array */
-    private $bindings;
+    private array $bindings;
 
     /**
-     * @param null|PDOStatement $pdoStatement
+     * @param PDOStatement $pdoStatement
      */
     public function setPdoStatement(PDOStatement $pdoStatement)
     {
@@ -58,7 +61,7 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @return null|PDOStatement
      */
-    public function getPdoStatement()
+    public function getPdoStatement(): ?PDOStatement
     {
         return $this->pdoStatement;
     }
@@ -66,7 +69,7 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @return Exception
      */
-    public function getException()
+    public function getException(): Exception
     {
         return $this->exception;
     }
@@ -86,7 +89,10 @@ class LeDbResult implements LeDbResultInterface
         $this->bindings = $bindings;
     }
 
-    public function getBindings()
+    /**
+     * @return array|null
+     */
+    public function getBindings(): ?array
     {
         return $this->bindings;
     }
@@ -95,7 +101,7 @@ class LeDbResult implements LeDbResultInterface
      * @return bool
      * @deprecated
      */
-    public function success()
+    public function success(): bool
     {
         return $this->isSuccess();
     }
@@ -103,7 +109,7 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @return bool
      */
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return ($this->getPdoStatement() instanceof PDOStatement);
     }
@@ -111,13 +117,13 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @return integer
      */
-    public function getLastInsertId()
+    public function getLastInsertId(): int
     {
         return $this->last_insert_id;
     }
 
     /**
-     * @param integer $input
+     * @param mixed $input
      */
     public function setLastInsertId($input)
     {
@@ -141,9 +147,9 @@ class LeDbResult implements LeDbResultInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getErrorInfo()
+    public function getErrorInfo(): string
     {
         return $this->error_info;
     }
@@ -160,7 +166,7 @@ class LeDbResult implements LeDbResultInterface
      * @Note Same as PDOStatement::rowCount(), the number of rows affected by INSERT, UPDATE, DELETE, but not SELECT
      * @return int
      */
-    public function getRowsAffected()
+    public function getRowsAffected(): int
     {
         $output = null;
         if ($this->pdoStatement instanceof PDOStatement) {
@@ -173,7 +179,7 @@ class LeDbResult implements LeDbResultInterface
      * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
      * @param int $input
      */
-    public function setRowsFound($input)
+    public function setRowsFound(int $input)
     {
         $this->rows_found = (int)$input;
     }
@@ -182,7 +188,7 @@ class LeDbResult implements LeDbResultInterface
      * @Note gets Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
      * @return int
      */
-    public function getRowsFound()
+    public function getRowsFound(): int
     {
         return $this->rows_found;
     }
@@ -191,18 +197,18 @@ class LeDbResult implements LeDbResultInterface
      * @Note gets the number of records in from the select statement. Do not use with SQL_CALC_FOUND_ROWS
      * @return int
      */
-    public function getRecordCount()
+    public function getRecordCount(): int
     {
         $output = 0;
         /* If there is data in LeDbResult::output, then we can get the count. Otherwise, return 0. */
-        if ($this->getOutput()) {
-            $output = count($this->output);
+        if ($data = $this->getData()) {
+            $output = count($data);
         }
         return $output;
     }
 
     /**
-     * @return bool
+     * @return bool|mixed
      */
     public function nextSet()
     {
@@ -222,7 +228,7 @@ class LeDbResult implements LeDbResultInterface
      * @param bool $sub_arrays
      * @return array
      */
-    public function getOutput($col = null, $sub_arrays = false)
+    public function getOutput($col = null, bool $sub_arrays = false): array
     {
         if (is_null($this->output)) {
             $output = $this->output = [];
@@ -247,6 +253,47 @@ class LeDbResult implements LeDbResultInterface
         return $this->output;
     }
 
+    private function getData(): array
+    {
+        if (is_null($this->data)) {
+            $this->data = [];
+            /* The code can only fetch on a select */
+            if ($this->pdoStatement instanceof PDOStatement && LeDbService::SQL_TYPE_READ == $this->getSqlType()) {
+                $this->data = $this->getPdoStatement()->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }
+        return $this->data;
+    }
+
+    /**
+     * @param null $col indicates using a column's value to create an associated array output
+     * @param bool $sub_arrays
+     * @return array
+     */
+    public function getOutput2($col = null, bool $sub_arrays = false): array
+    {
+        $data = $this->getData();
+        $consolidate = !is_null($col) && !empty($data);
+        $key = $consolidate ? "{$col}_" . (int)$sub_arrays : 'default';
+        if (! array_key_exists($key, $this->output)) {
+            if ($consolidate) {
+                $this->output[$key] = [];
+                if ($sub_arrays) {
+                    foreach ($this->data as $row) {
+                        $this->output[$key][$row[$col]][] = $row;
+                    }
+                } else {
+                    foreach ($this->data as $row) {
+                        $this->output[$key][$row[$col]] = $row;
+                    }
+                }
+            } else {
+                $this->output[$key] = $this->data;
+            }
+        }
+        return $this->output[$key];
+    }
+
     /**
      * @return mixed|null
      */
@@ -260,9 +307,9 @@ class LeDbResult implements LeDbResultInterface
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getFirstRow()
+    public function getFirstRow(): array
     {
         $output = $this->getOutput();
         if (0 < count($output)) {
@@ -276,7 +323,7 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @return string
      */
-    public function getSql()
+    public function getSql(): string
     {
         return $this->getPdoStatement()->queryString;
     }
@@ -299,7 +346,7 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @param string $input
      */
-    public function setSqlType($input)
+    public function setSqlType(string $input)
     {
         $this->sql_type = $input;
     }
@@ -307,7 +354,7 @@ class LeDbResult implements LeDbResultInterface
     /**
      * @return string
      */
-    public function getSqlType()
+    public function getSqlType(): string
     {
         return $this->sql_type;
     }
