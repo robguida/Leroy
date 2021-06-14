@@ -234,7 +234,7 @@ class LeDbResult implements LeDbResultInterface
      * @param bool $sub_arrays
      * @return array
      */
-    public function getOutput($col = null, bool $sub_arrays = false): array
+    public function getOutputDep($col = null, bool $sub_arrays = false): array
     {
         if (is_null($this->output)) {
             $output = $this->output = [];
@@ -276,7 +276,7 @@ class LeDbResult implements LeDbResultInterface
      * @param bool $sub_arrays
      * @return array
      */
-    public function getOutput2($col = null, bool $sub_arrays = false): array
+    public function getOutput($col = null, bool $sub_arrays = false): array
     {
         $data = $this->getData();
         $consolidate = !is_null($col) && !empty($data);
