@@ -221,9 +221,9 @@ class LeDbResult implements LeDbResultInterface
         /* The key starts with LeDbResultRowSet_0, and increments with each data set */
         $key = 'LeDbResultRowSet_' . count($this->output);
         if ($this->pdoStatement instanceof PDOStatement) {
-            $this->output[$key] = $this->getPdoStatement()->nextRowset();
+            $this->data[$key] = $this->getPdoStatement()->nextRowset();
         }
-        return $this->output[$key];
+        return $this->data[$key];
     }
 
     /**
@@ -276,11 +276,9 @@ class LeDbResult implements LeDbResultInterface
     public function getOutput($col = null, bool $sub_arrays = false): array
     {
         $data = $this->getData();
-        error_log(__FILE__ . ' ' . __LINE__ . ' $data = ' . print_r($data, true));
         $consolidate = !is_null($col) && !empty($data);
         $key = $consolidate ? "{$col}_" . (int)$sub_arrays : 'default';
-        error_log(__FILE__ . ' ' . __LINE__ . ' $key = ' . $key);
-        if (! array_key_exists($key, $this->output)) {
+         if (! array_key_exists($key, $this->output)) {
             if ($consolidate) {
                 $this->output[$key] = [];
                 if ($sub_arrays) {
@@ -296,7 +294,6 @@ class LeDbResult implements LeDbResultInterface
                 $this->output[$key] = $this->data;
             }
         }
-        error_log(__FILE__ . ' ' . __LINE__ . ' $this->output = ' . print_r($this->output, true));
         return $this->output[$key];
     }
 
@@ -317,7 +314,6 @@ class LeDbResult implements LeDbResultInterface
      */
     public function getFirstRow(): array
     {
-        error_log(__FILE__ . ' ' . __LINE__ . ' __METHOD__ = ' . __METHOD__);
         $output = $this->getOutput();
         if (0 < count($output)) {
             $output = current($output);
