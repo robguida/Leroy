@@ -322,7 +322,7 @@ class LeDbResult implements LeDbResultInterface
         if (0 < count($output)) {
             $output = current($output);
         } else {
-            $output = null;
+            $output = [];
         }
         return $output;
     }
