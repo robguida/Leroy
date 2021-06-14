@@ -16,7 +16,7 @@ interface LeDbResultInterface
     /**
      * @return Exception
      */
-    public function getException();
+    public function getException(): Exception;
 
     /**
      * @param Exception $exception
@@ -27,15 +27,15 @@ interface LeDbResultInterface
      * @return bool
      * @deprecated
      */
-    public function success();
+    public function success(): bool;
 
     /**
      * @return bool
      */
-    public function isSuccess();
+    public function isSuccess(): bool;
 
     /**
-     * @param null|PDOStatement $pdoStatement
+     * @param PDOStatement $pdoStatement
      */
     public function setPdoStatement(PDOStatement $pdoStatement);
 
@@ -45,32 +45,32 @@ interface LeDbResultInterface
     public function setBindings(array $bindings);
 
     /**
-     * @return array
+     * @return null|array
      */
-    public function getBindings();
+    public function getBindings(): ?array;
 
     /**
      * @return null|PDOStatement
      */
-    public function getPdoStatement();
+    public function getPdoStatement(): ?PDOStatement;
 
     /**
      * @param string $input
      */
-    public function setSqlType($input);
+    public function setSqlType(string $input);
 
     /**
      * @return string
      */
-    public function getSqlType();
+    public function getSqlType(): string;
 
     /**
-     * @return integer
+     * @return mixed
      */
     public function getLastInsertId();
 
     /**
-     * @param integer $input
+     * @param mixed $input
      */
     public function setLastInsertId($input);
 
@@ -102,47 +102,48 @@ interface LeDbResultInterface
     /**
      * @return array
      */
-    public function getFirstRow();
+    public function getFirstRow(): array;
 
     /**
      * @Note Same as PDOStatement::rowCount(), the number of rows affected by INSERT, UPDATE, DELETE, but not SELECT
      * @return int
      */
-    public function getRowsAffected();
+    public function getRowsAffected(): int;
 
     /**
      * @Note gets the number of records in from the select statement. Do not use with SQL_CALC_FOUND_ROWS
      * @return int
      */
-    public function getRecordCount();
+    public function getRecordCount(): int;
 
     /**
      * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
      * @param int $input
      */
-    public function setRowsFound($input);
+    public function setRowsFound(int $input);
 
     /**
      * @Note Use with SQL_CALC_FOUND_ROWS to get the total number of rows found in search that uses LIMIT
      * @return int
      */
-    public function getRowsFound();
+    public function getRowsFound(): int;
 
     /**
-     * @return bool
+     * @return bool|mixed
      */
     public function nextSet();
 
     /**
-     * @param null $col indicates using a column's value to create an associated array output
+     * @param ?string $col indicates using a column's value to create an associated array output
+     * @param bool $sub_arrays
      * @return array
      */
-    public function getOutput($col = null);
+    public function getOutput(string $col = null, bool $sub_arrays = false): array;
 
     /**
      * @return string
      */
-    public function getSql();
+    public function getSql(): string;
 
     /**
      * @return string|string[]
