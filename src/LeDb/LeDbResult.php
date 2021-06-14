@@ -50,6 +50,12 @@ class LeDbResult implements LeDbResultInterface
     /** @var array */
     private array $bindings;
 
+    public function __construct()
+    {
+        $this->output = [];
+        $this->data = [];
+    }
+
     /**
      * @param PDOStatement $pdoStatement
      */
