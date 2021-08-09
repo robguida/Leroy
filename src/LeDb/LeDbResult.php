@@ -23,17 +23,17 @@ class LeDbResult implements LeDbResultInterface
     /** @var Exception */
     private Exception $exception;
 
-    /** @var PDOStatement */
-    private PDOStatement $pdoStatement;
+    /** @var ?PDOStatement */
+    private ?PDOStatement $pdoStatement;
 
-    /** @var integer */
-    private int $last_insert_id;
+    /** @var ?int */
+    private ?int $last_insert_id;
 
     /** @var mixed */
     private $error_code;
 
-    /** @var string */
-    private string $error_info;
+    /** @var ?string */
+    private ?string $error_info;
 
     /** @var ?array */
     private ?array $data;
@@ -41,11 +41,11 @@ class LeDbResult implements LeDbResultInterface
     /** @var ?array */
     private ?array $output;
 
-    /** @var integer */
-    private int $rows_found;
+    /** @var ?int */
+    private ?int $rows_found;
 
-    /** @var string */
-    private string $sql_type;
+    /** @var ?string */
+    private ?string $sql_type;
 
     /** @var array */
     private array $bindings;
@@ -54,6 +54,13 @@ class LeDbResult implements LeDbResultInterface
     {
         $this->output = [];
         $this->data = null;
+        $this->pdoStatement = null;
+        $this->last_insert_id = null;
+        $this->error_code = null;
+        $this->error_info = null;
+        $this->rows_found = null;
+        $this->sql_type = null;
+        $this->bindings = [];
     }
 
     /**
