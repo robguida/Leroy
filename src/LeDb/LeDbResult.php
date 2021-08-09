@@ -226,6 +226,19 @@ class LeDbResult implements LeDbResultInterface
     }
 
     /**
+     * @return bool|mixed
+     */
+    public function nextSet()
+    {
+        /* The key starts with LeDbResultRowSet_0, and increments with each data set */
+        $key = 'LeDbResultRowSet_' . count($this->output);
+        if ($this->pdoStatement instanceof PDOStatement) {
+            $this->data[$key] = $this->getPdoStatement()->nextRowset();
+        }
+        return $this->data[$key];
+    }
+
+    /**
      * @param null $col indicates using a column's value to create an associated array output
      * @param bool $sub_arrays
      * @return array
